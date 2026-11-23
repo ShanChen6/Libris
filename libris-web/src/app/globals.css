@@ -91,3 +91,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Ngăn xem văn bản gốc: nháy nhẹ đoạn vừa được bôi vàng (Task 4.3) */
+@keyframes highlight-in {
+  0% {
+    box-shadow: 0 0 0 8px oklch(0.85 0.17 90 / 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}

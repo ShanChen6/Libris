@@ -24,6 +24,8 @@ export interface Citation {
   char_start: number;
   char_end: number;
   superseded_by: string[];
+  /** Văn bản chứa đoạn được trích dẫn – để mở nguyên văn (Task 4.3) */
+  document_id: string | null;
 }
 
 export interface Source {
@@ -95,6 +97,49 @@ export async function signIn(mode: "login" | "register", body: Record<string, st
 
 export const me = () => request<User>("/auth/me");
 
+export type DocumentStatus = "ACTIVE" | "AMENDED" | "EXPIRED" | "PENDING";
+
+export interface DocumentText {
+  id: string;
+  documentNumber: string;
+  documentType: string | null;
+  title: string;
+  issuingBody: string | null;
+  issueDate: string | null;
+  effectiveDate: string | null;
+  expiryDate: string | null;
+  status: DocumentStatus;
+  needsReview: boolean;
+  sourceUrl: string | null;
+  relations: {
+    type: string;
+    source: string;
+    target: string;
+    effectiveDate: string | null;
+  }[];
+  supersededProvisions: {
+    article: string;
+    clause: string | null;
+    kind: string;
+    source: string;
+  }[];
+  /** Nguyên văn; `char_start`/`char_end` tính theo code point */
+  fullText: string;
+}
+
+const documentCache = new Map<string, Promise<DocumentText>>();
+
+/** Nguyên văn văn bản (lưu tạm trong phiên làm việc: bấm nhiều trích dẫn cùng văn bản chỉ tải một lần). */
+export function getDocumentText(id: string): Promise<DocumentText> {
+  let doc = documentCache.get(id);
+  if (!doc) {
+    doc = request<DocumentText>(`/documents/${id}/text`);
+    doc.catch(() => documentCache.delete(id));
+    documentCache.set(id, doc);
+  }
+  return doc;
+}
+
 export const createSession = () =>
   request<{ id: string; title: string | null }>("/chat/sessions", {
     method: "POST",
@@ -110,12 +155,7 @@ export interface StreamHandlers {
 }
 
 /** Gửi câu hỏi và nhận câu trả lời dạng luồng SSE (Task 4.2). `signal` để dừng giữa chừng. */
-export async function streamAnswer(
-  sessionId: string,
-  content: string,
-  handlers: StreamHandlers,
-  signal?: AbortSignal,
-) {
+export async function streamAnswer(sessionId: string, content: string, handlers: StreamHandlers, signal?: AbortSignal) {
   const res = await fetch(`${API_URL}/chat/sessions/${sessionId}/messages`, {
     method: "POST",
     headers: {

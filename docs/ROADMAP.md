@@ -75,7 +75,7 @@
   - Xây dựng API quản lý kho văn bản luật: Cho phép Admin tải lên văn bản luật mới (file `.docx` hoặc `.pdf`), hệ thống tự động gọi sang FastAPI để chạy pipeline bóc tách và cập nhật vào VectorDB.
 - [x] **Task 4.2: Tích hợp Streaming Response (Server-Sent Events)**
   - Kết nối luồng dữ liệu từ `FastAPI -> NestJS -> Next.js` qua SSE để câu trả lời của Chatbot hiển thị mượt mà từng chữ theo thời gian thực kèm danh sách metadata các điều luật đã trích dẫn.
-- [ ] **Task 4.3: Giao diện Đối chiếu Trích dẫn Tương tác (Interactive Citation Viewer)**
+- [x] **Task 4.3: Giao diện Đối chiếu Trích dẫn Tương tác (Interactive Citation Viewer)**
   - Thiết kế giao diện Next.js (TailwindCSS + Shadcn/UI) chia 2 khu vực trực quan:
     - **Khung bên trái:** Giao diện hội thoại Chatbot với các thẻ trích dẫn màu xanh có thể bấm vào được.
     - **Khung bên phải (Ngăn xem văn bản gốc):** Khi người dùng bấm vào thẻ trích dẫn `[Điều 7 - Nghị định 168/2024/NĐ-CP]`, hệ thống tự động mở nguyên văn văn bản đó và **bôi vàng (highlight)** chính xác đoạn luật được trích dẫn để người dùng tự kiểm chứng.

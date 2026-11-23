@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AlertTriangle, Scale, Square } from "lucide-react";
 
+import { CitationViewer } from "@/components/citation-viewer";
 import { Button } from "@/components/ui/button";
 import {
   ApiError,
+  type Citation,
   createSession,
   me,
   streamAnswer,
@@ -14,6 +16,7 @@ import {
   type AnswerDone,
   type User,
 } from "@/lib/api";
+import { answerParts, boldParts, citationName, splitTags, type AnswerPart } from "@/lib/citations";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -23,34 +26,13 @@ interface ChatMessage {
   error?: string;
 }
 
-const CITATION_RE = /\[[^[\]]*?\s[-–—]\s\d{1,4}\/\d{4}\/[^\]\s]+\]/g;
-
-/** Tô màu các thẻ trích dẫn [Điều X, Khoản Y - Số hiệu] trong câu trả lời. */
-function withCitations(text: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  let last = 0;
-  for (const m of text.matchAll(CITATION_RE)) {
-    out.push(text.slice(last, m.index));
-    out.push(
-      <span
-        key={m.index}
-        className="bg-citation text-citation-foreground rounded px-1 py-0.5 text-[0.85em] font-medium whitespace-nowrap"
-      >
-        {m[0]}
-      </span>,
-    );
-    last = m.index + m[0].length;
-  }
-  out.push(text.slice(last));
-  return out;
-}
-
 export default function ChatPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
+  const [viewing, setViewing] = useState<Citation | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const busy = messages.at(-1)?.streaming ?? false;
@@ -94,7 +76,13 @@ export default function ChatPage() {
         {
           onDelta: (text) => updateLast((m) => ({ ...m, content: m.content + text })),
           // Bản chính thức: có thể thêm cảnh báo hiệu lực hoặc thay bằng lời từ chối
-          onDone: (done) => updateLast((m) => ({ ...m, content: done.answer, done, streaming: false })),
+          onDone: (done) =>
+            updateLast((m) => ({
+              ...m,
+              content: done.answer,
+              done,
+              streaming: false,
+            })),
           onError: (error) => updateLast((m) => ({ ...m, error, streaming: false })),
         },
         controller.signal,
@@ -117,8 +105,8 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col">
-      <header className="flex items-center justify-between border-b px-4 py-3">
+    <div className="flex h-dvh flex-col">
+      <header className="flex shrink-0 items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-2 font-semibold">
           <Scale className="size-5" /> Libris
         </div>
@@ -130,6 +118,7 @@ export default function ChatPage() {
             onClick={() => {
               setMessages([]);
               setSessionId(null);
+              setViewing(null);
             }}
           >
             Hội thoại mới
@@ -147,61 +136,124 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-6">
-        {messages.length === 0 && (
-          <p className="text-muted-foreground mt-16 text-center">
-            Hỏi Libris về pháp luật Việt Nam, VD: &quot;Đi xe máy không có gương chiếu hậu bên trái có bị phạt
-            không?&quot;
-          </p>
-        )}
-        {messages.map((m, i) =>
-          m.role === "user" ? (
-            <div key={i} className="bg-secondary self-end rounded-2xl px-4 py-2 whitespace-pre-wrap">
-              {m.content}
+      <div className="flex min-h-0 flex-1">
+        <section className="flex min-w-0 flex-1 flex-col">
+          <main className="flex-1 overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 py-6">
+              {messages.length === 0 && (
+                <p className="text-muted-foreground mt-16 text-center">
+                  Hỏi Libris về pháp luật Việt Nam, VD: &quot;Đi xe máy không có gương chiếu hậu bên trái có bị phạt
+                  không?&quot;
+                </p>
+              )}
+              {messages.map((m, i) =>
+                m.role === "user" ? (
+                  <div key={i} className="bg-secondary self-end rounded-2xl px-4 py-2 whitespace-pre-wrap">
+                    {m.content}
+                  </div>
+                ) : (
+                  <AssistantMessage key={i} message={m} active={viewing} onOpen={setViewing} />
+                ),
+              )}
+              <div ref={bottomRef} />
             </div>
-          ) : (
-            <AssistantMessage key={i} message={m} />
-          ),
-        )}
-        <div ref={bottomRef} />
-      </main>
+          </main>
 
-      <form onSubmit={send} className="bg-background sticky bottom-0 border-t px-4 py-3">
-        <div className="mx-auto flex max-w-3xl gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                e.currentTarget.form?.requestSubmit();
-              }
-            }}
-            rows={2}
-            maxLength={2000}
-            placeholder="Nhập câu hỏi pháp luật…"
-            aria-label="Câu hỏi"
-            className="border-input focus-visible:ring-ring/50 flex-1 resize-none rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-[3px]"
-          />
-          {busy ? (
-            <Button type="button" variant="outline" onClick={() => abortRef.current?.abort()}>
-              <Square /> Dừng
-            </Button>
-          ) : (
-            <Button type="submit" disabled={!input.trim()}>
-              Gửi
-            </Button>
-          )}
-        </div>
-      </form>
+          <form onSubmit={send} className="bg-background shrink-0 border-t px-4 py-3">
+            <div className="mx-auto flex max-w-3xl gap-2">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    e.currentTarget.form?.requestSubmit();
+                  }
+                }}
+                rows={2}
+                maxLength={2000}
+                placeholder="Nhập câu hỏi pháp luật…"
+                aria-label="Câu hỏi"
+                className="border-input focus-visible:ring-ring/50 flex-1 resize-none rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-[3px]"
+              />
+              {busy ? (
+                <Button type="button" variant="outline" onClick={() => abortRef.current?.abort()}>
+                  <Square /> Dừng
+                </Button>
+              ) : (
+                <Button type="submit" disabled={!input.trim()}>
+                  Gửi
+                </Button>
+              )}
+            </div>
+          </form>
+        </section>
+        {viewing && <CitationViewer citation={viewing} onClose={() => setViewing(null)} />}
+      </div>
     </div>
   );
 }
 
-function AssistantMessage({ message }: { message: ChatMessage }) {
+function AnswerText({
+  parts,
+  active,
+  onOpen,
+}: {
+  parts: AnswerPart[];
+  active: Citation | null;
+  onOpen: (c: Citation) => void;
+}) {
+  return parts.map((p, i) => {
+    if (p.kind === "text")
+      return boldParts(p.text).map((b, j) =>
+        b.bold ? (
+          <strong key={`${i}-${j}`} className="font-semibold">
+            {b.text}
+          </strong>
+        ) : (
+          b.text
+        ),
+      );
+    if (p.kind === "unverified")
+      return (
+        <span
+          key={i}
+          title="Chưa xác minh được trích dẫn này"
+          className="text-muted-foreground rounded border border-dashed px-1 py-0.5 text-[0.85em] whitespace-nowrap"
+        >
+          {p.text}
+        </span>
+      );
+    const isActive = active?.chunk_id === p.citation.chunk_id && active.start === p.citation.start;
+    return (
+      <button
+        key={i}
+        type="button"
+        onClick={() => onOpen(p.citation)}
+        title="Xem nguyên văn đoạn luật"
+        aria-pressed={isActive}
+        className={`bg-citation text-citation-foreground cursor-pointer rounded px-1 py-0.5 text-[0.85em] font-medium whitespace-nowrap underline-offset-2 hover:underline ${isActive ? "ring-citation-foreground ring-2" : ""}`}
+      >
+        {p.text}
+      </button>
+    );
+  });
+}
+
+function AssistantMessage({
+  message,
+  active,
+  onOpen,
+}: {
+  message: ChatMessage;
+  active: Citation | null;
+  onOpen: (c: Citation) => void;
+}) {
   const { done } = message;
   const citations = done?.citations ?? [];
   const unique = [...new Map(citations.map((c) => [c.chunk_id, c])).values()];
+  // Đang stream: thẻ chưa xác minh, chưa bấm được. Xong: chỉ thẻ đã xác minh mới mở văn bản gốc.
+  const parts = done ? answerParts(message.content, citations) : splitTags(message.content);
   return (
     <article
       aria-busy={message.streaming}
@@ -209,7 +261,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
     >
       {message.content ? (
         <div className="leading-7 whitespace-pre-wrap">
-          {withCitations(message.content)}
+          <AnswerText parts={parts} active={active} onOpen={onOpen} />
           {message.streaming && <span className="bg-foreground ml-0.5 inline-block h-4 w-1.5 animate-pulse" />}
         </div>
       ) : (
@@ -231,13 +283,20 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
           <ul className="space-y-1 text-sm">
             {unique.map((c) => (
               <li key={c.chunk_id}>
-                <span className="bg-citation text-citation-foreground rounded px-1.5 py-0.5 font-medium">
-                  {[c.article, c.clause, c.point].filter(Boolean).join(", ")}
-                </span>{" "}
-                {c.document_number} – {c.document_title}
-                {c.status === "EXPIRED" || c.superseded_by.length ? (
-                  <span className="text-destructive ml-1">(không còn hiệu lực)</span>
-                ) : null}
+                <button
+                  type="button"
+                  onClick={() => onOpen(c)}
+                  className="group text-left"
+                  title="Xem nguyên văn đoạn luật"
+                >
+                  <span className="bg-citation text-citation-foreground rounded px-1.5 py-0.5 font-medium group-hover:underline">
+                    {citationName(c)}
+                  </span>{" "}
+                  {c.document_number} – {c.document_title}
+                  {c.status === "EXPIRED" || c.superseded_by.length ? (
+                    <span className="text-destructive ml-1">(không còn hiệu lực)</span>
+                  ) : null}
+                </button>
               </li>
             ))}
           </ul>
