@@ -33,7 +33,7 @@ def main() -> None:
     p_embed.add_argument("--batch-size", type=int, default=64, help="số đoạn mỗi lần commit")
     p_embed.add_argument("--limit", type=int)
 
-    p_search = sub.add_parser("search", help="tra thử: so sánh tìm theo ngữ nghĩa và từ khóa")
+    p_search = sub.add_parser("search", help="tra thử Hybrid Search + Query Router (Task 3.1, 3.2)")
     p_search.add_argument("query")
     p_search.add_argument("-k", type=int, default=5)
     p_search.add_argument(
@@ -80,20 +80,25 @@ def main() -> None:
         import psycopg
 
         from app.pipeline.embedding import get_embedder
-        from app.pipeline.search import IN_FORCE, keyword_search, semantic_search
+        from app.retrieval.hybrid import hybrid_search
+        from app.retrieval.router import route
 
-        statuses = ("ACTIVE", "AMENDED", "EXPIRED", "PENDING") if args.all_status else IN_FORCE
+        plan = route(args.query)
+        if args.all_status:
+            plan.statuses = ("ACTIVE", "AMENDED", "EXPIRED", "PENDING")
         vector = get_embedder().encode([args.query])[0]
         with psycopg.connect(conninfo) as conn:
-            for name, hits in (
-                ("Ngữ nghĩa (vector)", semantic_search(conn, vector, k=args.k, statuses=statuses)),
-                ("Từ khóa (full-text)", keyword_search(conn, args.query, k=args.k,
-                                                       statuses=statuses)),
-            ):  # fmt: skip
-                print(f"\n=== {name}")
-                for i, h in enumerate(hits, 1):
-                    snippet = " ".join(h.content.split())[:150]
-                    print(f"{i}. {h.score:.3f} {h.citation} ({h.status})\n   {snippet}")
+            res = hybrid_search(conn, args.query, vector, top_k=args.k, plan=plan)
+        print(f"Router: {res.plan.mode} {res.plan.statuses}")
+        for reason in res.plan.reasons:
+            print(f"  - {reason}")
+        for i, h in enumerate(res.hits, 1):
+            ranks = f"vec={h.vec_rank} kw={h.kw_rank}" + (
+                f" ref={h.ref_rank}" if h.ref_rank else ""
+            )
+            note = f" (bị thay thế bởi {', '.join(h.replaced_by)})" if h.replaced_by else ""
+            print(f"\n{i}. {h.score:.4f} [{ranks}] {h.citation} {h.status}{note}")
+            print(f"   {' '.join(h.content.split())[:160]}")
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Protocol
 
 import numpy as np
 
-from app.core.config import Settings, get_settings
+from app.core.config import get_settings
 
 if TYPE_CHECKING:
     from sentence_transformers import SentenceTransformer
@@ -77,8 +77,9 @@ class SentenceTransformerEmbedder:
 
 
 @lru_cache
-def get_embedder(settings: Settings | None = None) -> SentenceTransformerEmbedder:
-    s = settings or get_settings()
+def get_embedder() -> SentenceTransformerEmbedder:
+    """Embedder dùng chung cho cả tiến trình (mô hình chỉ tải một lần)."""
+    s = get_settings()
     return SentenceTransformerEmbedder(
         s.embedding_model,
         device=s.embedding_device,

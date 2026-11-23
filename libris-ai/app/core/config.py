@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     # nhiều so với mức tối đa 8192 của bge-m3.
     embedding_max_seq_length: int = 1024
     embedding_batch_size: int = 16
+    embedding_preload: bool = False  # tải mô hình ngay khi khởi động API
 
 
 @lru_cache
