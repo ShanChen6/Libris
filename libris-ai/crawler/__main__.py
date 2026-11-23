@@ -4,6 +4,7 @@ Ví dụ:
     uv run python -m crawler crawl                       # crawl theo crawler/seeds.yaml
     uv run python -m crawler fetch 198540                # crawl 1 văn bản theo docid
     uv run python -m crawler list --org quoc-hoi --type luat --pages 2
+    uv run python -m crawler normalize               # chuẩn hóa metadata -> data/catalog.json
 """
 
 from __future__ import annotations
@@ -11,9 +12,11 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+from datetime import date
 from pathlib import Path
 
 from crawler.http import PoliteClient
+from crawler.metadata import build_catalog, load_records, write_catalog
 from crawler.pipeline import Store, crawl_document, crawl_seeds
 from crawler.sources import vanban_chinhphu as vbcp
 
@@ -44,6 +47,9 @@ def main() -> None:
     p_list.add_argument("--type", choices=sorted(vbcp.TYPE_GROUPS))
     p_list.add_argument("--pages", type=int, default=1)
 
+    p_norm = sub.add_parser("normalize", help="chuẩn hóa metadata, suy ra trạng thái hiệu lực")
+    p_norm.add_argument("--as-of", type=date.fromisoformat, default=date.today(), help="YYYY-MM-DD")
+
     args = parser.parse_args()
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
@@ -63,6 +69,15 @@ def main() -> None:
             for docid in args.docids:
                 rec = crawl_document(client, docid, store, ocr=not args.no_ocr, force=args.force)
                 print(store.processed_path(docid), rec["extraction"]["total_pages"], "trang")
+    elif args.cmd == "normalize":
+        store = Store(args.data_dir)
+        entries = build_catalog(load_records(store.processed), args.as_of)
+        out = args.data_dir / "catalog.json"
+        write_catalog(entries, out, args.as_of)
+        for e in entries:
+            flags = " ⚠" if e.warnings or e.needs_review else ""
+            print(f"{e.status:8} {e.document_number:18} {e.effective_date} {e.title}{flags}")
+        print(f"-> {out}")
     elif args.cmd == "list":
         with PoliteClient(min_interval=args.delay) as client:
             for item in vbcp.iter_listing(

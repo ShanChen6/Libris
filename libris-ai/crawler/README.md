@@ -73,10 +73,49 @@ Mỗi file `processed/<docid>.json` có dạng:
 OCR có thể nhận sai dấu hoặc số La Mã (VD: "Chương HI"), nên cần rà soát trước khi đưa vào kho
 tri thức.
 
+## Chuẩn hóa metadata & trạng thái hiệu lực (Task 1.3)
+
+```bash
+uv run python -m crawler normalize                 # trạng thái tính tại ngày hôm nay
+uv run python -m crawler normalize --as-of 2024-06-01   # trạng thái tại một thời điểm trong quá khứ
+```
+
+Lệnh này đọc toàn bộ `data/processed/` và ghi ra `data/catalog.json`. Mỗi văn bản gồm các trường
+`document_number`, `document_type` (Luật / Nghị định / Thông tư / Quyết định…), `issue_date`,
+`effective_date`, `status`, `expiry_date`, các quan hệ `replaced_by` / `amended_by` / `replaces` /
+`amends`, và `evidence` (câu nguyên văn làm căn cứ cho từng quan hệ).
+
+Nguồn dữ liệu không cung cấp trạng thái hiệu lực, nên trạng thái được **suy ra từ nội dung các văn
+bản trong kho**, cụ thể là từ điều khoản "Hiệu lực thi hành" và "Bãi bỏ":
+
+| Câu trong văn bản Y | Kết luận về văn bản X |
+|---|---|
+| "X … hết hiệu lực kể từ ngày [Y] có hiệu lực" / "Các nghị định sau đây hết hiệu lực: a) X…" | X bị Y thay thế |
+| "Bãi bỏ X" | X bị Y bãi bỏ |
+| "Bãi bỏ Điều/khoản … của X" | X bị bãi bỏ một phần |
+| Trích yếu "Sửa đổi, bổ sung … X" | X bị Y sửa đổi |
+| "X có hiệu lực thi hành từ ngày D" | Ngày hiệu lực của X là D (VD: Luật 43/2024/QH15 cho Luật Đất đai 2024 có hiệu lực sớm từ 01/8/2024) |
+
+Trạng thái tại thời điểm `as_of`:
+
+| `status` | Ý nghĩa |
+|---|---|
+| `ACTIVE` | Còn hiệu lực |
+| `AMENDED` | Còn hiệu lực nhưng đã bị sửa đổi, bổ sung hoặc bãi bỏ một phần |
+| `EXPIRED` | Đã bị thay thế hoặc bãi bỏ toàn bộ, và văn bản thay thế đã có hiệu lực |
+| `PENDING` | Chưa đến ngày có hiệu lực (bổ sung so với roadmap, để bộ lọc ở Task 3.2 không trả lời theo văn bản chưa có hiệu lực) |
+
+Parser tránh các bẫy thường gặp: không coi các luật "đã được sửa đổi, bổ sung theo …" là bị thay
+thế; bỏ qua số hiệu nằm trong đoạn trích dẫn “…”; không coi "có hiệu lực từ ngày Nghị quyết X hết
+hiệu lực" là X bị thay thế; không lấy ngày hiệu lực riêng của một Điều làm ngày hiệu lực của cả
+văn bản.
+
+Lưu ý: trạng thái chỉ chính xác trong phạm vi kho dữ liệu. Nếu văn bản thay thế chưa được crawl
+thì văn bản cũ vẫn hiện `ACTIVE`, vì vậy cần thêm văn bản liên quan vào `seeds.yaml`. Văn bản
+`needs_review` (OCR) có thể bị sót quan hệ do lỗi nhận dạng chữ.
+
 ## Giới hạn hiện tại
 
-- **Trạng thái hiệu lực** (`ACTIVE` / `EXPIRED` / `AMENDED`) chưa có trên nguồn này; sẽ được
-  chuẩn hóa ở Task 1.3.
 - **vbpl.vn** (CSDL quốc gia về pháp luật) chặn truy cập từ IP nước ngoài (HTTP 403 từ WAF của
   site), nên chưa dùng được làm nguồn khi chạy trên cloud.
 - Crawler chỉ tải file PDF; file đính kèm định dạng khác được ghi vào `skipped_attachments`.

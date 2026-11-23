@@ -8,6 +8,7 @@
 documents:
   # --- Đất đai ---
   - { number: 31/2024/QH15, org: quoc-hoi, type: luat, note: "Luật Đất đai 2024" }
+  - { number: 43/2024/QH15, org: quoc-hoi, type: luat, note: "Sửa đổi Luật Đất đai, Luật Nhà ở, Luật KDBĐS, Luật Các TCTD (cho Luật Đất đai 2024 có hiệu lực từ 01/8/2024)" }
   - { number: 45/2013/QH13, org: quoc-hoi, type: luat, note: "Luật Đất đai 2013 (văn bản cũ)" }
   - { number: 102/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Quy định chi tiết thi hành Luật Đất đai" }
   - { number: 101/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Điều tra cơ bản đất đai; đăng ký, cấp Giấy chứng nhận" }
