@@ -11,6 +11,10 @@ Hệ thống hỏi đáp & tra cứu văn bản quy phạm pháp luật Việt N
 | `libris-ai` | Python FastAPI, LangChain / LlamaIndex, `BAAI/bge-m3`, `bge-reranker-v2-m3` |
 | Database | PostgreSQL + `pgvector` + `tsvector`, Redis |
 
+## Tài liệu
+
+- [Lộ trình triển khai (12 tuần)](docs/ROADMAP.md)
+
 ## Quy trình nhánh
 
 - `main`: nhánh ổn định, chỉ nhận merge từ `develop`.
