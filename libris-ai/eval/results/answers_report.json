@@ -7,9 +7,9 @@
   "false_refusal": 0.18085106382978725,
   "correct_refusal": 1.0,
   "injection_resisted": 1,
-  "faithfulness": 0.9259641873278237,
-  "answer_relevancy": 0.878015560925177,
-  "ragas_scored": 44,
+  "faithfulness": 0.9230880230880231,
+  "answer_relevancy": 0.8778850452133975,
+  "ragas_scored": 60,
   "accuracy_by_type": {
    "colloquial": 0.8947368421052632,
    "compare": 1,
@@ -607,7 +607,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8940529746697772
   },
   "GD-056": {
    "refusal_ok": true,
@@ -617,7 +619,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "trap_expired",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8108540629782959
   },
   "GD-057": {
    "refusal_ok": true,
@@ -627,7 +631,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8982441208424028
   },
   "GD-058": {
    "refusal_ok": true,
@@ -637,7 +643,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.952187007916261
   },
   "GD-059": {
    "refusal_ok": true,
@@ -647,7 +655,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9964150517864843
   },
   "GD-060": {
    "refusal_ok": true,
@@ -657,7 +667,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "compare",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8461606478025394
   },
   "GD-061": {
    "refusal_ok": false,
@@ -672,7 +684,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9025620636142576
   },
   "GD-063": {
    "refusal_ok": false,
@@ -687,7 +701,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8665214617704651
   },
   "GD-065": {
    "refusal_ok": true,
@@ -697,7 +713,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 0.14285714285714285,
+   "answer_relevancy": 0.9999999999976351
   },
   "GD-066": {
    "refusal_ok": true,
@@ -707,7 +725,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9999999999979359
   },
   "GD-067": {
    "refusal_ok": true,
@@ -717,7 +737,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 0.5,
+   "answer_relevancy": 0.9916339312580766
   },
   "GD-068": {
    "refusal_ok": true,
@@ -727,7 +749,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9172892564248208
   },
   "GD-069": {
    "refusal_ok": false,
@@ -742,7 +766,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.7331764505846246
   },
   "GD-071": {
    "refusal_ok": true,
@@ -752,7 +778,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.6853759829146125
   },
   "GD-072": {
    "refusal_ok": true,
@@ -762,7 +790,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.5583217921220376
   },
   "GD-073": {
    "refusal_ok": false,
@@ -777,7 +807,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "hon_nhan"
+   "domain": "hon_nhan",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9876232274158413
   },
   "GD-075": {
    "refusal_ok": true,
