@@ -14,6 +14,7 @@ npm run lint && npm run build
 | `/` | giới thiệu |
 | `/login` | đăng nhập / đăng ký (gọi `/auth/*` của libris-api) |
 | `/chat` | hỏi đáp: câu trả lời hiện từng chữ qua SSE, cảnh báo hiệu lực, danh sách căn cứ pháp lý; nút **Dừng** hủy luồng. Bấm thẻ trích dẫn để mở ngăn xem văn bản gốc |
+| `/analyze` | tải lên (hoặc dán) hợp đồng: tiến trình theo thời gian thực, tóm tắt, điều khoản chính, các điểm cần lưu ý theo mức độ, có trích dẫn luật bấm được; bấm trích đoạn để xem vị trí trong hợp đồng (Task 4.4) |
 
 ## Ngăn xem văn bản gốc (Task 4.3)
 

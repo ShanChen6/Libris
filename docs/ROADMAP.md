@@ -79,7 +79,7 @@
   - Thiết kế giao diện Next.js (TailwindCSS + Shadcn/UI) chia 2 khu vực trực quan:
     - **Khung bên trái:** Giao diện hội thoại Chatbot với các thẻ trích dẫn màu xanh có thể bấm vào được.
     - **Khung bên phải (Ngăn xem văn bản gốc):** Khi người dùng bấm vào thẻ trích dẫn `[Điều 7 - Nghị định 168/2024/NĐ-CP]`, hệ thống tự động mở nguyên văn văn bản đó và **bôi vàng (highlight)** chính xác đoạn luật được trích dẫn để người dùng tự kiểm chứng.
-- [ ] **Task 4.4: Tính năng Tóm tắt & Phân tích Văn bản Pháp lý**
+- [x] **Task 4.4: Tính năng Tóm tắt & Phân tích Văn bản Pháp lý**
   - Cho phép người dùng tải lên một file hợp đồng lao động, hợp đồng thuê nhà hoặc văn bản hành chính để Libris tóm tắt các điều khoản quan trọng và cảnh báo các điểm bất lợi/rủi ro pháp lý.
 
 ---

@@ -2,21 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { AlertTriangle, Scale, Square } from "lucide-react";
+import { AlertTriangle, Square } from "lucide-react";
 
+import { AnswerText } from "@/components/answer-text";
+import { AppHeader } from "@/components/app-header";
 import { CitationViewer } from "@/components/citation-viewer";
 import { Button } from "@/components/ui/button";
-import {
-  ApiError,
-  type Citation,
-  createSession,
-  me,
-  streamAnswer,
-  tokenStore,
-  type AnswerDone,
-  type User,
-} from "@/lib/api";
-import { answerParts, boldParts, citationName, splitTags, type AnswerPart } from "@/lib/citations";
+import { ApiError, type Citation, createSession, streamAnswer, type AnswerDone } from "@/lib/api";
+import { answerParts, citationName, splitTags } from "@/lib/citations";
+import { useRequireUser } from "@/lib/use-user";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -28,7 +22,7 @@ interface ChatMessage {
 
 export default function ChatPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const user = useRequireUser();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -36,16 +30,6 @@ export default function ChatPage() {
   const abortRef = useRef<AbortController | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const busy = messages.at(-1)?.streaming ?? false;
-
-  useEffect(() => {
-    if (!tokenStore.get()) {
-      router.replace("/login");
-      return;
-    }
-    me().then(setUser, () => {
-      router.replace("/login");
-    });
-  }, [router]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
@@ -106,35 +90,19 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-dvh flex-col">
-      <header className="flex shrink-0 items-center justify-between border-b px-4 py-3">
-        <div className="flex items-center gap-2 font-semibold">
-          <Scale className="size-5" /> Libris
-        </div>
-        <div className="flex items-center gap-3 text-sm">
-          <span className="text-muted-foreground hidden sm:inline">{user?.email}</span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setMessages([]);
-              setSessionId(null);
-              setViewing(null);
-            }}
-          >
-            Hội thoại mới
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              tokenStore.clear();
-              router.replace("/login");
-            }}
-          >
-            Đăng xuất
-          </Button>
-        </div>
-      </header>
+      <AppHeader user={user}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setMessages([]);
+            setSessionId(null);
+            setViewing(null);
+          }}
+        >
+          Hội thoại mới
+        </Button>
+      </AppHeader>
 
       <div className="flex min-h-0 flex-1">
         <section className="flex min-w-0 flex-1 flex-col">
@@ -192,52 +160,6 @@ export default function ChatPage() {
       </div>
     </div>
   );
-}
-
-function AnswerText({
-  parts,
-  active,
-  onOpen,
-}: {
-  parts: AnswerPart[];
-  active: Citation | null;
-  onOpen: (c: Citation) => void;
-}) {
-  return parts.map((p, i) => {
-    if (p.kind === "text")
-      return boldParts(p.text).map((b, j) =>
-        b.bold ? (
-          <strong key={`${i}-${j}`} className="font-semibold">
-            {b.text}
-          </strong>
-        ) : (
-          b.text
-        ),
-      );
-    if (p.kind === "unverified")
-      return (
-        <span
-          key={i}
-          title="Chưa xác minh được trích dẫn này"
-          className="text-muted-foreground rounded border border-dashed px-1 py-0.5 text-[0.85em] whitespace-nowrap"
-        >
-          {p.text}
-        </span>
-      );
-    const isActive = active?.chunk_id === p.citation.chunk_id && active.start === p.citation.start;
-    return (
-      <button
-        key={i}
-        type="button"
-        onClick={() => onOpen(p.citation)}
-        title="Xem nguyên văn đoạn luật"
-        aria-pressed={isActive}
-        className={`bg-citation text-citation-foreground cursor-pointer rounded px-1 py-0.5 text-[0.85em] font-medium whitespace-nowrap underline-offset-2 hover:underline ${isActive ? "ring-citation-foreground ring-2" : ""}`}
-      >
-        {p.text}
-      </button>
-    );
-  });
 }
 
 function AssistantMessage({

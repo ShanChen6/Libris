@@ -180,3 +180,80 @@ export async function streamAnswer(sessionId: string, content: string, handlers:
     else if (event.event === "error") handlers.onError(data.message);
   }
 }
+
+// ---------------------------------------------------------------- Phân tích văn bản (Task 4.4)
+
+export type Severity = "high" | "medium" | "low" | "unclear";
+
+export interface Quote {
+  text: string;
+  /** Vị trí (code point) trong `text` của kết quả; null = không tìm thấy nguyên văn */
+  start: number | null;
+  end: number | null;
+}
+
+export interface Issue {
+  id: number;
+  title: string;
+  severity: Severity;
+  concern: string;
+  affected_party: string | null;
+  quote: Quote | null;
+  verdict: string;
+  recommendation: string;
+  /** Có ít nhất một trích dẫn luật đã xác minh */
+  grounded: boolean;
+  /** Như trích dẫn trong câu trả lời; `start`/`end` là vị trí thẻ trong `verdict` */
+  citations: Citation[];
+  /** Các đoạn luật tìm được cho điểm này (kể cả khi chưa được đánh giá) */
+  related: Citation[];
+  warnings: string[];
+}
+
+export interface Analysis {
+  document_type: string;
+  parties: { role: string; name: string }[];
+  summary: string;
+  key_terms: { topic: string; content: string; quote: Quote | null }[];
+  issues: Issue[];
+  text: string;
+  truncated: boolean;
+  warnings: string[];
+  disclaimer: string;
+  model: string | null;
+  timings: Record<string, number>;
+}
+
+export interface AnalysisHandlers {
+  onProgress: (data: { step: string; message: string }) => void;
+  onDone: (data: Analysis) => void;
+  onError: (message: string) => void;
+}
+
+/** Gửi file hoặc văn bản để tóm tắt và phân tích rủi ro; kết quả trả về qua SSE. */
+export async function streamAnalysis(
+  input: { file: File } | { text: string },
+  handlers: AnalysisHandlers,
+  signal?: AbortSignal,
+) {
+  const form = new FormData();
+  if ("file" in input) form.append("file", input.file);
+  else form.append("text", input.text);
+  const res = await fetch(`${API_URL}/analyze`, {
+    method: "POST",
+    headers: { Accept: "text/event-stream", Authorization: `Bearer ${tokenStore.get() ?? ""}` },
+    body: form,
+    signal,
+  });
+  if (!res.ok || !res.body) {
+    const body = (await res.json().catch(() => ({}))) as { message?: string | string[] };
+    const message = Array.isArray(body.message) ? body.message.join("; ") : body.message;
+    throw new ApiError(res.status, message ?? `Lỗi ${res.status}`);
+  }
+  for await (const event of parseSse(res.body)) {
+    const data = JSON.parse(event.data);
+    if (event.event === "progress") handlers.onProgress(data);
+    else if (event.event === "done") handlers.onDone(data);
+    else if (event.event === "error") handlers.onError(data.message);
+  }
+}
