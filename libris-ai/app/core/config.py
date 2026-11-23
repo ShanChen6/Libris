@@ -48,6 +48,13 @@ class Settings(BaseSettings):
     # rerank dưới ngưỡng này (câu trả lời đúng thường >= 0,85; không liên quan gần 0).
     answer_min_rerank_score: float = 0.2
 
+    # Xác thực giữa libris-api và libris-ai (header X-Internal-Token). Trống: không kiểm tra –
+    # chỉ dùng khi phát triển trên máy; môi trường triển khai bắt buộc đặt giá trị bí mật.
+    internal_api_token: str = ""
+    # Văn bản do Admin tải lên (Task 4.1)
+    upload_dir: str = "data/uploads"
+    max_upload_mb: int = 30
+
 
 @lru_cache
 def get_settings() -> Settings:

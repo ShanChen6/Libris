@@ -2,7 +2,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api import answer, health, search
+from app.api import answer, health, ingest, search
+from app.api.deps import InternalAuth
 from app.core.config import get_settings
 from app.pipeline.embedding import get_embedder
 from app.retrieval.rerank import get_reranker
@@ -27,5 +28,7 @@ app = FastAPI(
 )
 
 app.include_router(health.router)
-app.include_router(search.router)
-app.include_router(answer.router)
+# Các API nghiệp vụ chỉ dành cho libris-api (X-Internal-Token); /health để ngỏ cho giám sát
+app.include_router(search.router, dependencies=[InternalAuth])
+app.include_router(answer.router, dependencies=[InternalAuth])
+app.include_router(ingest.router, dependencies=[InternalAuth])

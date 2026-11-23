@@ -63,6 +63,48 @@ CREATE TYPE public.user_role AS ENUM (
 
 
 --
+-- Name: recompute_document_status(date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.recompute_document_status(as_of date DEFAULT CURRENT_DATE) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  changed integer;
+BEGIN
+  WITH computed AS (
+    SELECT d.id,
+      (SELECT min(r.effective_date) FROM document_relations r
+        WHERE r.target_number = d.document_number AND r.relation_type = 'replaces'
+          AND r.effective_date <= as_of) AS expiry,
+      EXISTS (SELECT 1 FROM document_relations r
+        WHERE r.target_number = d.document_number AND r.relation_type IN ('amends', 'repeals_part')
+          AND r.effective_date <= as_of)
+      OR EXISTS (SELECT 1 FROM superseded_provisions sp
+        WHERE sp.target_number = d.document_number AND sp.effective_date <= as_of) AS amended
+    FROM legal_documents d
+  ), next AS (
+    SELECT c.id, c.expiry,
+      CASE
+        WHEN d.effective_date > as_of THEN 'PENDING'
+        WHEN c.expiry IS NOT NULL THEN 'EXPIRED'
+        WHEN c.amended THEN 'AMENDED'
+        ELSE 'ACTIVE'
+      END::document_status AS status
+    FROM computed c JOIN legal_documents d ON d.id = c.id
+  )
+  UPDATE legal_documents d
+     SET status = n.status, expiry_date = n.expiry, status_as_of = as_of
+    FROM next n
+   WHERE d.id = n.id
+     AND (d.status, d.expiry_date, d.status_as_of) IS DISTINCT FROM (n.status, n.expiry, as_of);
+  GET DIAGNOSTICS changed = ROW_COUNT;
+  RETURN changed;
+END;
+$$;
+
+
+--
 -- Name: set_updated_at(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -119,6 +161,32 @@ CREATE TABLE public.document_relations (
     effective_date date,
     evidence text NOT NULL,
     CONSTRAINT document_relations_relation_type_check CHECK ((relation_type = ANY (ARRAY['replaces'::text, 'repeals_part'::text, 'amends'::text, 'sets_effective_date'::text])))
+);
+
+
+--
+-- Name: ingestion_jobs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ingestion_jobs (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    status text DEFAULT 'queued'::text NOT NULL,
+    step text,
+    filename text NOT NULL,
+    content_type text,
+    size_bytes integer NOT NULL,
+    sha256 text NOT NULL,
+    document_number text NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    document_id uuid,
+    chunks integer,
+    warnings jsonb DEFAULT '[]'::jsonb NOT NULL,
+    error text,
+    created_by uuid,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    started_at timestamp with time zone,
+    finished_at timestamp with time zone,
+    CONSTRAINT ingestion_jobs_status_check CHECK ((status = ANY (ARRAY['queued'::text, 'processing'::text, 'done'::text, 'failed'::text])))
 );
 
 
@@ -260,6 +328,14 @@ ALTER TABLE ONLY public.document_relations
 
 
 --
+-- Name: ingestion_jobs ingestion_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingestion_jobs
+    ADD CONSTRAINT ingestion_jobs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: legal_chunks legal_chunks_document_id_chunk_index_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -353,6 +429,13 @@ CREATE INDEX document_relations_target_idx ON public.document_relations USING bt
 
 
 --
+-- Name: ingestion_jobs_created_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ingestion_jobs_created_idx ON public.ingestion_jobs USING btree (created_at DESC);
+
+
+--
 -- Name: legal_chunks_document_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -439,6 +522,22 @@ ALTER TABLE ONLY public.chat_sessions
 
 
 --
+-- Name: ingestion_jobs ingestion_jobs_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingestion_jobs
+    ADD CONSTRAINT ingestion_jobs_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: ingestion_jobs ingestion_jobs_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingestion_jobs
+    ADD CONSTRAINT ingestion_jobs_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.legal_documents(id) ON DELETE SET NULL;
+
+
+--
 -- Name: legal_chunks legal_chunks_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -487,4 +586,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20261123000003'),
     ('20261123000004'),
     ('20261123000005'),
-    ('20261123000006');
+    ('20261123000006'),
+    ('20261123000007');

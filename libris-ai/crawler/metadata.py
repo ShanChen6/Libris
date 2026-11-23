@@ -421,7 +421,8 @@ class CatalogEntry:
         return d
 
 
-def _self_effective_date(text: str) -> date | None:
+def self_effective_date(text: str) -> date | None:
+    """Ngày hiệu lực văn bản tự ghi: '<Luật/Nghị định> này có hiệu lực ... từ ngày D'."""
     for p in text.split("\n"):
         if p[:1] in '“"':
             continue
@@ -480,7 +481,7 @@ def analyze(records: list[dict[str, Any]], as_of: date) -> Catalog:
         meta = rec["metadata"]
         number = normalize_number(meta["document_number"])
         site_eff = date.fromisoformat(meta["effective_date"]) if meta["effective_date"] else None
-        text_eff = _self_effective_date(rec["text"])
+        text_eff = self_effective_date(rec["text"])
         entry = CatalogEntry(
             source_id=meta["source_id"],
             document_number=number,
