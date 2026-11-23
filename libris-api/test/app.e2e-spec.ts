@@ -5,7 +5,7 @@ import pg from 'pg';
 import request from 'supertest';
 import { vi } from 'vitest';
 import { configureApp } from '../src/app.setup.js';
-import { AiClient } from '../src/documents/ai.client.js';
+import { AiClient } from '../src/ai/ai.client.js';
 import { createTestSchema, TEST_DB_URL } from './db.js';
 
 const ADMIN = { email: 'admin@libris.test', password: 'admin-password-123' };
@@ -14,7 +14,7 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
   let app: INestApplication;
   let db: pg.Client;
   let drop: () => Promise<void>;
-  const ai = { ingest: vi.fn() };
+  const ai = { ingest: vi.fn(), streamAnswer: vi.fn() };
 
   beforeAll(async () => {
     const schema = await createTestSchema();
@@ -297,6 +297,156 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
       .delete(`/admin/documents/${all.body[0].id}`)
       .set(auth)
       .expect(404);
+  });
+
+  it('chats: streams the answer, stores history with citations, scoped to the owner', async () => {
+    const token = await login('an@example.test', 'mat-khau-123');
+    const auth = { Authorization: `Bearer ${token}` };
+    const { rows: chunk } = await db.query(
+      `INSERT INTO legal_documents (document_number, title, full_text, source, source_id)
+       VALUES ('168/2024/NĐ-CP', 'Nghị định', 'xxx Phạt tiền 400.000 đồng', 't', 'c') RETURNING id`,
+    );
+    const { rows: c } = await db.query(
+      `INSERT INTO legal_chunks (document_id, chunk_index, article, clause, context_prefix, content,
+         char_start, char_end) VALUES ($1, 0, 'Điều 7', 'Khoản 2', '[NĐ 168]', 'Phạt tiền 400.000 đồng', 4, 26)
+       RETURNING id`,
+      [chunk[0].id],
+    );
+    const done = {
+      answer: 'Phạt tiền 400.000 đồng [Điều 7, Khoản 2 - 168/2024/NĐ-CP].',
+      refused: false,
+      refusal_reason: null,
+      warnings: [],
+      model: 'gemini',
+      usage: {},
+      timings: {},
+      plan: { mode: 'current', statuses: ['ACTIVE', 'AMENDED'], reasons: [] },
+      citations: [
+        {
+          label: '[Điều 7, Khoản 2 - 168/2024/NĐ-CP]',
+          chunk_id: c[0].id,
+          document_number: '168/2024/NĐ-CP',
+        },
+      ],
+      sources: [
+        {
+          chunk_id: c[0].id,
+          content: 'Phạt tiền 400.000 đồng',
+          rerank_score: 0.93,
+        },
+      ],
+    };
+    ai.streamAnswer.mockImplementation(async () => {
+      const enc = new TextEncoder();
+      return new ReadableStream({
+        start(ctrl) {
+          ctrl.enqueue(
+            enc.encode(
+              'event: meta\ndata: {"sources":[]}\n\nevent: delta\ndata: {"text":"Phạt tiền"}\n\n',
+            ),
+          );
+          ctrl.enqueue(
+            enc.encode(`event: done\ndata: ${JSON.stringify(done)}\n\n`),
+          );
+          ctrl.close();
+        },
+      });
+    });
+
+    const session = await http()
+      .post('/chat/sessions')
+      .set(auth)
+      .send({})
+      .expect(201);
+    const sessionId = session.body.id as string;
+    const res = await http()
+      .post(`/chat/sessions/${sessionId}/messages`)
+      .set(auth)
+      .send({ content: 'Xe máy không có gương chiếu hậu bị phạt bao nhiêu?' })
+      .buffer(true)
+      .parse((r, cb) => {
+        let text = '';
+        r.setEncoding('utf8');
+        r.on('data', (chunk: string) => (text += chunk));
+        r.on('end', () => cb(null, text));
+      })
+      .expect(200);
+    expect(res.headers['content-type']).toContain('text/event-stream');
+    const events = (res.body as string)
+      .trim()
+      .split('\n\n')
+      .map((block) => {
+        const [event, data] = block.split('\n');
+        return { event: event.slice(7), data: JSON.parse(data.slice(6)) };
+      });
+    expect(events.map((e) => e.event)).toEqual([
+      'start',
+      'meta',
+      'delta',
+      'done',
+    ]);
+    expect(events[0].data).toMatchObject({ sessionId });
+    expect(events[3].data.messageId).toEqual(expect.any(String));
+    expect(ai.streamAnswer.mock.calls[0][0]).toBe(
+      'Xe máy không có gương chiếu hậu bị phạt bao nhiêu?',
+    );
+
+    const history = await http()
+      .get(`/chat/sessions/${sessionId}`)
+      .set(auth)
+      .expect(200);
+    expect(history.body.title).toBe(
+      'Xe máy không có gương chiếu hậu bị phạt bao nhiêu?',
+    );
+    expect(history.body.messages.map((m: { role: string }) => m.role)).toEqual([
+      'user',
+      'assistant',
+    ]);
+    expect(history.body.messages[1].citations).toEqual([
+      expect.objectContaining({
+        position: 1,
+        chunkId: c[0].id,
+        documentId: chunk[0].id,
+        label: '[Điều 7, Khoản 2 - 168/2024/NĐ-CP]',
+        charStart: 4,
+        charEnd: 26,
+        score: 0.93,
+      }),
+    ]);
+    expect(history.body.messages[1].metadata).toMatchObject({
+      refused: false,
+      model: 'gemini',
+    });
+
+    const list = await http().get('/chat/sessions').set(auth).expect(200);
+    expect(list.body.items.map((s: { id: string }) => s.id)).toEqual([
+      sessionId,
+    ]);
+
+    // Người khác không thấy và không hỏi được trong phiên này
+    const other = await login(ADMIN.email, ADMIN.password);
+    await http()
+      .get(`/chat/sessions/${sessionId}`)
+      .set('Authorization', `Bearer ${other}`)
+      .expect(404);
+    await http()
+      .post(`/chat/sessions/${sessionId}/messages`)
+      .set('Authorization', `Bearer ${other}`)
+      .send({ content: 'x' })
+      .expect(404);
+    await http()
+      .post(`/chat/sessions/${sessionId}/messages`)
+      .set(auth)
+      .send({ content: ' ' })
+      .expect(400);
+
+    await http()
+      .patch(`/chat/sessions/${sessionId}`)
+      .set(auth)
+      .send({ title: 'Giao thông' })
+      .expect(200);
+    await http().delete(`/chat/sessions/${sessionId}`).set(auth).expect(204);
+    await http().get(`/chat/sessions/${sessionId}`).set(auth).expect(404);
   });
 
   it('throttles repeated sign-in attempts', async () => {

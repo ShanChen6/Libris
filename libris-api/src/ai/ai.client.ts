@@ -23,6 +23,11 @@ export interface UploadedFile {
   buffer: Buffer;
 }
 
+export interface AnswerOptions {
+  includeExpired?: boolean;
+  asOf?: string;
+}
+
 /** Gọi libris-ai (FastAPI) bằng token nội bộ. */
 @Injectable()
 export class AiClient {
@@ -39,6 +44,47 @@ export class AiClient {
 
   private headers(): Record<string, string> {
     return this.token ? { 'X-Internal-Token': this.token } : {};
+  }
+
+  /**
+   * Mở luồng SSE hỏi đáp (POST /answer/stream). Trả về body để đọc dần; `signal` hủy request
+   * (VD người dùng đóng trang) và libris-ai ngừng sinh câu trả lời.
+   */
+  async streamAnswer(
+    question: string,
+    options: AnswerOptions,
+    signal: AbortSignal,
+  ): Promise<ReadableStream<Uint8Array>> {
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/answer/stream`, {
+        method: 'POST',
+        headers: {
+          ...this.headers(),
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream',
+        },
+        body: JSON.stringify({
+          question,
+          include_expired: options.includeExpired ?? null,
+          as_of: options.asOf ?? null,
+        }),
+        signal,
+      });
+    } catch (error) {
+      if (signal.aborted) throw error;
+      this.logger.error(
+        `Không gọi được libris-ai: ${(error as Error).message}`,
+      );
+      throw new ServiceUnavailableException(
+        'Dịch vụ hỏi đáp (libris-ai) không phản hồi',
+      );
+    }
+    if (!res.ok || !res.body) {
+      this.logger.error(`libris-ai /answer/stream trả về HTTP ${res.status}`);
+      throw new ServiceUnavailableException('Dịch vụ hỏi đáp (libris-ai) lỗi');
+    }
+    return res.body;
   }
 
   /** Gửi file sang pipeline nạp văn bản; trả về id của job xử lý nền. */

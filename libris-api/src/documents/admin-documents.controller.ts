@@ -19,7 +19,7 @@ import { extname } from 'node:path';
 import { z } from 'zod';
 import { AdminPolicy } from '../auth/admin.policy.js';
 import type { User } from '../users/user.model.js';
-import { AiClient, type UploadedFile as File } from './ai.client.js';
+import { AiClient, type UploadedFile as File } from '../ai/ai.client.js';
 import { DocumentsRepository } from './documents.repository.js';
 import {
   ALLOWED_EXTENSIONS,

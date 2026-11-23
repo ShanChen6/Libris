@@ -3,8 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from '@nestjs/authentication';
 import { AuthorizationModule } from '@nestjs/authorization';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AiModule } from './ai/ai.module.js';
 import { AppController } from './app.controller.js';
 import { AuthModule } from './auth/auth.module.js';
+import { ChatModule } from './chat/chat.module.js';
 import { validateEnv, type Env } from './config/env.js';
 import { DatabaseModule } from './database/database.module.js';
 import { DocumentsModule } from './documents/documents.module.js';
@@ -32,9 +34,11 @@ import { UsersModule } from './users/users.module.js';
     // Giới hạn đăng nhập/đăng ký: 10 lần mỗi phút mỗi IP (ThrottlerGuard trên AuthController)
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 10 }]),
     DatabaseModule,
+    AiModule,
     UsersModule,
     AuthModule,
     DocumentsModule,
+    ChatModule,
   ],
   controllers: [AppController],
 })

@@ -40,6 +40,10 @@ báo quyền bị từ chối.
 | `POST /admin/documents` | ADMIN | multipart: `file` (.pdf/.doc/.docx), `documentNumber`, `title`, `documentType?`, `issuingBody?`, `signer?`, `issueDate?`, `effectiveDate?` → 202 `{ jobId, statusUrl }` |
 | `GET /admin/ingestions`, `GET /admin/ingestions/:id` | ADMIN | tiến trình xử lý: `queued → processing (extract, metadata, chunk, embed) → done / failed` |
 | `DELETE /admin/documents/:id` | ADMIN | xóa văn bản cùng các đoạn luật, tính lại trạng thái hiệu lực các văn bản liên quan |
+| `POST /chat/sessions` | đã đăng nhập | tạo hội thoại `{ title? }` |
+| `GET /chat/sessions`, `GET /chat/sessions/:id` | chủ hội thoại | danh sách hội thoại; chi tiết kèm tin nhắn và trích dẫn |
+| `PATCH /chat/sessions/:id`, `DELETE /chat/sessions/:id` | chủ hội thoại | đổi tên / xóa hội thoại |
+| `POST /chat/sessions/:id/messages` | chủ hội thoại | `{ content }` → luồng SSE (xem dưới); 20 câu hỏi mỗi phút |
 | `GET /admin/users?limit=&after=` | ADMIN | danh sách người dùng (phân trang theo con trỏ) |
 | `PATCH /admin/users/:id/role` | ADMIN | `{ role: "USER" \| "ADMIN" }`; không hạ được quản trị viên cuối cùng (409) |
 
@@ -61,6 +65,23 @@ token sai/hết hạn; 403 là không đủ quyền.
   chuyển sang `POST /ingest` của libris-ai kèm `X-Internal-Token`. libris-ai xử lý nền và ghi tiến
   trình vào bảng `ingestion_jobs`, libris-api đọc thẳng từ đó. Khi văn bản mới thay thế hoặc bãi bỏ
   văn bản cũ, hàm SQL `recompute_document_status()` cập nhật trạng thái văn bản cũ ngay.
+
+## Luồng trả lời (SSE)
+
+`POST /chat/sessions/:id/messages` trả `text/event-stream`. Luồng đi `FastAPI → NestJS → Next.js`:
+libris-api lưu câu hỏi, gọi `POST /answer/stream` của libris-ai rồi chuyển tiếp từng sự kiện.
+
+| Sự kiện | Dữ liệu |
+|---|---|
+| `start` | `{ userMessageId }` – gửi ngay, trước khi truy xuất |
+| `meta` | `{ plan, sources }` – các đoạn luật tìm được |
+| `delta` | `{ text }` – từng mẩu câu trả lời |
+| `done` | kết quả cuối như `POST /answer` của libris-ai (câu trả lời đã xác minh trích dẫn, `citations`, `warnings`, `refused`) kèm `messageId`. Client thay nội dung đã hiển thị bằng `answer` ở đây |
+| `error` | `{ message }` |
+
+Câu trả lời và các trích dẫn đã xác minh được lưu vào `chat_messages` / `message_citations` khi
+nhận `done`. Client ngắt kết nối giữa chừng thì libris-api hủy luôn request sang libris-ai (không
+tốn lượt gọi LLM) và không lưu câu trả lời dở.
 
 ## Kiểm thử
 
