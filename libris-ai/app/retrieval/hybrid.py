@@ -47,7 +47,11 @@ _WORD_RE = re.compile(r"\d{1,4}/(?:19|20)\d{2}/[^\s,;:()]+|[^\W_]+(?:-[^\W_]+)*"
 @dataclass
 class SearchWeights:
     vector: float = 1.0
-    keyword: float = 1.0
+    # Đo trên Golden Dataset (eval/eval_retrieval.py, Task 5.2): Context Precision@5 sau rerank
+    # 0,681 với keyword=1 -> 0,744 với keyword=0,25. Văn bản OCR nhiễu và truy vấn theo từng âm
+    # tiết khiến luồng từ khóa kéo nhiều đoạn không liên quan vào danh sách ứng viên; vẫn giữ một
+    # phần để bắt số hiệu văn bản, thuật ngữ chính xác.
+    keyword: float = 0.25
     referenced: float = 1.0
     candidates: int = 50  # số kết quả mỗi luồng trước khi hợp nhất
 

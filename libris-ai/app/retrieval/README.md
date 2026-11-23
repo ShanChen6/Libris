@@ -43,9 +43,11 @@ RRF(đoạn) = w_vec/(60 + rank_vec) + w_kw/(60 + rank_kw) + w_ref/(60 + rank_re
 | `ref` | cosine, chỉ trong văn bản được nêu đích danh | ưu tiên văn bản người dùng hỏi tới |
 
 RRF chỉ dùng **thứ hạng**, không dùng điểm gốc, nên không cần chuẩn hóa thang điểm giữa cosine và
-`ts_rank`. Một đoạn đứng đầu cả hai luồng có điểm `2/61 ≈ 0,0328`. Trọng số và số ứng viên mỗi luồng
-(`candidates`, mặc định 50) là tham số để tinh chỉnh bằng RAGAS (Task 5.2). Top 20 kết quả sẽ được
-đưa qua reranker (Task 3.3).
+`ts_rank`. Trọng số mặc định: vector 1, từ khóa **0,25** (chọn bằng Golden Dataset, Task 5.2: Context
+Precision@5 sau rerank tăng từ 0,681 lên 0,744 so với trọng số 1 – xem
+[eval/README.md](../../eval/README.md)). Một đoạn đứng đầu cả hai luồng có điểm `1,25/61 ≈ 0,0205`.
+Số ứng viên mỗi luồng là `candidates` (mặc định 50); Top `RERANK_CANDIDATES` kết quả được đưa qua
+reranker (Task 3.3).
 
 ## Lọc hiệu lực & Query Router (`router.py`)
 

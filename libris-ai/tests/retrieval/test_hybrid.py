@@ -73,7 +73,7 @@ def test_default_returns_only_documents_in_force(seeded) -> None:
     assert {h.document_number for h in res.hits} <= {"168/2024/NĐ-CP", "31/2024/QH15"}
     top = res.hits[0]
     assert top.vec_rank == 1 and top.kw_rank == 1  # cả hai luồng cùng xếp đầu
-    assert top.score == pytest.approx(2 / 61)
+    assert top.score == pytest.approx(1 / 61 + 0.25 / 61)  # RRF, trọng số từ khóa 0,25
     assert [h.score for h in res.hits] == sorted((h.score for h in res.hits), reverse=True)
 
 
