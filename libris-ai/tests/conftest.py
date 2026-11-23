@@ -18,6 +18,9 @@ import psycopg
 import pytest
 
 DB_URL = os.environ.get("LIBRIS_TEST_DATABASE_URL")
+REDIS_URL = os.environ.get("LIBRIS_TEST_REDIS_URL")
+# Semantic cache tắt mặc định trong test (test của cache tự bật với Redis riêng)
+os.environ["SEMANTIC_CACHE_ENABLED"] = "false"
 MIGRATIONS = Path(__file__).resolve().parents[2] / "db" / "migrations"
 
 
@@ -43,3 +46,18 @@ def pg_conninfo() -> Iterator[str]:
     finally:
         with psycopg.connect(DB_URL, autocommit=True) as conn:
             conn.execute(f"DROP SCHEMA {schema} CASCADE")
+
+
+@pytest.fixture
+def redis_client():
+    """Redis 8 thật (vector set); test tự dọn các khóa có tiền tố riêng."""
+    if not REDIS_URL:
+        pytest.skip("Cần LIBRIS_TEST_REDIS_URL (VD redis://localhost:6379/15)")
+    import redis
+
+    client = redis.Redis.from_url(REDIS_URL)
+    prefix = f"test:{uuid.uuid4().hex[:8]}"
+    yield client, prefix
+    keys = list(client.scan_iter(f"{prefix}:*"))
+    if keys:
+        client.delete(*keys)

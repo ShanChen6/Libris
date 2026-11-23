@@ -190,6 +190,11 @@ function AssistantMessage({
         message.streaming && <p className="text-muted-foreground animate-pulse">Đang tra cứu văn bản pháp luật…</p>
       )}
       {message.error && <p className="text-destructive mt-2 text-sm">{message.error}</p>}
+      {done?.cached && (
+        <p className="text-muted-foreground mt-2 text-xs">
+          Trả lời từ bộ nhớ đệm (câu hỏi tương tự đã được trả lời gần đây).
+        </p>
+      )}
       {done && done.warnings.length > 0 && (
         <ul className="text-muted-foreground mt-3 space-y-1 text-sm">
           {done.warnings.map((w) => (

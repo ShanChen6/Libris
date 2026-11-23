@@ -48,6 +48,8 @@ export interface AnswerDone {
   sources: Source[];
   model: string | null;
   plan: { mode: string; statuses: string[]; reasons: string[] };
+  /** Lấy từ Semantic Cache (Task 5.3) */
+  cached?: boolean;
 }
 
 export class ApiError extends Error {

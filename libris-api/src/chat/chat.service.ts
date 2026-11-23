@@ -14,6 +14,7 @@ interface DoneEvent {
   plan: { mode: string; statuses: string[]; reasons: string[] };
   citations: { label: string; chunk_id: string; document_number: string }[];
   sources: { chunk_id: string; content: string; rerank_score: number | null }[];
+  cached?: boolean; // trả lời từ Semantic Cache của libris-ai
 }
 
 @Injectable()
@@ -101,6 +102,7 @@ export class ChatService {
         refusalReason: result.refusal_reason,
         warnings: result.warnings,
         model: result.model,
+        cached: result.cached ?? false,
         usage: result.usage,
         timings: result.timings,
         plan: {

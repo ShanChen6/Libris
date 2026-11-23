@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from collections.abc import Iterator
 from datetime import date
 from typing import Annotated, Any
@@ -14,6 +15,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.api.search import EmbedderDep, HitOut, PlanOut, RerankerDep, SettingsDep
+from app.cache.semantic import SemanticCache, corpus_version, get_cache
 from app.generation.answer import AnswerResult, answer_question, stream_answer
 from app.generation.llm import LLMClient, LLMError, get_llm
 from app.retrieval.service import make_plan
@@ -21,6 +23,7 @@ from app.retrieval.service import make_plan
 log = logging.getLogger(__name__)
 router = APIRouter(tags=["answer"])
 LLMDep = Annotated[LLMClient, Depends(get_llm)]
+CacheDep = Annotated[SemanticCache | None, Depends(get_cache)]
 
 
 class AnswerRequest(BaseModel):
@@ -59,6 +62,7 @@ class AnswerResponse(BaseModel):
     model: str | None
     usage: dict[str, int]
     timings: dict[str, float]
+    cached: bool = False  # lấy từ Semantic Cache (Task 5.3)
 
 
 def _citations(res: AnswerResult) -> list[CitationOut]:
@@ -122,6 +126,40 @@ def _options(settings) -> dict:
     }
 
 
+class _Cache:
+    """Tra / ghi Semantic Cache cho một câu hỏi; ``cache`` None thì không làm gì."""
+
+    def __init__(self, cache: SemanticCache | None, req: AnswerRequest, embedder, conn) -> None:
+        self.cache, self.req = cache, req
+        if cache is not None:
+            self.vector = embedder.encode([req.question])[0]
+            self.scope = cache.scope(
+                req.include_expired, req.as_of, date.today(), corpus_version(conn)
+            )
+
+    def lookup(self) -> AnswerResponse | None:
+        if self.cache is None:
+            return None
+        started = time.perf_counter()
+        hit = self.cache.lookup(self.req.question, self.vector, self.scope)
+        if hit is None:
+            return None
+        log.info("Cache: '%s' ~ '%s' (%.3f)", self.req.question, hit.question, hit.similarity)
+        res = AnswerResponse(**hit.payload)
+        res.question = self.req.question
+        res.cached = True
+        res.usage = {}
+        res.timings = {"cache": time.perf_counter() - started}
+        return res
+
+    def store(self, res: AnswerResponse) -> None:
+        # Không lưu lời từ chối: lần hỏi sau vẫn có cơ hội trả lời (VD LLM chỉ lỗi tạm thời)
+        if self.cache is not None and not res.refused:
+            self.cache.store(
+                self.req.question, self.vector, self.scope, res.model_dump(mode="json")
+            )
+
+
 @router.post("/answer", response_model=AnswerResponse)
 def answer(
     req: AnswerRequest,
@@ -129,10 +167,14 @@ def answer(
     embedder: EmbedderDep,
     reranker: RerankerDep,
     llm: LLMDep,
+    cache: CacheDep,
 ) -> AnswerResponse:
     plan = make_plan(req.question, include_expired=req.include_expired, as_of=req.as_of)
     try:
         with psycopg.connect(settings.database_url) as conn:
+            cached = _Cache(cache, req, embedder, conn)
+            if (hit := cached.lookup()) is not None:
+                return hit
             res = answer_question(
                 conn, req.question, embedder=embedder, reranker=reranker, llm=llm, plan=plan,
                 **_options(settings),
@@ -141,7 +183,9 @@ def answer(
         raise HTTPException(
             status_code=503, detail=f"Dịch vụ LLM tạm thời không khả dụng: {exc}"
         ) from exc
-    return to_response(res)
+    out = to_response(res)
+    cached.store(out)
+    return out
 
 
 def _meta(prep) -> dict[str, Any]:
@@ -166,6 +210,7 @@ def answer_stream(
     embedder: EmbedderDep,
     reranker: RerankerDep,
     llm: LLMDep,
+    cache: CacheDep,
 ) -> StreamingResponse:
     """Như POST /answer nhưng trả về luồng SSE (Task 4.2):
 
@@ -180,6 +225,16 @@ def answer_stream(
     def events() -> Iterator[str]:
         try:
             with psycopg.connect(settings.database_url) as conn:
+                cached = _Cache(cache, req, embedder, conn)
+                if (hit := cached.lookup()) is not None:
+                    # Trúng cache: gửi ngay toàn bộ câu trả lời, cùng thứ tự sự kiện như bình thường
+                    sources = [src.model_dump(mode="json") for src in hit.sources]
+                    yield sse(
+                        "meta", {"plan": hit.plan.model_dump(mode="json"), "sources": sources}
+                    )
+                    yield sse("delta", {"text": hit.answer})
+                    yield sse("done", hit)
+                    return
                 for kind, payload in stream_answer(
                     conn, req.question, embedder=embedder, reranker=reranker, llm=llm, plan=plan,
                     **_options(settings),
@@ -189,7 +244,9 @@ def answer_stream(
                     elif kind == "delta":
                         yield sse("delta", {"text": payload})
                     elif kind == "done":
-                        yield sse("done", to_response(payload))
+                        out = to_response(payload)
+                        cached.store(out)
+                        yield sse("done", out)
                     else:
                         yield sse("error", payload)
         except Exception as exc:  # noqa: BLE001 – luồng đã mở: báo lỗi bằng sự kiện, không bằng HTTP

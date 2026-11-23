@@ -55,6 +55,11 @@ class Settings(BaseSettings):
     upload_dir: str = "data/uploads"
     max_upload_mb: int = 30
 
+    # Semantic Cache (Task 5.3): ngưỡng cosine chọn bằng eval/calibrate_cache.py
+    semantic_cache_enabled: bool = True
+    semantic_cache_threshold: float = 0.95
+    semantic_cache_ttl: int = 86_400  # giây; scope còn đổi theo ngày và theo phiên bản kho dữ liệu
+
     # Phân tích hợp đồng người dùng tải lên (Task 4.4)
     analysis_max_upload_mb: int = 10
     analysis_max_chars: int = 60_000  # phần vượt quá không đưa cho LLM (báo trong warnings)
