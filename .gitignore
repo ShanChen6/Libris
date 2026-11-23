@@ -24,3 +24,6 @@ Thumbs.db
 # IDE
 .idea/
 .vscode/
+
+# Cache điểm rerank / LLM giám khảo của script đánh giá
+libris-ai/eval/.cache/
