@@ -14,7 +14,11 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
   let app: INestApplication;
   let db: pg.Client;
   let drop: () => Promise<void>;
-  const ai = { ingest: vi.fn(), streamAnswer: vi.fn() };
+  const ai = {
+    ingest: vi.fn(),
+    streamAnswer: vi.fn(),
+    analyzeStream: vi.fn(),
+  };
 
   beforeAll(async () => {
     const schema = await createTestSchema();
@@ -466,6 +470,57 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
       .expect(200);
     await http().delete(`/chat/sessions/${sessionId}`).set(auth).expect(204);
     await http().get(`/chat/sessions/${sessionId}`).set(auth).expect(404);
+  });
+
+  it('analyzes an uploaded contract by relaying the libris-ai stream', async () => {
+    const token = await login('an@example.test', 'mat-khau-123');
+    const auth = { Authorization: `Bearer ${token}` };
+    const sse =
+      'event: progress\ndata: {"step":"read","message":"Đang đọc"}\n\n' +
+      'event: done\ndata: {"summary":"Hợp đồng thuê nhà","issues":[]}\n\n';
+    ai.analyzeStream.mockImplementation(
+      async () =>
+        new ReadableStream({
+          start(ctrl) {
+            ctrl.enqueue(new TextEncoder().encode(sse));
+            ctrl.close();
+          },
+        }),
+    );
+    const res = await http()
+      .post('/analyze')
+      .set(auth)
+      .attach('file', Buffer.from('%PDF-1.7'), 'hop-dong.pdf')
+      .expect(200);
+    expect(res.headers['content-type']).toContain('text/event-stream');
+    expect(res.text).toBe(sse);
+    const [input] = ai.analyzeStream.mock.calls[0];
+    expect(input.file.originalname).toBe('hop-dong.pdf');
+    expect(input.text).toBeUndefined();
+
+    await http()
+      .post('/analyze')
+      .set(auth)
+      .field('text', 'Điều 1. Bên A cho Bên B thuê nhà...')
+      .expect(200);
+    expect(ai.analyzeStream.mock.calls[1][0].text).toContain('Bên A');
+
+    // Thiếu dữ liệu, gửi cả hai, sai định dạng, chưa đăng nhập
+    await http().post('/analyze').set(auth).expect(400);
+    await http()
+      .post('/analyze')
+      .set(auth)
+      .field('text', 'abc')
+      .attach('file', Buffer.from('x'), 'a.pdf')
+      .expect(400);
+    const bad = await http()
+      .post('/analyze')
+      .set(auth)
+      .attach('file', Buffer.from('x'), 'a.exe')
+      .expect(400);
+    expect(bad.body.message).toContain('.docx');
+    await http().post('/analyze').field('text', 'abc').expect(401);
+    expect(ai.analyzeStream).toHaveBeenCalledTimes(2);
   });
 
   it('throttles repeated sign-in attempts', async () => {

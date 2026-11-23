@@ -45,6 +45,7 @@ báo quyền bị từ chối.
 | `GET /chat/sessions`, `GET /chat/sessions/:id` | chủ hội thoại | danh sách hội thoại; chi tiết kèm tin nhắn và trích dẫn |
 | `PATCH /chat/sessions/:id`, `DELETE /chat/sessions/:id` | chủ hội thoại | đổi tên / xóa hội thoại |
 | `POST /chat/sessions/:id/messages` | chủ hội thoại | `{ content }` → luồng SSE (xem dưới); 20 câu hỏi mỗi phút |
+| `POST /analyze` | đã đăng nhập | multipart: `file` (.pdf/.doc/.docx, ≤ 10 MB) **hoặc** `text` → luồng SSE `progress`* → `done` \| `error`: tóm tắt hợp đồng và cảnh báo điều khoản bất lợi (Task 4.4). Không lưu văn bản; 5 lần mỗi phút |
 | `GET /admin/users?limit=&after=` | ADMIN | danh sách người dùng (phân trang theo con trỏ) |
 | `PATCH /admin/users/:id/role` | ADMIN | `{ role: "USER" \| "ADMIN" }`; không hạ được quản trị viên cuối cùng (409) |
 

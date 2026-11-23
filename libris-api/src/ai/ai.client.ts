@@ -1,6 +1,7 @@
 import {
   Injectable,
   Logger,
+  PayloadTooLargeException,
   ServiceUnavailableException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -83,6 +84,57 @@ export class AiClient {
     if (!res.ok || !res.body) {
       this.logger.error(`libris-ai /answer/stream trả về HTTP ${res.status}`);
       throw new ServiceUnavailableException('Dịch vụ hỏi đáp (libris-ai) lỗi');
+    }
+    return res.body;
+  }
+
+  /**
+   * Phân tích hợp đồng (POST /analyze/stream, Task 4.4): gửi một file hoặc văn bản, nhận luồng
+   * SSE `progress`* → `done` | `error`. Lỗi đầu vào libris-ai phát hiện ngay (sai định dạng, quá
+   * lớn) thành 422/413 trước khi mở luồng. Hủy luồng trả về = đóng kết nối tới libris-ai.
+   */
+  async analyzeStream(input: {
+    file?: UploadedFile;
+    text?: string;
+  }): Promise<ReadableStream<Uint8Array>> {
+    const form = new FormData();
+    if (input.file) {
+      form.append(
+        'file',
+        new Blob([new Uint8Array(input.file.buffer)], {
+          type: input.file.mimetype,
+        }),
+        input.file.originalname,
+      );
+    }
+    if (input.text) form.append('text', input.text);
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/analyze/stream`, {
+        method: 'POST',
+        headers: { ...this.headers(), Accept: 'text/event-stream' },
+        body: form,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Không gọi được libris-ai: ${(error as Error).message}`,
+      );
+      throw new ServiceUnavailableException(
+        'Dịch vụ phân tích văn bản (libris-ai) không phản hồi',
+      );
+    }
+    if (res.status === 422 || res.status === 413) {
+      const body = (await res.json().catch(() => ({}))) as { detail?: unknown };
+      const message = describeDetail(body.detail) ?? 'Dữ liệu không hợp lệ';
+      throw res.status === 413
+        ? new PayloadTooLargeException(message)
+        : new UnprocessableEntityException(message);
+    }
+    if (!res.ok || !res.body) {
+      this.logger.error(`libris-ai /analyze/stream trả về HTTP ${res.status}`);
+      throw new ServiceUnavailableException(
+        'Dịch vụ phân tích văn bản (libris-ai) lỗi',
+      );
     }
     return res.body;
   }

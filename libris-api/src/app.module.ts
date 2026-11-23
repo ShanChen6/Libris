@@ -4,6 +4,7 @@ import { AuthenticationModule } from '@nestjs/authentication';
 import { AuthorizationModule } from '@nestjs/authorization';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AiModule } from './ai/ai.module.js';
+import { AnalyzeModule } from './analyze/analyze.module.js';
 import { AppController } from './app.controller.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ChatModule } from './chat/chat.module.js';
@@ -39,6 +40,7 @@ import { UsersModule } from './users/users.module.js';
     AuthModule,
     DocumentsModule,
     ChatModule,
+    AnalyzeModule,
   ],
   controllers: [AppController],
 })
