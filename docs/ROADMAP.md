@@ -28,7 +28,7 @@
     - `document_type`: Loại văn bản (`Luật`, `Nghị định`, `Thông tư`, `Quyết định`).
     - `issue_date`: Ngày ban hành & `effective_date`: Ngày có hiệu lực.
     - `status`: Trạng thái hiệu lực (`ACTIVE` - Còn hiệu lực, `EXPIRED` - Hết hiệu lực, `AMENDED` - Bị sửa đổi/bổ sung).
-- [ ] **Task 1.4: Thiết kế Database PostgreSQL + `pgvector`**
+- [x] **Task 1.4: Thiết kế Database PostgreSQL + `pgvector`**
   - Bảng `Users` & `ChatSessions` & `ChatMessages` (quản lý người dùng, phiên hội thoại và danh sách các trích dẫn đi kèm từng câu trả lời).
   - Bảng `LegalDocuments` (lưu nguyên văn và metadata của văn bản luật).
   - Bảng `LegalChunks` (lưu từng đoạn luật đã cắt nhỏ, kèm cột `embedding vector(1024)` và cột `search_vector tsvector`).
@@ -38,7 +38,7 @@
 ### GIAI ĐOẠN 2: Pipeline Xử lý Ngôn ngữ Luật — Legal Chunking & Embedding (Tuần 3 – Tuần 4)
 *Mục tiêu: Giải quyết bài toán cắt văn bản luật không làm đứt gãy ngữ cảnh pháp lý của từng Điều/Khoản.*
 
-- [ ] **Task 2.1: Phân tách Văn bản theo Cấu trúc Phân cấp (Hierarchical Chunking)**
+- [x] **Task 2.1: Phân tách Văn bản theo Cấu trúc Phân cấp (Hierarchical Chunking)**
   - Xây dựng bộ phân tích cú pháp (Parser) bằng Regex nhận diện đúng cấu trúc văn bản hành chính Việt Nam: **Phần → Chương → Mục → Điều → Khoản → Điểm**.
   - **Quy tắc bảo toàn ngữ cảnh:** Mỗi đoạn dữ liệu (`chunk`) sau khi cắt bắt buộc phải được gắn thêm tiền tố ngữ cảnh ở đầu đoạn (VD: `[Văn bản: Nghị định 168/2024/NĐ-CP | Chương II | Điều 7: Xử phạt người điều khiển xe mô tô...]`) để mô hình nhúng hiểu trọn vẹn chủ thể áp dụng.
 - [ ] **Task 2.2: Tạo Vector nhúng (Embedding) & Chỉ mục tìm kiếm**

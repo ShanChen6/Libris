@@ -27,39 +27,12 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Literal
 
+from app.pipeline.vn import fz as _fz
+
 Status = Literal["ACTIVE", "EXPIRED", "AMENDED", "PENDING"]
 RelationType = Literal["replaces", "repeals_part", "amends", "sets_effective_date"]
 
-# --- Regex chịu lỗi dấu của OCR -------------------------------------------------------------
-# OCR tiếng Việt hay nhầm dấu ("hệt hiệu lực", "bỗ sung", "Điêu"), nên các cụm từ khóa được so khớp
-# theo "họ" chữ cái: mọi biến thể dấu của cùng một chữ cái gốc đều được chấp nhận.
-_VN_LETTERS = "aàáảãạăằắẳẵặâầấẩẫậeèéẻẽẹêềếểễệiìíỉĩịoòóỏõọôồốổỗộơờớởỡợuùúủũụưừứửữựyỳýỷỹỵdđ"
-
-
-def _base_letter(c: str) -> str:
-    return "d" if c in "đĐ" else unicodedata.normalize("NFD", c.lower())[0]
-
-
-_FAMILIES: dict[str, set[str]] = {}
-for _ch in _VN_LETTERS:
-    _FAMILIES.setdefault(_base_letter(_ch), set()).update({_ch, _ch.upper()})
-
-
-def _fz(phrase: str) -> str:
-    """Regex khớp ``phrase`` bất kể sai lệch dấu và hoa/thường."""
-    out: list[str] = []
-    for c in phrase:
-        if c == " ":
-            out.append(r"\s+")
-        elif c.lower() in _VN_LETTERS:
-            out.append("[" + "".join(sorted(_FAMILIES[_base_letter(c)])) + "]")
-        elif c.isalpha():
-            out.append(f"[{c.lower()}{c.upper()}]")
-        else:
-            out.append(re.escape(c))
-    return "".join(out)
-
-
+# --- Regex chịu lỗi dấu của OCR (xem app.pipeline.vn.fz) -----------------------------------
 _KINDS = [
     "Bộ luật", "Luật", "Pháp lệnh", "Nghị quyết", "Nghị định", "Quyết định",
     "Thông tư liên tịch", "Thông tư",

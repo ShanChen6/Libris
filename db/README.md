@@ -115,3 +115,23 @@ erDiagram
   HNSW một lần trên dữ liệu có sẵn nhanh hơn nhiều so với cập nhật dần khi chèn.
 - **`message_citations` lưu lại `document_number` và `label`**, đồng thời `chunk_id` chuyển thành
   `NULL` khi chunk bị cắt lại. Nhờ vậy lịch sử hội thoại cũ vẫn hiển thị đúng trích dẫn.
+
+## Lưu ý khi cắt `full_text` bằng SQL
+
+`full_text` của văn bản dài được PostgreSQL nén (TOAST). Với cột nén, `substr(full_text, s, n)`
+chỉ giải nén một lát byte, và có thể báo lỗi `invalid byte sequence for encoding "UTF8"` khi lát
+đó cắt ngang một ký tự tiếng Việt nhiều byte. Lỗi đã được tái hiện trên PostgreSQL 17.8; dữ liệu
+không hề sai.
+
+Để lấy nguyên văn một đoạn luật, hãy dùng `legal_chunks.content` (đã bằng đúng
+`full_text[char_start:char_end]`). Nếu buộc phải cắt trong SQL, ép giải nén toàn bộ trước:
+
+```sql
+SELECT substr(d.full_text || '', c.char_start + 1, c.char_end - c.char_start)
+FROM legal_chunks c JOIN legal_documents d ON d.id = c.document_id;
+```
+
+Lưu ý thêm: `char_start`/`char_end` tính theo **ký tự** (code point), không theo byte. Phía
+JavaScript (Task 4.3) cần cắt theo code point (`Array.from(text)`), vì `String.slice` đếm theo
+UTF-16.
+

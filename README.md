@@ -77,6 +77,7 @@ cd libris-ai
 uv run python -m crawler crawl       # văn bản trong crawler/seeds.yaml -> libris-ai/data/
 uv run python -m crawler normalize   # chuẩn hóa metadata, trạng thái hiệu lực -> data/catalog.json
 uv run python -m crawler load-db     # nạp vào PostgreSQL
+uv run python -m app.pipeline chunk  # cắt văn bản theo Điều/Khoản/Điểm -> legal_chunks
 ```
 
 Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu ra: [libris-ai/crawler/README.md](libris-ai/crawler/README.md).

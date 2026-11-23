@@ -8,45 +8,11 @@ Test chạy trong một schema tạm và xóa schema đó khi xong.
 from __future__ import annotations
 
 import json
-import os
-import re
-import uuid
-from collections.abc import Iterator
 from pathlib import Path
-from urllib.parse import quote
 
 import psycopg
-import pytest
 
 from crawler.db import load
-
-DB_URL = os.environ.get("LIBRIS_TEST_DATABASE_URL")
-MIGRATIONS = Path(__file__).resolve().parents[3] / "db" / "migrations"
-
-pytestmark = pytest.mark.skipif(not DB_URL, reason="cần LIBRIS_TEST_DATABASE_URL")
-
-
-def _up_sql(path: Path) -> str:
-    text = path.read_text(encoding="utf-8")
-    return re.split(r"^-- migrate:down", text, flags=re.MULTILINE)[0]
-
-
-@pytest.fixture
-def conninfo() -> Iterator[str]:
-    assert DB_URL
-    schema = f"test_{uuid.uuid4().hex[:8]}"
-    with psycopg.connect(DB_URL, autocommit=True) as conn:
-        conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
-        conn.execute(f"CREATE SCHEMA {schema}")
-        conn.execute(f"SET search_path TO {schema}, public")
-        for path in sorted(MIGRATIONS.glob("*.sql")):
-            conn.execute(_up_sql(path).replace("CREATE EXTENSION IF NOT EXISTS vector;", ""))
-    sep = "&" if "?" in DB_URL else "?"
-    try:
-        yield f"{DB_URL}{sep}options={quote(f'-csearch_path={schema},public')}"
-    finally:
-        with psycopg.connect(DB_URL, autocommit=True) as conn:
-            conn.execute(f"DROP SCHEMA {schema} CASCADE")
 
 
 def _write_data(tmp_path: Path, text: str) -> tuple[Path, Path]:
@@ -102,7 +68,8 @@ def _write_data(tmp_path: Path, text: str) -> tuple[Path, Path]:
     return catalog_path, processed
 
 
-def test_load_documents_and_relations(conninfo: str, tmp_path: Path) -> None:
+def test_load_documents_and_relations(pg_conninfo: str, tmp_path: Path) -> None:
+    conninfo = pg_conninfo
     catalog_path, processed = _write_data(tmp_path, "Điều 1. Phạm vi điều chỉnh")
     res = load(conninfo, catalog_path, processed)
     assert (res.inserted, res.updated, res.relations) == (1, 0, 1)
@@ -117,7 +84,8 @@ def test_load_documents_and_relations(conninfo: str, tmp_path: Path) -> None:
         assert rel == [("23/2008/QH12", "replaces")]
 
 
-def test_reload_invalidates_chunks_only_when_text_changes(conninfo: str, tmp_path: Path) -> None:
+def test_reload_invalidates_chunks_only_when_text_changes(pg_conninfo: str, tmp_path: Path) -> None:
+    conninfo = pg_conninfo
     catalog_path, processed = _write_data(tmp_path, "Điều 1. Phạm vi điều chỉnh")
     load(conninfo, catalog_path, processed)
     with psycopg.connect(conninfo) as conn:
