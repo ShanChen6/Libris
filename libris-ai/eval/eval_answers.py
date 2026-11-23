@@ -43,6 +43,7 @@ from golden import GoldenItem, has_fact, load_golden, matches  # noqa: E402
 RESULTS = ROOT / "results"
 ANSWERS = RESULTS / "answers.jsonl"
 RAGAS = RESULTS / "ragas.jsonl"
+REPORT = RESULTS / "answers_report.json"
 _TAG_RE = re.compile(r"\[[^\[\]]*\d{1,4}/\d{4}/[^\]]*\]")
 
 
@@ -258,9 +259,7 @@ def report(items: list[GoldenItem]) -> dict:
         if "facts_ok" in r:
             by_type[r["type"]].append(r["facts_ok"])
     summary["accuracy_by_type"] = {t: statistics.mean(v) for t, v in sorted(by_type.items())}
-    (RESULTS / "answers_report.json").write_text(
-        json.dumps({"summary": summary, "rows": rows}, ensure_ascii=False, indent=1)
-    )
+    REPORT.write_text(json.dumps({"summary": summary, "rows": rows}, ensure_ascii=False, indent=1))
     return summary
 
 
@@ -271,7 +270,15 @@ def main() -> None:
     parser.add_argument("--sleep", type=float, default=4.0, help="giây nghỉ giữa các lượt gọi LLM")
     parser.add_argument("--judge-model", help="mô hình giám khảo RAGAS (mặc định LLM_MODEL)")
     parser.add_argument("--ids", nargs="*", help="chỉ chạy các câu này")
+    parser.add_argument(
+        "--run", default="", help="tên lượt chạy: lưu vào answers_<run>.jsonl (so sánh cấu hình)"
+    )
     args = parser.parse_args()
+    if args.run:
+        global ANSWERS, RAGAS, REPORT
+        ANSWERS = RESULTS / f"answers_{args.run}.jsonl"
+        RAGAS = RESULTS / f"ragas_{args.run}.jsonl"
+        REPORT = RESULTS / f"answers_report_{args.run}.json"
     items = load_golden()
     if args.ids:
         items = [i for i in items if i.id in set(args.ids)]

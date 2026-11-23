@@ -64,6 +64,9 @@ CONFIGS = {
     "hybrid_kw0.25_rerank10": Config(
         SearchWeights(vector=1, keyword=0.25), rerank=True, candidates=10
     ),
+    "hybrid_kw0.25_rerank20": Config(
+        SearchWeights(vector=1, keyword=0.25), rerank=True, candidates=20
+    ),
     "hybrid_rerank10": Config(SearchWeights(), rerank=True, candidates=10),
     "hybrid_rerank20": Config(SearchWeights(), rerank=True, candidates=20),
 }
