@@ -62,6 +62,7 @@ class HitOut(BaseModel):
     ref_rank: int | None
     rerank_score: float | None  # độ liên quan [0, 1] do cross-encoder chấm
     hybrid_rank: int | None  # thứ hạng trước khi rerank
+    document_id: str | None = None
 
 
 class SearchResponse(BaseModel):

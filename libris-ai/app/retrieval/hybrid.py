@@ -77,6 +77,8 @@ class FusedHit:
     # Do reranker (Task 3.3) gán: điểm liên quan [0, 1] và thứ hạng trước khi rerank
     rerank_score: float | None = None
     hybrid_rank: int | None = None
+    # Văn bản chứa đoạn: để giao diện mở nguyên văn (Task 4.3)
+    document_id: str | None = None
 
     @property
     def citation(self) -> str:
@@ -183,7 +185,8 @@ SELECT c.id, d.document_number, d.title, d.status::text, d.effective_date, d.exp
                  FROM superseded_provisions sp
                  WHERE sp.target_number = d.document_number AND sp.article = c.article
                    AND (sp.clause = '' OR c.clause IS NULL OR sp.clause = c.clause)),
-                '{{}}') AS superseded_by
+                '{{}}') AS superseded_by,
+       d.id
 FROM fused f
 JOIN legal_chunks c ON c.id = f.id
 JOIN legal_documents d ON d.id = c.document_id
@@ -269,6 +272,7 @@ def hybrid_search(
             ref_rank=r[16],
             replaced_by=list(r[17] or []),
             superseded_by=list(r[18] or []),
+            document_id=str(r[19]),
         )
         for r in rows
     ]

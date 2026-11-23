@@ -55,6 +55,12 @@ class Settings(BaseSettings):
     upload_dir: str = "data/uploads"
     max_upload_mb: int = 30
 
+    # Phân tích hợp đồng người dùng tải lên (Task 4.4)
+    analysis_max_upload_mb: int = 10
+    analysis_max_chars: int = 60_000  # phần vượt quá không đưa cho LLM (báo trong warnings)
+    analysis_max_issues: int = 6  # mỗi điểm tốn một lượt tra luật (~8 giây trên CPU)
+    analysis_passages_per_issue: int = 3
+
 
 @lru_cache
 def get_settings() -> Settings:

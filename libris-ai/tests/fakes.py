@@ -51,11 +51,13 @@ class FakeLLM:
     def __init__(self, reply) -> None:
         self.reply = reply
         self.calls: list[list] = []
+        self.json_modes: list[bool] = []
 
-    def complete(self, messages):
+    def complete(self, messages, *, json_mode=False, max_tokens=None):
         from app.generation.llm import Completion
 
         self.calls.append(messages)
+        self.json_modes.append(json_mode)
         text = self.reply(messages) if callable(self.reply) else self.reply
         return Completion(text=text, model="fake-llm", usage={"total_tokens": 1})
 

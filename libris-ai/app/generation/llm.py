@@ -39,7 +39,11 @@ class Completion:
 
 
 class LLMClient(Protocol):
-    def complete(self, messages: list[Message]) -> Completion: ...
+    def complete(
+        self, messages: list[Message], *, json_mode: bool = False, max_tokens: int | None = None
+    ) -> Completion:
+        """``json_mode``: yêu cầu mô hình trả về một đối tượng JSON (Task 4.4)."""
+        ...
 
     def stream(self, messages: list[Message]) -> Iterator[str]:
         """Từng mẩu văn bản theo thời gian thực (dùng cho SSE, Task 4.2)."""
@@ -79,14 +83,24 @@ class OpenAICompatibleClient:
             transport=transport,
         )
 
-    def _payload(self, model: str, messages: list[Message], stream: bool) -> dict[str, Any]:
+    def _payload(
+        self,
+        model: str,
+        messages: list[Message],
+        stream: bool,
+        *,
+        json_mode: bool = False,
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
         payload: dict[str, Any] = {
             "model": model,
             "messages": [{"role": m.role, "content": m.content} for m in messages],
             "temperature": self.temperature,
-            "max_tokens": self.max_tokens,
+            "max_tokens": max_tokens or self.max_tokens,
             "stream": stream,
         }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
         if self.reasoning_effort:
             payload["reasoning_effort"] = self.reasoning_effort
         return payload
@@ -114,7 +128,9 @@ class OpenAICompatibleClient:
         """True: thử mô hình kế tiếp / vòng sau; False: lỗi không phục hồi được (VD 400, 401)."""
         return status in FALLBACK_STATUS
 
-    def complete(self, messages: list[Message]) -> Completion:
+    def complete(
+        self, messages: list[Message], *, json_mode: bool = False, max_tokens: int | None = None
+    ) -> Completion:
         last = ""
         skip: set[str] = set()
         for model in self._attempts():
@@ -123,7 +139,10 @@ class OpenAICompatibleClient:
             started = time.monotonic()
             try:
                 resp = self._http.post(
-                    "chat/completions", json=self._payload(model, messages, False)
+                    "chat/completions",
+                    json=self._payload(
+                        model, messages, False, json_mode=json_mode, max_tokens=max_tokens
+                    ),
                 )
             except httpx.TransportError as exc:
                 last = f"{model}: {exc}"

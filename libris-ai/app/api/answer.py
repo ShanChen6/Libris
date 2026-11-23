@@ -44,6 +44,7 @@ class CitationOut(BaseModel):
     char_start: int
     char_end: int
     superseded_by: list[str]
+    document_id: str | None
 
 
 class AnswerResponse(BaseModel):
@@ -76,6 +77,7 @@ def _citations(res: AnswerResult) -> list[CitationOut]:
             char_start=c.hit.char_start,
             char_end=c.hit.char_end,
             superseded_by=c.hit.superseded_by,
+            document_id=c.hit.document_id,
         )
         for c in res.citations
         if c.hit is not None

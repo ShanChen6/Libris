@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api import answer, health, ingest, search
+from app.api import analyze, answer, health, ingest, search
 from app.api.deps import InternalAuth
 from app.core.config import get_settings
 from app.pipeline.embedding import get_embedder
@@ -32,3 +32,4 @@ app.include_router(health.router)
 app.include_router(search.router, dependencies=[InternalAuth])
 app.include_router(answer.router, dependencies=[InternalAuth])
 app.include_router(ingest.router, dependencies=[InternalAuth])
+app.include_router(analyze.router, dependencies=[InternalAuth])
