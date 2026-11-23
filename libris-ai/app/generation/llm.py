@@ -68,6 +68,9 @@ class OpenAICompatibleClient:
         self.reasoning_effort = reasoning_effort
         self.retries = retries
         self.last_model: str | None = None  # mô hình phục vụ lần gọi gần nhất
+        # Lý do dừng của lần gọi gần nhất: "stop" là bình thường; "length", "content_filter"
+        # (Gemini chặn khi chép nguyên văn quá dài)... là câu trả lời có thể bị cắt dở
+        self.last_finish_reason: str | None = None
         headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         self._http = httpx.Client(
             base_url=base_url.rstrip("/") + "/",
@@ -128,6 +131,7 @@ class OpenAICompatibleClient:
             if resp.status_code == 200:
                 data = resp.json()
                 self.last_model = data.get("model", model)
+                self.last_finish_reason = data["choices"][0].get("finish_reason")
                 text = data["choices"][0]["message"].get("content") or ""
                 return Completion(
                     text=text,
@@ -157,6 +161,7 @@ class OpenAICompatibleClient:
                             raise LLMError(last)
                         continue
                     self.last_model = model
+                    self.last_finish_reason = None
                     for line in resp.iter_lines():
                         if not line.startswith("data:"):
                             continue
@@ -165,6 +170,8 @@ class OpenAICompatibleClient:
                             return
                         chunk = json.loads(data)
                         for choice in chunk.get("choices", []):
+                            if choice.get("finish_reason"):
+                                self.last_finish_reason = choice["finish_reason"]
                             delta = (choice.get("delta") or {}).get("content")
                             if delta:
                                 yield delta

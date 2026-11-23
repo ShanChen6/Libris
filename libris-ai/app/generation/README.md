@@ -3,7 +3,7 @@
 ```bash
 cd libris-ai
 uv run python -m app.pipeline ask "Thời gian thử việc tối đa là bao lâu?"
-uv run uvicorn app.main:app --port 8000      # POST /answer, xem /docs
+uv run uvicorn app.main:app --port 8000      # POST /answer, POST /answer/stream, xem /docs
 ```
 
 ```http
@@ -15,6 +15,15 @@ Kết quả gồm `answer` (có thẻ trích dẫn), `citations` (các trích d�
 trí thẻ trong câu trả lời, `char_start`/`char_end` trong nguyên văn để bôi vàng ở Task 4.3),
 `refused` và `refusal_reason`, `warnings`, `sources` (các đoạn luật đã đưa cho LLM), `model`,
 `usage` và `timings`.
+
+`POST /answer/stream` trả cùng nội dung dưới dạng Server-Sent Events (Task 4.2): `meta`
+(`{plan, sources}` ngay sau truy xuất), nhiều `delta` (`{text}`), rồi `done` (toàn bộ kết quả như
+`POST /answer`) hoặc `error`. Đầu câu trả lời được giữ lại đến khi chắc chắn không phải `TỪ CHỐI`.
+Bản trong `done` mới là bản chính thức: đã xác minh trích dẫn, có thể thêm cảnh báo hiệu lực hoặc
+bị thay bằng lời từ chối.
+
+Nếu LLM dừng sớm (`finish_reason` khác `stop`, VD Gemini chặn vì `RECITATION`), câu trả lời được
+cắt dòng gạch đầu dòng dở và thêm cảnh báo "Câu trả lời có thể chưa đầy đủ".
 
 ## Cấu hình LLM
 
@@ -85,7 +94,7 @@ trong ngữ cảnh. Khi đó `service.retrieve()`:
 
 ## Giới hạn
 
-- Câu hỏi được xử lý độc lập; chưa có hội thoại nhiều lượt. Câu hỏi nối tiếp kiểu "còn ô tô thì
-  sao?" cần viết lại câu hỏi dựa trên lịch sử (làm ở giai đoạn 4 cùng lưu lịch sử hội thoại).
+- Câu hỏi được xử lý độc lập. Lịch sử hội thoại đã được lưu (Task 4.2) nhưng chưa đưa vào LLM, nên
+  câu hỏi nối tiếp kiểu "còn ô tô thì sao?" cần viết lại câu hỏi dựa trên lịch sử.
 - Văn bản bản OCR (`needs_review`) có thể sai số hoặc dấu; câu trả lời chép nguyên văn nên cũng mang
   theo lỗi đó. Trước khi demo nên rà soát các đoạn luật hay được trích dẫn.

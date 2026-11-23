@@ -112,3 +112,21 @@ def test_no_auth_header_without_key() -> None:
     assert c.complete([Message("user", "u")]).text
     with pytest.raises(ValueError):
         OpenAICompatibleClient(base_url="https://x/v1", models=[])
+
+
+def test_finish_reason_is_recorded() -> None:
+    def handler(req: httpx.Request) -> httpx.Response:
+        if json.loads(req.content)["stream"]:
+            return httpx.Response(
+                200,
+                text='data: {"choices":[{"delta":{"content":"a"}}]}\n'
+                'data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n',
+            )
+        return httpx.Response(200, json={"model": "m1", "choices": [
+            {"message": {"content": "x"}, "finish_reason": "stop"}]})  # fmt: skip
+
+    client = _client(handler)
+    client.complete([Message("user", "u")])
+    assert client.last_finish_reason == "stop"
+    assert "".join(client.stream([Message("user", "u")])) == "a"
+    assert client.last_finish_reason == "length" and client.last_model == "m1"

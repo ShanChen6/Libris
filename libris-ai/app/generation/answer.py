@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -143,10 +144,22 @@ def messages_for(prep: Prepared) -> list:
     return build_messages(prep.question, prep.hits, prep.plan, prep.today)
 
 
-def finalize(prep: Prepared, raw_text: str, model: str | None, usage: dict[str, int]):
+_DANGLING_RE = re.compile(r"\n\s*(?:[*•\-]|\d+\.)?\s*$")
+
+
+def finalize(
+    prep: Prepared,
+    raw_text: str,
+    model: str | None,
+    usage: dict[str, int],
+    finish_reason: str | None = None,
+):
     """Lớp 3: nhận diện từ chối, xác minh trích dẫn, gắn cảnh báo hiệu lực."""
     question, plan, hits = prep.question, prep.plan, prep.hits
     text = raw_text.strip()
+    truncated = finish_reason not in (None, "stop")
+    if truncated:
+        text = _DANGLING_RE.sub("", text)  # bỏ gạch đầu dòng dở dang ở cuối
     meta = {"model": model, "usage": usage, "timings": prep.timings}
 
     if is_refusal(text):
@@ -170,6 +183,11 @@ def finalize(prep: Prepared, raw_text: str, model: str | None, usage: dict[str, 
     notices = validity_notices(valid)
     if notices:
         text += "\n\n" + "\n".join(f"⚠️ {n}" for n in notices)
+    if truncated:
+        warnings.append(
+            f"Câu trả lời có thể chưa đầy đủ: mô hình dừng sớm ({finish_reason}). "
+            "Hãy xem trực tiếp các điều luật được trích dẫn."
+        )
     if any(c.hit and c.hit.superseded_by for c in valid) and plan.mode == "current":
         warnings.append("Có trích dẫn tới Điều/Khoản đã bị bãi bỏ hoặc sửa đổi.")
     return AnswerResult(question, text, False, None, plan, hits, valid, warnings, **meta)
@@ -201,7 +219,9 @@ def answer_question(
     started = time.monotonic()
     completion: Completion = llm.complete(messages_for(prep))
     prep.timings["llm"] = time.monotonic() - started
-    return finalize(prep, completion.text, completion.model, completion.usage)
+    return finalize(
+        prep, completion.text, completion.model, completion.usage, _finish_reason_of(llm)
+    )
 
 
 StreamEvent = tuple[str, Any]
@@ -261,7 +281,11 @@ def stream_answer(
     if not decided and pending and not is_refusal(pending):
         yield "delta", pending  # câu trả lời ngắn hơn độ dài chữ "TỪ CHỐI"
     prep.timings["llm"] = time.monotonic() - started
-    yield "done", finalize(prep, "".join(parts), _model_of(llm), {})
+    yield "done", finalize(prep, "".join(parts), _model_of(llm), {}, _finish_reason_of(llm))
+
+
+def _finish_reason_of(llm: LLMClient) -> str | None:
+    return getattr(llm, "last_finish_reason", None)
 
 
 def _model_of(llm: LLMClient) -> str | None:

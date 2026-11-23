@@ -204,3 +204,15 @@ def test_stream_endpoint(seeded) -> None:  # noqa: F811
     done = events[-1][1]
     assert events[-1][0] == "done" and done["refused"] is False and done["citations"]
     assert done["answer"].startswith("".join(d["text"] for k, d in events if k == "delta"))
+
+
+def test_truncated_answer_is_flagged(seeded) -> None:  # noqa: F811
+    class Cut(FakeLLM):
+        last_finish_reason = "content_filter"
+
+    res = _ask(seeded, "gương chiếu hậu", Cut(lambda m: _cite_first(m) + "\n  *"))
+    assert not res.refused and not res.answer.rstrip().endswith("*")
+    assert any("chưa đầy đủ" in w and "content_filter" in w for w in res.warnings)
+    events = _stream(seeded, "gương chiếu hậu", Cut(lambda m: _cite_first(m) + "\n2."))
+    assert any("chưa đầy đủ" in w for w in events[-1][1].warnings)
+    assert not events[-1][1].answer.endswith("2.")
