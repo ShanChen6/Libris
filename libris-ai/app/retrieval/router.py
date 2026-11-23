@@ -58,6 +58,9 @@ _FULL_DATE_RE = re.compile(
     + fz("năm") + r"\s+((?:19|20)\d{2})"
 )  # fmt: skip
 _YEAR_RE = re.compile(r"(" + _DATE_CUE + r")\s+" + fz("năm") + r"\s+((?:19|20)\d{2})\b")
+# "Năm 2023, ..." ở đầu câu / đầu vế: cũng là mốc thời gian (Golden Dataset GD-028, GD-088).
+# Năm trong tên văn bản ("Luật Đất đai năm 2013") đã bị loại trước khi xét mốc thời gian.
+_LEADING_YEAR_RE = re.compile(r"(?:^|[,;:.]\s*)(" + fz("năm") + r")\s+((?:19|20)\d{2})\b")
 
 
 @dataclass
@@ -92,10 +95,10 @@ def _period(query: str) -> tuple[tuple[date, date], str] | None:
         day = _safe_date(int(y), int(mth), int(d))
         if day:
             return _range_for_cue(cue, day, day), m.group(0)
-    m = _YEAR_RE.search(query)
+    m = _YEAR_RE.search(query) or _LEADING_YEAR_RE.search(query.strip())
     if m:
         y = int(m.group(2))
-        return _range_for_cue(m.group(1), date(y, 1, 1), date(y, 12, 31)), m.group(0)
+        return _range_for_cue(m.group(1), date(y, 1, 1), date(y, 12, 31)), m.group(0).strip(" ,;:.")
     return None
 
 

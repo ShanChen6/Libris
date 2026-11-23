@@ -54,12 +54,26 @@ def test_named_documents_with_year(query: str, named: tuple[str, str, int]) -> N
         ("vào ngày 1 tháng 8 năm 2024 thì sao", (date(2024, 8, 1), date(2024, 8, 1))),
         ("Trước ngày 1/1/2025 không đội mũ bảo hiểm", (date(2024, 12, 31), date(2024, 12, 31))),
         ("Sau ngày 31/12/2024 thì phạt bao nhiêu", (date(2025, 1, 1), date(2025, 1, 1))),
+        # Năm ở đầu câu / đầu vế (lỗi phát hiện bằng Golden Dataset)
+        (
+            "Năm 2023 đi xe máy không đội mũ bảo hiểm bị phạt bao nhiêu?",
+            (date(2023, 1, 1), date(2023, 12, 31)),
+        ),
+        (
+            "Cho hỏi, năm 2020 thời hạn giao đất nông nghiệp là bao lâu?",
+            (date(2020, 1, 1), date(2020, 12, 31)),
+        ),
     ],
 )
 def test_point_in_time(query: str, period: tuple[date, date]) -> None:
     plan = route(query)
     assert plan.mode == "point_in_time"
     assert plan.period == period
+
+
+def test_year_inside_text_is_not_a_period() -> None:
+    assert route("Bộ luật Lao động năm 2019 quy định thử việc thế nào?").period is None
+    assert route("Phạt từ 400.000 đồng, áp dụng từ 2025").period is None
 
 
 def test_invalid_date_is_ignored() -> None:
