@@ -387,6 +387,25 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
     ]);
     expect(events[0].data).toMatchObject({ sessionId });
     expect(events[3].data.messageId).toEqual(expect.any(String));
+    expect(events[3].data.citations[0].document_id).toBe(chunk[0].id);
+
+    // Ngăn xem văn bản gốc: nguyên văn + vị trí đoạn được trích dẫn (Task 4.3)
+    const source = await http()
+      .get(`/documents/${chunk[0].id}/text`)
+      .set(auth)
+      .expect(200);
+    expect(source.body).toMatchObject({
+      documentNumber: '168/2024/NĐ-CP',
+      fullText: 'xxx Phạt tiền 400.000 đồng',
+    });
+    expect([...source.body.fullText].slice(4, 26).join('')).toBe(
+      'Phạt tiền 400.000 đồng',
+    );
+    await http()
+      .get('/documents/00000000-0000-4000-8000-000000000000/text')
+      .set(auth)
+      .expect(404);
+    await http().get(`/documents/${chunk[0].id}/text`).expect(401);
     expect(ai.streamAnswer.mock.calls[0][0]).toBe(
       'Xe máy không có gương chiếu hậu bị phạt bao nhiêu?',
     );

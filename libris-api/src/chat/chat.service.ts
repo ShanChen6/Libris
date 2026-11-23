@@ -27,7 +27,7 @@ export class ChatService {
 
   /**
    * Luồng SSE cho một câu hỏi: `start` → `meta` → `delta`* → `done` (kèm `messageId` của câu trả
-   * lời đã lưu) hoặc `error`. Người dùng đóng trang giữa chừng: request tới libris-ai bị hủy và
+   * lời đã lưu và `document_id` của từng trích dẫn) hoặc `error`. Người dùng đóng trang giữa chừng: request tới libris-ai bị hủy và
    * câu trả lời dở dang không được lưu.
    */
   async *ask(
@@ -49,9 +49,17 @@ export class ChatService {
       for await (const event of parseSse(body)) {
         if (event.event === 'done') {
           const result = JSON.parse(event.data) as DoneEvent;
-          const messageId = await this.saveAnswer(sessionId, result);
+          const saved = await this.saveAnswer(sessionId, result);
           finished = true;
-          yield formatSse('done', { ...result, messageId });
+          yield formatSse('done', {
+            ...result,
+            // document_id để giao diện mở nguyên văn văn bản được trích dẫn (Task 4.3)
+            citations: result.citations.map((c) => ({
+              ...c,
+              document_id: saved.documentIds[c.chunk_id] ?? null,
+            })),
+            messageId: saved.id,
+          });
           return;
         }
         if (event.event === 'error') {

@@ -51,7 +51,10 @@ describe('ChatService', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     repo.addUserMessage.mockResolvedValue('u1');
-    repo.addAssistantMessage.mockResolvedValue('a1');
+    repo.addAssistantMessage.mockResolvedValue({
+      id: 'a1',
+      documentIds: { c1: 'd1' },
+    });
   });
 
   it('relays the stream and saves the verified answer with its citations', async () => {
@@ -69,9 +72,11 @@ describe('ChatService', () => {
       'event: delta',
       'event: done',
     ]);
-    expect(JSON.parse(events[3].split('\n')[1].slice(6))).toMatchObject({
-      messageId: 'a1',
-      refused: false,
+    const done = JSON.parse(events[3].split('\n')[1].slice(6));
+    expect(done).toMatchObject({ messageId: 'a1', refused: false });
+    expect(done.citations[0]).toMatchObject({
+      chunk_id: 'c1',
+      document_id: 'd1',
     });
     const [sessionId, content, metadata, citations] =
       repo.addAssistantMessage.mock.calls[0];

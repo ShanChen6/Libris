@@ -73,6 +73,16 @@ export class DocumentsRepository {
     };
   }
 
+  /** Nguyên văn văn bản – để xem và bôi vàng đoạn được trích dẫn (Task 4.3). */
+  async fullText(id: string): Promise<string | null> {
+    if (!isUuid(id)) return null;
+    const { rows } = await this.db.query<{ full_text: string }>(
+      'SELECT full_text FROM legal_documents WHERE id = $1',
+      [id],
+    );
+    return rows[0]?.full_text ?? null;
+  }
+
   /**
    * Xóa văn bản (đoạn luật xóa theo khóa ngoại) cùng các quan hệ do nó quy định, rồi tính lại
    * trạng thái hiệu lực: VD xóa luật mới thì luật cũ nó thay thế trở lại ACTIVE.

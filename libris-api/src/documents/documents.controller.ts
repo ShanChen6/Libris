@@ -23,6 +23,21 @@ export class DocumentsController {
     return this.documents.list(query);
   }
 
+  /**
+   * Chi tiết văn bản kèm nguyên văn (`fullText`). `char_start`/`char_end` của đoạn luật tính theo
+   * code point trong `fullText` (JS: cắt bằng `Array.from`, không dùng `String.slice`).
+   */
+  @Get(':id/text')
+  async text(@Param('id') id: string) {
+    const [doc, fullText] = await Promise.all([
+      this.documents.findById(id),
+      this.documents.fullText(id),
+    ]);
+    if (!doc || fullText === null)
+      throw new NotFoundException('Không tìm thấy văn bản');
+    return { ...doc, fullText };
+  }
+
   @Get(':id')
   async get(@Param('id') id: string) {
     const doc = await this.documents.findById(id);

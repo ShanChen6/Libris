@@ -126,7 +126,7 @@ export class ChatRepository {
     content: string,
     metadata: Record<string, unknown>,
     citations: SavedCitation[],
-  ): Promise<string> {
+  ): Promise<{ id: string; documentIds: Record<string, string> }> {
     return this.db.transaction(async (tx) => {
       const { rows } = await tx.query<{ id: string }>(
         `INSERT INTO chat_messages (session_id, role, content, metadata)
@@ -134,13 +134,16 @@ export class ChatRepository {
         [sessionId, content, metadata],
       );
       const messageId = rows[0].id;
+      // chunk_id -> document_id, để giao diện mở được văn bản gốc của từng trích dẫn (Task 4.3)
+      const documentIds: Record<string, string> = {};
       for (const c of citations) {
-        await tx.query(
+        const saved = await tx.query<{ document_id: string | null }>(
           `INSERT INTO message_citations
              (message_id, position, chunk_id, document_id, document_number, label, quote, score)
            VALUES ($1, $2,
              (SELECT id FROM legal_chunks WHERE id = $3::uuid),
-             (SELECT id FROM legal_documents WHERE document_number = $4), $4, $5, $6, $7)`,
+             (SELECT id FROM legal_documents WHERE document_number = $4), $4, $5, $6, $7)
+           RETURNING document_id`,
           [
             messageId,
             c.position,
@@ -151,12 +154,14 @@ export class ChatRepository {
             c.score,
           ],
         );
+        const documentId = saved.rows[0]?.document_id;
+        if (documentId && c.chunkId) documentIds[c.chunkId] = documentId;
       }
       await tx.query(
         'UPDATE chat_sessions SET updated_at = now() WHERE id = $1',
         [sessionId],
       );
-      return messageId;
+      return { id: messageId, documentIds };
     });
   }
 }

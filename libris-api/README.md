@@ -37,6 +37,7 @@ báo quyền bị từ chối.
 | `GET /auth/me` | đã đăng nhập | người dùng hiện tại |
 | `GET /documents?status=ACTIVE,AMENDED&type=Luật&q=đất đai` | đã đăng nhập | danh sách văn bản, kèm trạng thái hiệu lực và số đoạn |
 | `GET /documents/:id` | đã đăng nhập | chi tiết văn bản, quan hệ thay thế/sửa đổi, các Điều/Khoản bị bãi bỏ |
+| `GET /documents/:id/text` | đã đăng nhập | như trên, kèm nguyên văn `fullText` – cho ngăn xem văn bản gốc. `char_start`/`char_end` của đoạn luật tính theo code point (JS: `Array.from`) |
 | `POST /admin/documents` | ADMIN | multipart: `file` (.pdf/.doc/.docx), `documentNumber`, `title`, `documentType?`, `issuingBody?`, `signer?`, `issueDate?`, `effectiveDate?` → 202 `{ jobId, statusUrl }` |
 | `GET /admin/ingestions`, `GET /admin/ingestions/:id` | ADMIN | tiến trình xử lý: `queued → processing (extract, metadata, chunk, embed) → done / failed` |
 | `DELETE /admin/documents/:id` | ADMIN | xóa văn bản cùng các đoạn luật, tính lại trạng thái hiệu lực các văn bản liên quan |
@@ -76,7 +77,7 @@ libris-api lưu câu hỏi, gọi `POST /answer/stream` của libris-ai rồi ch
 | `start` | `{ userMessageId }` – gửi ngay, trước khi truy xuất |
 | `meta` | `{ plan, sources }` – các đoạn luật tìm được |
 | `delta` | `{ text }` – từng mẩu câu trả lời |
-| `done` | kết quả cuối như `POST /answer` của libris-ai (câu trả lời đã xác minh trích dẫn, `citations`, `warnings`, `refused`) kèm `messageId`. Client thay nội dung đã hiển thị bằng `answer` ở đây |
+| `done` | kết quả cuối như `POST /answer` của libris-ai (câu trả lời đã xác minh trích dẫn, `citations`, `warnings`, `refused`) kèm `messageId`; mỗi trích dẫn có thêm `document_id` để mở nguyên văn. Client thay nội dung đã hiển thị bằng `answer` ở đây |
 | `error` | `{ message }` |
 
 Câu trả lời và các trích dẫn đã xác minh được lưu vào `chat_messages` / `message_citations` khi
