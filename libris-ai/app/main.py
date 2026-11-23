@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api import health, search
+from app.api import answer, health, search
 from app.core.config import get_settings
 from app.pipeline.embedding import get_embedder
 from app.retrieval.rerank import get_reranker
@@ -28,3 +28,4 @@ app = FastAPI(
 
 app.include_router(health.router)
 app.include_router(search.router)
+app.include_router(answer.router)

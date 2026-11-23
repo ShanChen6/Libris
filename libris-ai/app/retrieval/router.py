@@ -112,6 +112,24 @@ def _range_for_cue(cue: str, start: date, end: date) -> tuple[date, date]:
     return start, end
 
 
+_COMPARE_FILLER_RE = re.compile(
+    r"(?:\b(?:" + "|".join(fz(p) for p in ["theo", "giữa", "của", "giữa các", "và"]) + r")\s+)?"
+    + r"(?:" + "|".join(fz(p) for p in ["quy định", "luật", "nghị định"]) + r")?\s*"
+    + r"(?:" + _COMPARE_RE.pattern + r")"
+    + r"(?:\s+(?:" + "|".join(fz(p) for p in ["và mới", "với hiện nay", "hiện nay", "hiện hành",
+                                              "và hiện hành", "so với"]) + r"))*"
+)  # fmt: skip
+
+
+def core_question(query: str) -> str:
+    """Bỏ các cụm chỉ ý so sánh ("So sánh ...", "theo quy định cũ và mới"...) để tìm kiếm theo
+    đúng nội dung được hỏi; các cụm này làm nhiễu cả vector lẫn reranker."""
+    core = _COMPARE_FILLER_RE.sub(" ", query)
+    core = re.sub(r"\s+", " ", core).strip(" ,.?")
+    core = re.sub(r"\s+(?:" + fz("so với") + "|" + fz("với") + r")$", "", core)
+    return core if len(core) >= 8 else query
+
+
 def route(query: str) -> RetrievalPlan:
     plan = RetrievalPlan()
     statuses = set(IN_FORCE)

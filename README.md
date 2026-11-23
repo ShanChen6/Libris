@@ -90,6 +90,13 @@ cd libris-ai
 uv run python -m app.pipeline search "Đi xe máy không có gương chiếu hậu bên trái có bị phạt không?"
 ```
 
+Hỏi đáp có trích dẫn (cần `LLM_API_KEY` trong `libris-ai/.env`, xem
+[libris-ai/app/generation/README.md](libris-ai/app/generation/README.md)):
+
+```bash
+uv run python -m app.pipeline ask "Thời gian thử việc tối đa là bao lâu?"
+```
+
 Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu ra: [libris-ai/crawler/README.md](libris-ai/crawler/README.md).
 
 ## Tài liệu

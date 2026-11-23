@@ -59,7 +59,7 @@
   - Bổ sung bộ nhận diện ý định (Query Router): Nếu người dùng hỏi so sánh luật cũ và mới, tự động mở rộng bộ lọc sang cả văn bản `EXPIRED`.
 - [x] **Task 3.3: Tái xếp hạng Kết quả (Cross-Encoder Reranking)**
   - Đưa Top 20 đoạn luật tìm được từ Hybrid Search qua mô hình Reranker (`bge-reranker-v2-m3`) để chấm điểm lại mức độ liên quan trực tiếp với câu hỏi, chọn ra **Top 5 đoạn luật tinh túy nhất**.
-- [ ] **Task 3.4: Thiết kế System Prompt Chống Ảo giác (Strict Citation Prompting)**
+- [x] **Task 3.4: Thiết kế System Prompt Chống Ảo giác (Strict Citation Prompting)**
   - Thiết lập quy tắc bắt buộc cho LLM:
     - Chỉ sử dụng thông tin nằm trong Top 5 đoạn luật được cung cấp.
     - Bắt buộc chèn thẻ trích dẫn chuẩn xác ngay sau mỗi luận điểm theo định dạng: `[Điều X, Khoản Y - Số hiệu văn bản]`.

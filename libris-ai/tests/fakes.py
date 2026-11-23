@@ -43,3 +43,21 @@ class FakeReranker:
             [len(words & set(p.lower().split())) / max(len(words), 1) for p in passages],
             dtype=np.float32,
         )
+
+
+class FakeLLM:
+    """LLM giả: trả về câu trả lời dựng sẵn (hoặc hàm của danh sách message)."""
+
+    def __init__(self, reply) -> None:
+        self.reply = reply
+        self.calls: list[list] = []
+
+    def complete(self, messages):
+        from app.generation.llm import Completion
+
+        self.calls.append(messages)
+        text = self.reply(messages) if callable(self.reply) else self.reply
+        return Completion(text=text, model="fake-llm", usage={"total_tokens": 1})
+
+    def stream(self, messages):
+        yield self.complete(messages).text

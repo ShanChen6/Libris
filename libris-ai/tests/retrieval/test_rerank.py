@@ -69,3 +69,17 @@ def test_retrieve_pipeline(seeded) -> None:  # noqa: F811
 
         no_rr = retrieve(conn, "gương chiếu hậu", emb, None, top_n=3)
         assert not no_rr.reranked and all(h.rerank_score is None for h in no_rr.hits)
+
+
+def test_balance_old_and_new() -> None:
+    from app.retrieval.service import balance_old_and_new
+
+    old = [_hit(i, "cũ") for i in range(1, 6)]
+    for h in old:
+        h.superseded_by = ["repealed:X"]
+    new = [_hit(i, "mới") for i in range(6, 8)]
+    picked = balance_old_and_new(old + new, 5)  # 5 đoạn cũ xếp trên, 2 đoạn mới xếp dưới
+    assert len(picked) == 5
+    assert sum(1 for h in picked if not h.superseded_by) == 2
+    assert [h.article for h in picked] == ["Điều 1", "Điều 2", "Điều 3", "Điều 6", "Điều 7"]
+    assert balance_old_and_new(old, 3) == old[:3]  # không có đoạn mới -> theo thứ hạng

@@ -44,6 +44,10 @@ def main() -> None:
     p_search.add_argument("--no-rerank", action="store_true", help="bỏ qua cross-encoder")
     p_search.add_argument("--candidates", type=int, help="số ứng viên đưa vào reranker")
 
+    p_ask = sub.add_parser("ask", help="hỏi đáp có trích dẫn (Task 3.4), cần LLM")
+    p_ask.add_argument("question")
+    p_ask.add_argument("--all-status", action="store_true", help="dùng cả văn bản hết hiệu lực")
+
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     conninfo = args.database_url or get_settings().database_url
@@ -116,6 +120,39 @@ def main() -> None:
                 note += f" (Điều/Khoản bị bãi bỏ/sửa đổi: {', '.join(h.superseded_by)})"
             print(f"\n{i}. [{ranks}] {h.citation} {h.status}{note}")
             print(f"   {' '.join(h.content.split())[:160]}")
+
+    elif args.cmd == "ask":
+        import psycopg
+
+        from app.generation.answer import answer_question
+        from app.generation.llm import get_llm
+        from app.pipeline.embedding import get_embedder
+        from app.retrieval.rerank import get_reranker
+        from app.retrieval.service import make_plan
+
+        settings = get_settings()
+        plan = make_plan(args.question, include_expired=True if args.all_status else None)
+        with psycopg.connect(conninfo) as conn:
+            res = answer_question(
+                conn,
+                args.question,
+                embedder=get_embedder(),
+                reranker=get_reranker(),
+                llm=get_llm(),
+                plan=plan,
+                candidates=settings.rerank_candidates,
+                top_n=settings.rerank_top_n,
+                min_rerank_score=settings.answer_min_rerank_score,
+            )
+        print(res.answer)
+        print(
+            f"\n— Router: {res.plan.mode}; mô hình: {res.model}; "
+            f"thời gian: {', '.join(f'{k} {v:.1f}s' for k, v in res.timings.items())}"
+        )
+        if res.refused:
+            print(f"— Từ chối: {res.refusal_reason}")
+        for w in res.warnings:
+            print(f"— Cảnh báo: {w}")
 
 
 if __name__ == "__main__":

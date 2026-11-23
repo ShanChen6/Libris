@@ -31,6 +31,23 @@ class Settings(BaseSettings):
     rerank_top_n: int = 5
     reranker_preload: bool = False
 
+    # LLM sinh câu trả lời (Task 3.4) qua API tương thích OpenAI. Mặc định: Gemini.
+    # Đổi nhà cung cấp chỉ cần đổi base_url + model (VD OpenAI: https://api.openai.com/v1).
+    llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai"
+    llm_api_key: str = ""  # trống: không gửi header (proxy của môi trường cloud tự gắn key)
+    llm_model: str = "gemini-3.6-flash"
+    # Thử lần lượt khi mô hình chính quá tải (429/5xx) hoặc không còn phục vụ (404)
+    llm_fallback_models: list[str] = ["gemini-3.5-flash", "gemini-flash-lite-latest"]
+    llm_temperature: float = 0.1  # thấp: bám sát văn bản, ít "sáng tạo"
+    llm_max_tokens: int = 2048
+    llm_reasoning_effort: str | None = "low"  # giảm độ trễ của mô hình có suy luận
+    llm_timeout: float = 60.0
+    llm_retries: int = 2
+
+    # Chống ảo giác (Task 3.4): từ chối trước khi gọi LLM nếu đoạn liên quan nhất có điểm
+    # rerank dưới ngưỡng này (câu trả lời đúng thường >= 0,85; không liên quan gần 0).
+    answer_min_rerank_score: float = 0.2
+
 
 @lru_cache
 def get_settings() -> Settings:

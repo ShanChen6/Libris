@@ -68,3 +68,22 @@ def test_invalid_date_is_ignored() -> None:
 
 def test_pending() -> None:
     assert "PENDING" in route("Quy định nào sắp có hiệu lực về đất đai?").statuses
+
+
+@pytest.mark.parametrize(
+    ("query", "core"),
+    [
+        ("So sánh mức phạt khi điều khiển xe máy có nồng độ cồn theo quy định cũ và mới",
+         "mức phạt khi điều khiển xe máy có nồng độ cồn"),
+        ("Mức phạt không đội mũ bảo hiểm thay đổi thế nào so với trước đây",
+         "Mức phạt không đội mũ bảo hiểm thế nào"),
+        ("Luật đất đai trước đây quy định thế nào về sổ đỏ",
+         "Luật đất đai quy định thế nào về sổ đỏ"),
+        ("Thời gian thử việc tối đa", "Thời gian thử việc tối đa"),
+        ("so sánh", "so sánh"),  # quá ngắn sau khi bỏ -> giữ nguyên
+    ],
+)  # fmt: skip
+def test_core_question(query: str, core: str) -> None:
+    from app.retrieval.router import core_question
+
+    assert core_question(query) == core
