@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Scale } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,9 @@ export default function Home() {
         </p>
       </div>
       <div>
-        <Button disabled>Sắp ra mắt</Button>
+        <Button asChild>
+          <Link href="/chat">Bắt đầu hỏi đáp</Link>
+        </Button>
       </div>
     </main>
   );

@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# libris-web
 
-## Getting Started
-
-First, run the development server:
+Giao diện Next.js của Libris.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local      # NEXT_PUBLIC_API_URL=http://localhost:4000 (libris-api)
+npm install
+npm run dev                     # http://localhost:3000
+npm run lint && npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Trang | Mô tả |
+|---|---|
+| `/` | giới thiệu |
+| `/login` | đăng nhập / đăng ký (gọi `/auth/*` của libris-api) |
+| `/chat` | hỏi đáp: câu trả lời hiện từng chữ qua SSE, thẻ trích dẫn `[Điều X - Số hiệu]` tô màu, cảnh báo hiệu lực, danh sách căn cứ pháp lý; nút **Dừng** hủy luồng |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`src/lib/api.ts` là client của libris-api; `src/lib/sse.ts` đọc luồng SSE từ `fetch` (không dùng
+`EventSource` vì cần `POST` và header `Authorization`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Giới hạn hiện tại: access token lưu trong `localStorage` (đơn giản cho giai đoạn này; nên chuyển
+sang cookie `HttpOnly` trước khi triển khai thật); chưa có danh sách hội thoại cũ và ngăn xem văn bản
+gốc (Task 4.3).

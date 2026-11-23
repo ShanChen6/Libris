@@ -73,7 +73,7 @@
 - [x] **Task 4.1: Xây dựng Backend Quản trị (NestJS)**
   - Xây dựng hệ thống đăng ký/đăng nhập (JWT), phân quyền người dùng và quản trị viên.
   - Xây dựng API quản lý kho văn bản luật: Cho phép Admin tải lên văn bản luật mới (file `.docx` hoặc `.pdf`), hệ thống tự động gọi sang FastAPI để chạy pipeline bóc tách và cập nhật vào VectorDB.
-- [ ] **Task 4.2: Tích hợp Streaming Response (Server-Sent Events)**
+- [x] **Task 4.2: Tích hợp Streaming Response (Server-Sent Events)**
   - Kết nối luồng dữ liệu từ `FastAPI -> NestJS -> Next.js` qua SSE để câu trả lời của Chatbot hiển thị mượt mà từng chữ theo thời gian thực kèm danh sách metadata các điều luật đã trích dẫn.
 - [ ] **Task 4.3: Giao diện Đối chiếu Trích dẫn Tương tác (Interactive Citation Viewer)**
   - Thiết kế giao diện Next.js (TailwindCSS + Shadcn/UI) chia 2 khu vực trực quan:
