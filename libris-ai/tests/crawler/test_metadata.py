@@ -198,3 +198,81 @@ def test_normalize_document_type(raw: str | None, number: str, expected: str | N
 def test_normalize_title() -> None:
     assert normalize_title("Bộ Luật Lao động") == "Bộ luật Lao động"
     assert normalize_title("LUẬT HÔN NHÂN VÀ GIA ĐÌNH") == "Luật hôn nhân và gia đình"
+
+
+# --- Điều/Khoản bị bãi bỏ / thay nội dung ------------------------------------------------------
+from crawler.metadata import analyze, extract_provisions, parse_spec  # noqa: E402
+
+AMENDING = "\n".join(
+    [
+        "Điều 52. Sửa đổi, bổ sung một số điều của Nghị định số 100/2019/NĐ-CP ngày 30 tháng 12 "
+        "năm 2019 của Chính phủ đã được sửa đổi, bổ sung bởi Nghị định số 123/2021/NĐ-CP",
+        "1. Sửa đổi, bổ sung khoản 4 Điều 82 như sau:",
+        "“4. Nội dung mới.”",
+        "2. Sửa đổi, bổ sung tên Điều 53 như sau:",
+        "“Điều 53. Tên mới”",
+        "8. Bãi bỏ một số điểm, khoản, điều sau đây:",
+        "a) Bãi bỏ khoản 1 Điều 3;",
+        "b) Bãi bỏ điểm b, điểm e khoản 2 Điều 4;",
+        "d) Bãi bỏ Điều 5, Điều 6, Điêu 7;",
+        "e) Bãi bỏ Điều 16, Điều 17; ø) Bãi bỏ điểm a khoản 1; khoản 2; khoản 4 Điều 23;",
+        "0 Bãi bỏ Điều 25; :",
+        "9. Bỏ một số cụm từ tại các điểm, khoản, điều sau đây:",
+        "a) Bỏ cụm từ “camera” tại điểm p khoản 2 Điều 4;",
+        "Điều 53. Hiệu lực thi hành",
+        "1. Nghị định này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2025.",
+    ]
+)
+
+
+@pytest.mark.parametrize(
+    ("spec", "default", "expected"),
+    [
+        ("Điều 5, Điều 6, Điêu 7;", None, [("Điều 5", None), ("Điều 6", None), ("Điều 7", None)]),
+        ("khoản 1; điểm c khoản 2; khoản 7 Điều 12;", None,
+         [("Điều 12", "Khoản 1"), ("Điều 12", "Khoản 7")]),
+        ("khoản 1, khoản 3 Điêu 82.", None, [("Điều 82", "Khoản 1"), ("Điều 82", "Khoản 3")]),
+        ("điểm c khoản 2 Điều 7", None, []),  # cấp Điểm: đoạn vẫn còn nội dung hiệu lực
+        ("khoản 2 và khoản 3", "Điều 3", [("Điều 3", "Khoản 2"), ("Điều 3", "Khoản 3")]),
+        ("tên Điều 53", None, []),
+        ("tên điều, khoản 5 Điều 53", None, [("Điều 53", "Khoản 5")]),
+        ("cụm từ “Điều 9” tại điểm đ khoản 3", None, []),
+        ("khoản 2", None, []),  # không xác định được Điều
+    ],
+)  # fmt: skip
+def test_parse_spec(spec: str, default: str | None, expected: list) -> None:
+    assert parse_spec(spec, default) == expected
+
+
+def test_extract_provisions_from_amending_decree() -> None:
+    provs = extract_provisions("168/2024/NĐ-CP", AMENDING)
+    assert {p.target for p in provs} == {"100/2019/NĐ-CP"}  # không phải 123/2021 (đã sửa đổi theo)
+    got = {(p.kind, p.article, p.clause) for p in provs}
+    assert got == {
+        ("amended", "Điều 82", "Khoản 4"),
+        ("repealed", "Điều 3", "Khoản 1"),
+        ("repealed", "Điều 5", None),
+        ("repealed", "Điều 6", None),
+        ("repealed", "Điều 7", None),
+        ("repealed", "Điều 16", None),
+        ("repealed", "Điều 17", None),
+        ("repealed", "Điều 23", "Khoản 2"),
+        ("repealed", "Điều 23", "Khoản 4"),
+        ("repealed", "Điều 25", None),
+    }
+
+
+def test_provisions_only_inside_amending_articles() -> None:
+    text = "Điều 5. Hiệu lực thi hành\n2. Bãi bỏ Điều 3 của Nghị định số 1/2020/NĐ-CP."
+    assert extract_provisions("2/2024/NĐ-CP", text) == []
+
+
+def test_analyze_sets_provision_effective_date() -> None:
+    records = [
+        _rec("1", "100/2019/NĐ-CP", "2020-01-01"),
+        _rec("2", "168/2024/NĐ-CP", "2025-01-01", AMENDING),
+    ]
+    catalog = analyze(records, date(2026, 1, 1))
+    assert catalog.provisions
+    assert {p.effective for p in catalog.provisions} == {date(2025, 1, 1)}
+    assert catalog.to_dict()["provisions"][0]["effective"] == "2025-01-01"

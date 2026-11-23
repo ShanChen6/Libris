@@ -41,7 +41,7 @@
 - [x] **Task 2.1: Phân tách Văn bản theo Cấu trúc Phân cấp (Hierarchical Chunking)**
   - Xây dựng bộ phân tích cú pháp (Parser) bằng Regex nhận diện đúng cấu trúc văn bản hành chính Việt Nam: **Phần → Chương → Mục → Điều → Khoản → Điểm**.
   - **Quy tắc bảo toàn ngữ cảnh:** Mỗi đoạn dữ liệu (`chunk`) sau khi cắt bắt buộc phải được gắn thêm tiền tố ngữ cảnh ở đầu đoạn (VD: `[Văn bản: Nghị định 168/2024/NĐ-CP | Chương II | Điều 7: Xử phạt người điều khiển xe mô tô...]`) để mô hình nhúng hiểu trọn vẹn chủ thể áp dụng.
-- [ ] **Task 2.2: Tạo Vector nhúng (Embedding) & Chỉ mục tìm kiếm**
+- [x] **Task 2.2: Tạo Vector nhúng (Embedding) & Chỉ mục tìm kiếm**
   - Sử dụng mô hình `BAAI/bge-m3` (hỗ trợ tốt tiếng Việt và độ dài lên tới 8192 tokens) để sinh vector cho toàn bộ `LegalChunks`.
   - Tạo chỉ mục **HNSW** cho cột `embedding` (tăng tốc tìm kiếm ngữ nghĩa) và chỉ mục **GIN** cho cột `search_vector` (tăng tốc tìm kiếm từ khóa tiếng Việt).
 
@@ -50,11 +50,11 @@
 ### GIAI ĐOẠN 3: Lõi Truy xuất Thông minh — Hybrid Search & Chống Ảo giác (Tuần 5 – Tuần 7)
 *Mục tiêu: Đảm bảo hệ thống tìm trúng điều luật chính xác nhất và trả lời trung thực 100% theo căn cứ pháp lý.*
 
-- [ ] **Task 3.1: Xây dựng Tìm kiếm lai (Hybrid Search với thuật toán RRF)**
+- [x] **Task 3.1: Xây dựng Tìm kiếm lai (Hybrid Search với thuật toán RRF)**
   - Viết truy vấn kết hợp đồng thời 2 luồng tìm kiếm trên PostgreSQL và hợp nhất điểm số bằng **Reciprocal Rank Fusion (RRF)**:
     - *Vector Search:* Bắt ý định câu hỏi đời thường (VD: *"Đi xe máy không gương chiếu hậu bên trái có bị phạt không?"*).
     - *Keyword Search (Full-text Search):* Bắt chính xác số hiệu văn bản, điều khoản hoặc thuật ngữ pháp lý đặc thù.
-- [ ] **Task 3.2: Bộ lọc Hiệu lực Pháp lý Thông minh (Temporal & Status Filtering)**
+- [x] **Task 3.2: Bộ lọc Hiệu lực Pháp lý Thông minh (Temporal & Status Filtering)**
   - Mặc định hệ thống chỉ truy xuất các `LegalChunks` thuộc văn bản có trạng thái `ACTIVE` (Còn hiệu lực) để tránh tư vấn nhầm luật cũ.
   - Bổ sung bộ nhận diện ý định (Query Router): Nếu người dùng hỏi so sánh luật cũ và mới, tự động mở rộng bộ lọc sang cả văn bản `EXPIRED`.
 - [ ] **Task 3.3: Tái xếp hạng Kết quả (Cross-Encoder Reranking)**

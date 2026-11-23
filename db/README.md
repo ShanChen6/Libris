@@ -98,6 +98,13 @@ erDiagram
     }
 ```
 
+## Bảng bổ sung
+
+- `superseded_provisions` (Task 3.2): Điều/Khoản của một văn bản bị văn bản khác bãi bỏ hoặc thay
+  nội dung, kèm `effective_date` và câu nguyên văn làm căn cứ. Hybrid Search dùng bảng này để loại
+  các đoạn luật đã hết hiệu lực dù văn bản chứa chúng vẫn còn hiệu lực một phần. `clause = ''`
+  nghĩa là cả Điều.
+
 ## Quyết định thiết kế
 
 - **Trạng thái hiệu lực nằm ở `legal_documents.status`.** Task 3.2 lọc

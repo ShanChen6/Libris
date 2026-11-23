@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.core.config import Settings, get_settings
 from app.pipeline.embedding import Embedder, get_embedder
+from app.retrieval.expansion import expand_query
 from app.retrieval.hybrid import SearchWeights, hybrid_search
 from app.retrieval.router import route
 
@@ -43,6 +44,7 @@ class HitOut(BaseModel):
     effective_date: date | None
     expiry_date: date | None
     replaced_by: list[str]
+    superseded_by: list[str]
     article: str | None
     clause: str | None
     point: str | None
@@ -58,6 +60,7 @@ class HitOut(BaseModel):
 
 class SearchResponse(BaseModel):
     query: str
+    expanded_query: str
     plan: PlanOut
     hits: list[HitOut]
 
@@ -77,13 +80,16 @@ def search(req: SearchRequest, settings: SettingsDep, embedder: EmbedderDep) -> 
         plan.statuses = tuple(s for s in ("ACTIVE", "AMENDED", "EXPIRED") if s in statuses)
         plan.reasons.append(f"Theo yêu cầu: include_expired={req.include_expired}")
 
-    query_vector = embedder.encode([req.query])[0]
+    # Router phân tích câu gốc; tìm kiếm dùng câu đã nối thêm thuật ngữ pháp lý
+    expanded = expand_query(req.query)
+    query_vector = embedder.encode([expanded])[0]
     with psycopg.connect(settings.database_url) as conn:
         result = hybrid_search(
-            conn, req.query, query_vector, top_k=req.top_k, plan=plan, weights=req.weights
+            conn, expanded, query_vector, top_k=req.top_k, plan=plan, weights=req.weights
         )
     return SearchResponse(
-        query=result.query,
+        query=req.query,
+        expanded_query=expanded,
         plan=PlanOut(
             mode=result.plan.mode,
             statuses=list(result.plan.statuses),

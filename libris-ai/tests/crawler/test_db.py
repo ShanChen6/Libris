@@ -53,6 +53,17 @@ def _write_data(tmp_path: Path, text: str) -> tuple[Path, Path]:
                 "warnings": [],
             }
         ],
+        "provisions": [
+            {
+                "kind": "repealed",
+                "source": "36/2024/QH15",
+                "target": "23/2008/QH12",
+                "article": "Điều 9",
+                "clause": None,
+                "effective": "2025-01-01",
+                "evidence": "Bãi bỏ Điều 9",
+            }
+        ],
         "relations": [
             {
                 "type": "replaces",
@@ -72,7 +83,7 @@ def test_load_documents_and_relations(pg_conninfo: str, tmp_path: Path) -> None:
     conninfo = pg_conninfo
     catalog_path, processed = _write_data(tmp_path, "Điều 1. Phạm vi điều chỉnh")
     res = load(conninfo, catalog_path, processed)
-    assert (res.inserted, res.updated, res.relations) == (1, 0, 1)
+    assert (res.inserted, res.updated, res.relations, res.provisions) == (1, 0, 1, 1)
 
     with psycopg.connect(conninfo) as conn:
         row = conn.execute(
@@ -82,6 +93,10 @@ def test_load_documents_and_relations(pg_conninfo: str, tmp_path: Path) -> None:
         assert row == ("ACTIVE", "2025-01-01", ["23/2008/QH12"], "Điều 1. Phạm vi điều chỉnh")
         rel = conn.execute("SELECT target_number, relation_type FROM document_relations").fetchall()
         assert rel == [("23/2008/QH12", "replaces")]
+        prov = conn.execute(
+            "SELECT target_number, article, clause, effective_date::text FROM superseded_provisions"
+        ).fetchall()
+        assert prov == [("23/2008/QH12", "Điều 9", "", "2025-01-01")]
 
 
 def test_reload_invalidates_chunks_only_when_text_changes(pg_conninfo: str, tmp_path: Path) -> None:

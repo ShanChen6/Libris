@@ -121,3 +121,41 @@ def test_weights_and_top_k(seeded) -> None:
     expired_only = _search(seeded, "gương chiếu hậu", plan=plan)
     assert {h.document_number for h in expired_only.hits} <= {"100/2019/NĐ-CP", "45/2013/QH13"}
     assert expired_only.hits[0].citation.endswith("- 100/2019/NĐ-CP]")
+
+
+@pytest.fixture
+def partly_repealed(pg_conninfo: str) -> tuple[str, FakeEmbedder]:
+    """NĐ 100/2019 còn hiệu lực (AMENDED) nhưng Điều 1 (đường bộ) bị NĐ 168/2024 bãi bỏ."""
+    text = (
+        "Điều 1. Xử phạt người điều khiển xe mô tô\n"
+        "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với xe mô tô không có gương chiếu hậu.\n"
+        "Điều 2. Xử phạt vi phạm trong lĩnh vực đường sắt\n"
+        "Phạt tiền từ 100.000 đồng đến 200.000 đồng đối với tàu không có gương chiếu hậu."
+    )
+    with psycopg.connect(pg_conninfo) as conn:
+        conn.execute(
+            "INSERT INTO legal_documents (document_number, title, status, effective_date, "
+            "full_text, source, source_id) VALUES ('100/2019/NĐ-CP', 'Xử phạt', 'AMENDED', "
+            "'2020-01-01', %s, 't', '1')",
+            (text,),
+        )
+        conn.execute(
+            "INSERT INTO superseded_provisions VALUES ('100/2019/NĐ-CP', 'Điều 1', '', "
+            "'repealed', '168/2024/NĐ-CP', '2025-01-01', 'Bãi bỏ Điều 1')"
+        )
+    chunk_documents(pg_conninfo)
+    emb = FakeEmbedder()
+    embed_chunks(pg_conninfo, emb)
+    return pg_conninfo, emb
+
+
+def test_repealed_articles_are_excluded_by_default(partly_repealed) -> None:
+    current = _search(partly_repealed, "xe mô tô không có gương chiếu hậu")
+    assert [h.article for h in current.hits] == ["Điều 2"]  # chỉ còn phần đường sắt
+
+    compare = _search(partly_repealed, "so sánh mức phạt xe mô tô không có gương chiếu hậu")
+    old = next(h for h in compare.hits if h.article == "Điều 1")
+    assert old.superseded_by == ["repealed:168/2024/NĐ-CP"]
+
+    past = _search(partly_repealed, "vào năm 2023 xe mô tô không có gương chiếu hậu")
+    assert "Điều 1" in [h.article for h in past.hits]  # năm 2023 Điều 1 còn hiệu lực

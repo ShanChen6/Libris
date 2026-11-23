@@ -80,15 +80,19 @@ def main() -> None:
         import psycopg
 
         from app.pipeline.embedding import get_embedder
+        from app.retrieval.expansion import expand_query
         from app.retrieval.hybrid import hybrid_search
         from app.retrieval.router import route
 
         plan = route(args.query)
         if args.all_status:
             plan.statuses = ("ACTIVE", "AMENDED", "EXPIRED", "PENDING")
-        vector = get_embedder().encode([args.query])[0]
+        expanded = expand_query(args.query)
+        vector = get_embedder().encode([expanded])[0]
         with psycopg.connect(conninfo) as conn:
-            res = hybrid_search(conn, args.query, vector, top_k=args.k, plan=plan)
+            res = hybrid_search(conn, expanded, vector, top_k=args.k, plan=plan)
+        if expanded != args.query:
+            print(f"Mở rộng: {expanded}")
         print(f"Router: {res.plan.mode} {res.plan.statuses}")
         for reason in res.plan.reasons:
             print(f"  - {reason}")
@@ -97,6 +101,8 @@ def main() -> None:
                 f" ref={h.ref_rank}" if h.ref_rank else ""
             )
             note = f" (bị thay thế bởi {', '.join(h.replaced_by)})" if h.replaced_by else ""
+            if h.superseded_by:
+                note += f" (Điều/Khoản bị bãi bỏ/sửa đổi: {', '.join(h.superseded_by)})"
             print(f"\n{i}. {h.score:.4f} [{ranks}] {h.citation} {h.status}{note}")
             print(f"   {' '.join(h.content.split())[:160]}")
 

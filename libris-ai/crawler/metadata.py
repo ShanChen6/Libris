@@ -267,6 +267,132 @@ def extract_relations(number: str, title: str | None, text: str) -> list[Relatio
     return rels
 
 
+# --- Điều/Khoản bị bãi bỏ hoặc thay nội dung (lọc hiệu lực ở cấp đoạn, Task 3.2) -------------
+ProvisionKind = Literal["repealed", "amended"]
+_ART_NUM = r"(\d{1,3}[a-zđ]?)"
+_ART_IN_SPEC_RE = re.compile(_fz("Điều") + r"\s*" + _ART_NUM + r"(?![\d/])")
+_CLAUSE_IN_SPEC_RE = re.compile(r"(?<![\wđ])" + _fz("khoản") + r"\s*(\d{1,3}[a-zđ]?)(?![\d/])")
+_POINT_WORD_RE = re.compile(r"(?<![\wđ])" + _fz("điểm") + r"(?![\wđ])")
+_AMEND_SPEC_RE = re.compile(
+    r"^\W*(?:[a-zđ\d]{1,2}[.)]?\s+)?" + _fz("Sửa đổi") + r",?\s*" + _fz("bổ sung")
+    + r"\s+(.*?)\s+" + _fz("như sau")
+)  # fmt: skip
+_NEXT_UNIT_RE = re.compile(r"^\W{0,2}(?:\d{1,2}\.\s|" + _fz("Điều") + r"\s*\d+[a-zđ]?\s*\.)")
+_REPEAL_WORD_RE = re.compile(_fz("Bãi bỏ"))
+
+
+@dataclass
+class Provision:
+    """Điều (clause=None) hoặc Khoản của văn bản ``target`` không còn hiệu lực theo ``source``."""
+
+    kind: ProvisionKind
+    source: str
+    target: str
+    article: str  # "Điều 6"
+    clause: str | None  # "Khoản 2"
+    evidence: str
+    effective: date | None = None
+
+
+def parse_spec(spec: str, default_article: str | None = None) -> list[tuple[str, str | None]]:
+    """'Điều 5, Điều 6' -> [(Điều 5, None), (Điều 6, None)];
+    'khoản 1; điểm c khoản 2; khoản 7 Điều 12' -> [(Điều 12, Khoản 1), (Điều 12, Khoản 7)].
+
+    Phạm vi cấp Điểm bị bỏ qua: đoạn chứa Điểm đó vẫn còn nội dung khác đang có hiệu lực.
+    """
+    spec = _QUOTED_RE.sub(" ", spec)
+    body = _NUMBERING_RE.sub("", spec).strip()
+    if re.match(_fz("cụm từ") + r"(?!\w)", body):
+        return []  # chỉ sửa một cụm từ: nội dung còn lại vẫn hiệu lực
+    # "tên Điều 53" / "tên điều, khoản 5 ..." -> sửa tên không làm Điều hết hiệu lực
+    named = re.match(_fz("tên") + r"\s+(?:" + _fz("điều") + "|" + _fz("chương") + r")", body)
+    if named:
+        rest = re.sub(r"^\s*(?:\d+[a-zđ]?)?\s*[,;]?\s*(?:" + _fz("và") + r"\s+)?", "",
+                      body[named.end():])  # fmt: skip
+        if not _CLAUSE_IN_SPEC_RE.search(rest):
+            return []
+        body = rest
+    if re.match(_fz("Điều"), body):
+        # Danh sách cả Điều: "Điều 5, Điều 6, ..., Điều 11"
+        return [(f"Điều {n}", None) for n in _ART_IN_SPEC_RE.findall(body.split(";")[0])]
+    articles = _ART_IN_SPEC_RE.findall(body)
+    article = f"Điều {articles[-1]}" if articles else default_article
+    if article is None:
+        return []
+    out: list[tuple[str, str | None]] = []
+    for segment in re.split(r";|\s+(?:và|,)\s+(?=" + _fz("khoản") + ")", body):
+        if _POINT_WORD_RE.search(segment):
+            continue
+        for n in _CLAUSE_IN_SPEC_RE.findall(segment):
+            out.append((article, f"Khoản {n}"))
+    if not out and not _CLAUSE_IN_SPEC_RE.search(body) and not _POINT_WORD_RE.search(body):
+        # "Sửa đổi, bổ sung Điều 17 như sau"
+        out = [(article, None)] if articles else []
+    return list(dict.fromkeys(out))
+
+
+def extract_provisions(number: str, text: str) -> list[Provision]:
+    """Điều/Khoản của văn bản khác bị văn bản ``number`` bãi bỏ hoặc thay nội dung.
+
+    Chỉ xét trong Điều có tiêu đề "Sửa đổi, bổ sung ... của <văn bản X>" (ngữ cảnh xác định X).
+    """
+    me = normalize_number(number)
+    out: list[Provision] = []
+    context: list[str] = []
+    context_amends = False
+    current_article: str | None = None
+    paragraphs = text.split("\n")
+
+    def add(kind: ProvisionKind, items: list[tuple[str, str | None]], evidence: str) -> None:
+        if len(context) != 1 or context[0] == me:
+            return
+        for article, clause in items:
+            out.append(Provision(kind, me, context[0], article, clause, evidence[:500]))
+
+    i = 0
+    while i < len(paragraphs):
+        p = paragraphs[i]
+        i += 1
+        if _ARTICLE_RE.match(p):
+            context = _refs(p)
+            context_amends = _AMEND_RE.search(p) is not None
+            # "Điều 2. Sửa đổi, bổ sung khoản 1 Điều 197 của Luật Nhà ở số ..."
+            current_article = None
+            head_spec = re.split(_fz("của"), _ARTICLE_RE.sub("", p))[0]
+            items = parse_spec(head_spec) if context_amends else []
+            if items:
+                current_article = items[-1][0]
+            continue
+        if not context_amends or p[:1] in '“"':
+            continue
+
+        m = _AMEND_SPEC_RE.match(p)
+        if m:
+            items = parse_spec(m.group(1), current_article)
+            arts = _ART_IN_SPEC_RE.findall(m.group(1))
+            if arts:
+                current_article = f"Điều {arts[-1]}"
+            add("amended", items, p)
+            continue
+
+        m = _REPEAL_RE.match(p)
+        if m:
+            block = [m.group(1)]
+            if m.group(1).rstrip().endswith(":"):
+                # Gom cả danh sách (OCR có thể làm hỏng ký hiệu a), b)... hoặc dồn nhiều mục)
+                while i < len(paragraphs) and not _NEXT_UNIT_RE.match(paragraphs[i]):
+                    block.append(paragraphs[i])
+                    i += 1
+                pieces = _REPEAL_WORD_RE.split(" ".join(block[1:]))
+            else:
+                pieces = [block[0]]
+            for piece in pieces:
+                if _refs(piece):  # bãi bỏ một phần văn bản khác được nêu đích danh: bỏ qua
+                    continue
+                add("repealed", parse_spec(piece, current_article), f"{p} … {piece.strip()}")
+    return out
+
+
 @dataclass
 class CatalogEntry:
     source_id: str
@@ -310,6 +436,7 @@ class Catalog:
     as_of: date
     documents: list[CatalogEntry]
     relations: list[Relation]
+    provisions: list[Provision] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -325,6 +452,18 @@ class Catalog:
                 }
                 for r in self.relations
             ],
+            "provisions": [
+                {
+                    "kind": p.kind,
+                    "source": p.source,
+                    "target": p.target,
+                    "article": p.article,
+                    "clause": p.clause,
+                    "effective": p.effective.isoformat() if p.effective else None,
+                    "evidence": p.evidence,
+                }
+                for p in self.provisions
+            ],
         }
 
 
@@ -335,6 +474,7 @@ def build_catalog(records: list[dict[str, Any]], as_of: date) -> list[CatalogEnt
 def analyze(records: list[dict[str, Any]], as_of: date) -> Catalog:
     entries: dict[str, CatalogEntry] = {}
     relations: list[Relation] = []
+    provisions: list[Provision] = []
 
     for rec in records:
         meta = rec["metadata"]
@@ -360,6 +500,7 @@ def analyze(records: list[dict[str, Any]], as_of: date) -> Catalog:
             )
         entries[number] = entry
         relations += extract_relations(number, entry.title, rec["text"])
+        provisions += extract_provisions(number, rec["text"])
 
     def ev(r: Relation) -> dict[str, str]:
         return {"type": r.type, "source": r.source, "target": r.target, "text": r.evidence}
@@ -417,7 +558,11 @@ def analyze(records: list[dict[str, Any]], as_of: date) -> Catalog:
     documents = sorted(
         entries.values(), key=lambda e: (e.issue_date or date.min, e.document_number)
     )
-    return Catalog(as_of=as_of, documents=documents, relations=relations)
+    # Điều/Khoản bị bãi bỏ / thay nội dung kể từ ngày văn bản nguồn có hiệu lực
+    for prov in provisions:
+        src = entries.get(prov.source)
+        prov.effective = src.effective_date if src else None
+    return Catalog(as_of=as_of, documents=documents, relations=relations, provisions=provisions)
 
 
 def load_records(processed_dir: Path) -> list[dict[str, Any]]:

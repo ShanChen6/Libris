@@ -204,6 +204,22 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: superseded_provisions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.superseded_provisions (
+    target_number text NOT NULL,
+    article text NOT NULL,
+    clause text DEFAULT ''::text NOT NULL,
+    kind text NOT NULL,
+    source_number text NOT NULL,
+    effective_date date,
+    evidence text NOT NULL,
+    CONSTRAINT superseded_provisions_kind_check CHECK ((kind = ANY (ARRAY['repealed'::text, 'amended'::text])))
+);
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -300,6 +316,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: superseded_provisions superseded_provisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.superseded_provisions
+    ADD CONSTRAINT superseded_provisions_pkey PRIMARY KEY (target_number, article, clause, source_number);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -333,6 +357,20 @@ CREATE INDEX document_relations_target_idx ON public.document_relations USING bt
 --
 
 CREATE INDEX legal_chunks_document_idx ON public.legal_chunks USING btree (document_id, chunk_index);
+
+
+--
+-- Name: legal_chunks_embedding_hnsw_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX legal_chunks_embedding_hnsw_idx ON public.legal_chunks USING hnsw (embedding public.vector_cosine_ops) WITH (m='16', ef_construction='64');
+
+
+--
+-- Name: legal_chunks_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX legal_chunks_search_vector_idx ON public.legal_chunks USING gin (search_vector);
 
 
 --
@@ -447,4 +485,6 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20261123000001'),
     ('20261123000002'),
     ('20261123000003'),
-    ('20261123000004');
+    ('20261123000004'),
+    ('20261123000005'),
+    ('20261123000006');

@@ -72,6 +72,8 @@ class FusedHit:
     kw_rank: int | None
     ref_rank: int | None
     replaced_by: list[str] = field(default_factory=list)
+    # ["repealed:168/2024/NĐ-CP"]: Điều/Khoản này (hoặc một phần) bị bãi bỏ / thay nội dung
+    superseded_by: list[str] = field(default_factory=list)
 
     @property
     def citation(self) -> str:
@@ -114,8 +116,22 @@ def _doc_filter(plan: RetrievalPlan, params: dict[str, Any]) -> str:
     if plan.referenced:
         params["referenced"] = plan.referenced
         scope = f"({scope} OR d.document_number = ANY(%(referenced)s))"
-    return scope
+    # Cấp đoạn: bỏ Điều/Khoản đã bị bãi bỏ / thay nội dung (VD: phần đường bộ của NĐ 100/2019 bị
+    # NĐ 168/2024 bãi bỏ dù văn bản vẫn AMENDED). Câu hỏi so sánh thì giữ lại để đối chiếu.
+    if plan.mode == "compare":
+        params["cutoff"] = None
+    elif plan.period:
+        params["cutoff"] = plan.period[0]
+    else:
+        params["cutoff"] = date.today()
+    return scope + _NOT_SUPERSEDED
 
+
+_NOT_SUPERSEDED = """
+    AND (%(cutoff)s::date IS NULL OR NOT EXISTS (
+      SELECT 1 FROM superseded_provisions sp
+      WHERE sp.target_number = d.document_number AND sp.article = c.article
+        AND (sp.clause = '' OR sp.clause = c.clause) AND sp.effective_date <= %(cutoff)s::date))"""
 
 _HYBRID_SQL = """
 WITH vec AS (
@@ -159,7 +175,12 @@ SELECT c.id, d.document_number, d.title, d.status::text, d.effective_date, d.exp
        coalesce((SELECT array_agg(DISTINCT dr.source_number)
                  FROM document_relations dr
                  WHERE dr.target_number = d.document_number AND dr.relation_type = 'replaces'),
-                '{{}}') AS replaced_by
+                '{{}}') AS replaced_by,
+       coalesce((SELECT array_agg(DISTINCT sp.kind || ':' || sp.source_number)
+                 FROM superseded_provisions sp
+                 WHERE sp.target_number = d.document_number AND sp.article = c.article
+                   AND (sp.clause = '' OR c.clause IS NULL OR sp.clause = c.clause)),
+                '{{}}') AS superseded_by
 FROM fused f
 JOIN legal_chunks c ON c.id = f.id
 JOIN legal_documents d ON d.id = c.document_id
@@ -244,6 +265,7 @@ def hybrid_search(
             kw_rank=r[15],
             ref_rank=r[16],
             replaced_by=list(r[17] or []),
+            superseded_by=list(r[18] or []),
         )
         for r in rows
     ]

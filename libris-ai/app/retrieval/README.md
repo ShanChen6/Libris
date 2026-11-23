@@ -56,3 +56,43 @@ cho người dùng.
 Router hiện dựa trên luật (regex chịu lỗi dấu), nên nhanh, giải thích được và không tốn chi phí gọi
 LLM. Khi bộ Golden Dataset (Task 5.1) cho thấy có nhiều câu hỏi bị phân loại sai, có thể thay
 bằng bộ phân loại LLM, vẫn giữ nguyên giao diện `route(query) -> RetrievalPlan`.
+
+### Lọc ở cấp Điều/Khoản
+
+Trạng thái `AMENDED` ở cấp văn bản là chưa đủ. VD: NĐ 168/2024 **bãi bỏ Điều 5–11, 16–22, 25–27,
+29–38…** của NĐ 100/2019 (phần đường bộ), trong khi phần đường sắt của NĐ 100/2019 vẫn còn hiệu lực.
+Nếu chỉ lọc theo văn bản, chatbot sẽ trả lời theo mức phạt cũ.
+
+Bảng `superseded_provisions` (do `crawler normalize` trích từ các danh sách "Bãi bỏ Điều…, khoản…
+Điều…" và "Sửa đổi, bổ sung khoản … Điều … như sau") liệt kê các Điều/Khoản không còn hiệu lực:
+
+| Chế độ | Đoạn thuộc Điều/Khoản bị bãi bỏ hoặc thay nội dung |
+|---|---|
+| `current` | bị loại nếu `effective_date ≤ hôm nay` |
+| `point_in_time` | bị loại nếu bị bãi bỏ trước đầu khoảng thời gian hỏi |
+| `compare` | được giữ lại để đối chiếu |
+
+Mỗi kết quả có `superseded_by` (VD `["repealed:168/2024/NĐ-CP"]`) để LLM cảnh báo khi trích dẫn.
+Việc bãi bỏ ở cấp **Điểm** bị bỏ qua, vì đoạn chứa Điểm đó vẫn còn nội dung khác đang có hiệu lực.
+
+### Mở rộng truy vấn (`expansion.py`)
+
+Người dùng hỏi "vượt đèn đỏ", "sổ đỏ", "bằng lái", "nghỉ đẻ"…, còn văn bản viết "không chấp hành
+hiệu lệnh của đèn tín hiệu giao thông", "giấy chứng nhận quyền sử dụng đất", "giấy phép lái xe",
+"nghỉ thai sản". Thuật ngữ tương ứng được nối vào câu truy vấn trước khi tìm, ở cả hai luồng vector
+và từ khóa. Router vẫn phân tích câu gốc.
+
+### Đánh giá nhanh
+
+```bash
+uv run python eval/retrieval_smoke.py     # 10 câu hỏi mẫu, in Recall@20 và MRR
+```
+
+| Cấu hình | Recall@20 | Ghi chú |
+|---|---|---|
+| Hybrid RRF | 9/10 | trượt "vượt đèn đỏ" (khác cách diễn đạt) |
+| + mở rộng truy vấn | 10/10 | |
+| + lọc cấp Điều/Khoản | 10/10, MRR 0,53 | đoạn đúng lên hạng cao hơn vì bớt đoạn lỗi thời |
+
+Đoạn đúng thường nằm trong top 10 nhưng chưa ở hạng 1 (MRR 0,53). Xếp lại thứ tự là nhiệm vụ của
+reranker (Task 3.3).

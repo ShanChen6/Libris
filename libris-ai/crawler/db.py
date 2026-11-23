@@ -52,6 +52,7 @@ class LoadResult:
     updated: int = 0
     chunks_invalidated: int = 0
     relations: int = 0
+    provisions: int = 0
 
 
 def document_rows(catalog: dict[str, Any], processed_dir: Path) -> list[dict[str, Any]]:
@@ -143,5 +144,24 @@ def load(conninfo: str, catalog_path: Path, processed_dir: Path) -> LoadResult:
             ],
         )
         result.relations = len(relations)
+
+        cur.execute("DELETE FROM superseded_provisions WHERE source_number = ANY(%s)", (sources,))
+        provisions = {
+            (p["target"], p["article"], p["clause"] or "", p["source"]): p
+            for p in catalog.get("provisions", [])
+            if p["source"] in sources
+        }
+        cur.executemany(
+            """
+            INSERT INTO superseded_provisions
+              (target_number, article, clause, kind, source_number, effective_date, evidence)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            [
+                (t, a, c, p["kind"], s, p["effective"], p["evidence"])
+                for (t, a, c, s), p in provisions.items()
+            ],
+        )
+        result.provisions = len(provisions)
     log.info("Nạp xong: %s", result)
     return result

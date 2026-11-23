@@ -104,7 +104,8 @@ def main() -> None:
         )
         print(
             f"Thêm mới {res.inserted}, cập nhật {res.updated} văn bản; "
-            f"{res.relations} quan hệ; xóa {res.chunks_invalidated} chunk lỗi thời"
+            f"{res.relations} quan hệ; {res.provisions} Điều/Khoản bị bãi bỏ hoặc sửa đổi; "
+            f"xóa {res.chunks_invalidated} chunk lỗi thời"
         )
     elif args.cmd == "list":
         with PoliteClient(min_interval=args.delay) as client:
