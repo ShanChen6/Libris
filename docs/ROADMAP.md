@@ -16,7 +16,7 @@
 ### GIAI ĐOẠN 1: Thu thập, Chuẩn hóa Dữ liệu & Thiết kế Cơ sở dữ liệu (Tuần 1 – Tuần 2)
 *Mục tiêu: Xây dựng kho văn bản pháp luật Việt Nam sạch, có cấu trúc phân cấp rõ ràng và gắn nhãn trạng thái hiệu lực pháp lý.*
 
-- [ ] **Task 1.1: Khởi tạo hạ tầng & Môi trường phát triển**
+- [x] **Task 1.1: Khởi tạo hạ tầng & Môi trường phát triển**
   - Khởi tạo 3 phân hệ: `libris-web` (Next.js), `libris-api` (NestJS), và `libris-ai` (Python FastAPI).
   - Cấu hình Docker Compose chạy PostgreSQL (đã kích hoạt `CREATE EXTENSION vector;`) và Redis.
 - [ ] **Task 1.2: Thu thập dữ liệu pháp luật (Data Crawling)**

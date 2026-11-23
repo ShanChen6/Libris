@@ -11,6 +11,63 @@ Hệ thống hỏi đáp & tra cứu văn bản quy phạm pháp luật Việt N
 | `libris-ai` | Python FastAPI, LangChain / LlamaIndex, `BAAI/bge-m3`, `bge-reranker-v2-m3` |
 | Database | PostgreSQL + `pgvector` + `tsvector`, Redis |
 
+## Cấu trúc thư mục
+
+```
+Libris/
+├── libris-web/          # Next.js 16 (App Router) + TailwindCSS 4 + shadcn/ui
+├── libris-api/          # NestJS 12 – Auth, quản lý hội thoại, gateway
+├── libris-ai/           # FastAPI (Python 3.12, uv) – RAG pipeline
+├── docker/postgres/     # Script khởi tạo PostgreSQL (CREATE EXTENSION vector)
+├── docker-compose.yml   # PostgreSQL 17 + pgvector, Redis
+└── docs/ROADMAP.md
+```
+
+## Chạy môi trường phát triển
+
+Yêu cầu: Docker, Node.js 22+, [uv](https://docs.astral.sh/uv/).
+
+**1. Hạ tầng (PostgreSQL + pgvector, Redis)**
+
+```bash
+cp .env.example .env
+docker compose up -d --wait
+```
+
+**2. libris-ai** – http://localhost:8000 (tài liệu API: `/docs`)
+
+```bash
+cd libris-ai
+cp .env.example .env
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+**3. libris-api** – http://localhost:4000
+
+```bash
+cd libris-api
+cp .env.example .env
+npm install
+npm run start:dev
+```
+
+**4. libris-web** – http://localhost:3000
+
+```bash
+cd libris-web
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+### Kiểm tra sức khỏe dịch vụ
+
+| Dịch vụ | Endpoint |
+|---|---|
+| libris-ai | `GET :8000/health`, `GET :8000/health/ready` (kiểm tra Postgres/pgvector & Redis) |
+| libris-api | `GET :4000/health` |
+
 ## Tài liệu
 
 - [Lộ trình triển khai (12 tuần)](docs/ROADMAP.md)
