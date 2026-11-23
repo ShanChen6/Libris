@@ -33,12 +33,16 @@ def main() -> None:
     p_embed.add_argument("--batch-size", type=int, default=64, help="số đoạn mỗi lần commit")
     p_embed.add_argument("--limit", type=int)
 
-    p_search = sub.add_parser("search", help="tra thử Hybrid Search + Query Router (Task 3.1, 3.2)")
+    p_search = sub.add_parser(
+        "search", help="tra thử truy xuất: Router + Hybrid + Rerank (3.1-3.3)"
+    )
     p_search.add_argument("query")
     p_search.add_argument("-k", type=int, default=5)
     p_search.add_argument(
         "--all-status", action="store_true", help="tìm cả văn bản đã hết hiệu lực"
     )
+    p_search.add_argument("--no-rerank", action="store_true", help="bỏ qua cross-encoder")
+    p_search.add_argument("--candidates", type=int, help="số ứng viên đưa vào reranker")
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -80,19 +84,24 @@ def main() -> None:
         import psycopg
 
         from app.pipeline.embedding import get_embedder
-        from app.retrieval.expansion import expand_query
-        from app.retrieval.hybrid import hybrid_search
-        from app.retrieval.router import route
+        from app.retrieval.rerank import get_reranker
+        from app.retrieval.service import make_plan, retrieve
 
-        plan = route(args.query)
-        if args.all_status:
-            plan.statuses = ("ACTIVE", "AMENDED", "EXPIRED", "PENDING")
-        expanded = expand_query(args.query)
-        vector = get_embedder().encode([expanded])[0]
+        settings = get_settings()
+        plan = make_plan(args.query, include_expired=True if args.all_status else None)
+        reranker = None if args.no_rerank else get_reranker()
         with psycopg.connect(conninfo) as conn:
-            res = hybrid_search(conn, expanded, vector, top_k=args.k, plan=plan)
-        if expanded != args.query:
-            print(f"Mở rộng: {expanded}")
+            res = retrieve(
+                conn,
+                args.query,
+                get_embedder(),
+                reranker,
+                candidates=args.candidates or settings.rerank_candidates,
+                top_n=args.k,
+                plan=plan,
+            )
+        if res.expanded_query != args.query:
+            print(f"Mở rộng: {res.expanded_query}")
         print(f"Router: {res.plan.mode} {res.plan.statuses}")
         for reason in res.plan.reasons:
             print(f"  - {reason}")
@@ -100,10 +109,12 @@ def main() -> None:
             ranks = f"vec={h.vec_rank} kw={h.kw_rank}" + (
                 f" ref={h.ref_rank}" if h.ref_rank else ""
             )
+            if h.rerank_score is not None:
+                ranks = f"rerank={h.rerank_score:.3f} hybrid#{h.hybrid_rank} " + ranks
             note = f" (bị thay thế bởi {', '.join(h.replaced_by)})" if h.replaced_by else ""
             if h.superseded_by:
                 note += f" (Điều/Khoản bị bãi bỏ/sửa đổi: {', '.join(h.superseded_by)})"
-            print(f"\n{i}. {h.score:.4f} [{ranks}] {h.citation} {h.status}{note}")
+            print(f"\n{i}. [{ranks}] {h.citation} {h.status}{note}")
             print(f"   {' '.join(h.content.split())[:160]}")
 
 

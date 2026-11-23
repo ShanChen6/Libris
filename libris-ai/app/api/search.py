@@ -1,4 +1,4 @@
-"""POST /search – Hybrid Search có lọc hiệu lực (Task 3.1, 3.2)."""
+"""POST /search – Hybrid Search có lọc hiệu lực + rerank (Task 3.1, 3.2, 3.3)."""
 
 from __future__ import annotations
 
@@ -11,16 +11,20 @@ from pydantic import BaseModel, Field
 
 from app.core.config import Settings, get_settings
 from app.pipeline.embedding import Embedder, get_embedder
-from app.retrieval.expansion import expand_query
-from app.retrieval.hybrid import SearchWeights, hybrid_search
-from app.retrieval.router import route
+from app.retrieval.hybrid import SearchWeights
+from app.retrieval.rerank import Reranker, get_reranker
+from app.retrieval.service import make_plan, retrieve
 
 router = APIRouter(tags=["search"])
 
 
 class SearchRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
-    top_k: int = Field(default=20, ge=1, le=100)
+    # Số đoạn trả về. Mặc định: RERANK_TOP_N (5) khi rerank, 20 khi không rerank
+    top_n: int | None = Field(default=None, ge=1, le=100)
+    rerank: bool = True
+    # Số ứng viên Hybrid Search đưa vào reranker. Mặc định: RERANK_CANDIDATES
+    candidates: int | None = Field(default=None, ge=1, le=100)
     # Ghi đè Query Router khi cần (VD: giao diện có nút "xem cả văn bản đã hết hiệu lực")
     include_expired: bool | None = None
     as_of: date | None = None
@@ -56,40 +60,44 @@ class HitOut(BaseModel):
     vec_rank: int | None
     kw_rank: int | None
     ref_rank: int | None
+    rerank_score: float | None  # độ liên quan [0, 1] do cross-encoder chấm
+    hybrid_rank: int | None  # thứ hạng trước khi rerank
 
 
 class SearchResponse(BaseModel):
     query: str
     expanded_query: str
+    reranked: bool
     plan: PlanOut
     hits: list[HitOut]
 
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 EmbedderDep = Annotated[Embedder, Depends(get_embedder)]
+RerankerDep = Annotated[Reranker, Depends(get_reranker)]
 
 
 @router.post("/search", response_model=SearchResponse)
-def search(req: SearchRequest, settings: SettingsDep, embedder: EmbedderDep) -> SearchResponse:
-    plan = route(req.query)
-    if req.as_of:
-        plan.mode, plan.period = "point_in_time", (req.as_of, req.as_of)
-        plan.reasons.append(f"Theo yêu cầu: văn bản có hiệu lực tại {req.as_of.isoformat()}")
-    if req.include_expired is not None:
-        statuses = {"ACTIVE", "AMENDED"} | ({"EXPIRED"} if req.include_expired else set())
-        plan.statuses = tuple(s for s in ("ACTIVE", "AMENDED", "EXPIRED") if s in statuses)
-        plan.reasons.append(f"Theo yêu cầu: include_expired={req.include_expired}")
-
-    # Router phân tích câu gốc; tìm kiếm dùng câu đã nối thêm thuật ngữ pháp lý
-    expanded = expand_query(req.query)
-    query_vector = embedder.encode([expanded])[0]
+def search(
+    req: SearchRequest, settings: SettingsDep, embedder: EmbedderDep, reranker: RerankerDep
+) -> SearchResponse:
+    plan = make_plan(req.query, include_expired=req.include_expired, as_of=req.as_of)
+    top_n = req.top_n or (settings.rerank_top_n if req.rerank else 20)
     with psycopg.connect(settings.database_url) as conn:
-        result = hybrid_search(
-            conn, expanded, query_vector, top_k=req.top_k, plan=plan, weights=req.weights
+        result = retrieve(
+            conn,
+            req.query,
+            embedder,
+            reranker if req.rerank else None,
+            candidates=max(req.candidates or settings.rerank_candidates, top_n),
+            top_n=top_n,
+            plan=plan,
+            weights=req.weights,
         )
     return SearchResponse(
-        query=req.query,
-        expanded_query=expanded,
+        query=result.query,
+        expanded_query=result.expanded_query,
+        reranked=result.reranked,
         plan=PlanOut(
             mode=result.plan.mode,
             statuses=list(result.plan.statuses),

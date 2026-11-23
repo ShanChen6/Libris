@@ -57,7 +57,7 @@
 - [x] **Task 3.2: Bộ lọc Hiệu lực Pháp lý Thông minh (Temporal & Status Filtering)**
   - Mặc định hệ thống chỉ truy xuất các `LegalChunks` thuộc văn bản có trạng thái `ACTIVE` (Còn hiệu lực) để tránh tư vấn nhầm luật cũ.
   - Bổ sung bộ nhận diện ý định (Query Router): Nếu người dùng hỏi so sánh luật cũ và mới, tự động mở rộng bộ lọc sang cả văn bản `EXPIRED`.
-- [ ] **Task 3.3: Tái xếp hạng Kết quả (Cross-Encoder Reranking)**
+- [x] **Task 3.3: Tái xếp hạng Kết quả (Cross-Encoder Reranking)**
   - Đưa Top 20 đoạn luật tìm được từ Hybrid Search qua mô hình Reranker (`bge-reranker-v2-m3`) để chấm điểm lại mức độ liên quan trực tiếp với câu hỏi, chọn ra **Top 5 đoạn luật tinh túy nhất**.
 - [ ] **Task 3.4: Thiết kế System Prompt Chống Ảo giác (Strict Citation Prompting)**
   - Thiết lập quy tắc bắt buộc cho LLM:

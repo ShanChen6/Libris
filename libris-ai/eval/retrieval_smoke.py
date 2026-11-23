@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 import psycopg
@@ -21,7 +22,9 @@ from app.core.config import get_settings  # noqa: E402
 from app.pipeline.embedding import get_embedder  # noqa: E402
 from app.retrieval.expansion import expand_query  # noqa: E402
 from app.retrieval.hybrid import hybrid_search  # noqa: E402
+from app.retrieval.rerank import rerank  # noqa: E402
 from app.retrieval.router import route  # noqa: E402
+from app.retrieval.service import retrieve  # noqa: E402
 
 # (câu hỏi, số hiệu, Điều, cụm từ phải có trong đoạn)
 CASES = [
@@ -42,32 +45,68 @@ CASES = [
 ]  # fmt: skip
 
 
+def _rank(hits, number: str, article: str, must: str) -> int | None:
+    return next(
+        (
+            i
+            for i, h in enumerate(hits, 1)
+            if h.document_number == number
+            and h.article == article
+            and must.lower() in h.content.lower()
+        ),
+        None,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("-k", type=int, default=20)
+    parser.add_argument("-k", type=int, default=20, help="số ứng viên từ Hybrid Search")
+    parser.add_argument("--rerank", action="store_true", help="tái xếp hạng bằng cross-encoder")
+    parser.add_argument(
+        "--rerank-query", choices=["original", "expanded"], default="expanded",
+        help="câu đưa cho reranker: câu hỏi gốc hay câu đã mở rộng thuật ngữ",
+    )  # fmt: skip
     args = parser.parse_args()
     embedder = get_embedder()
-    found, rr = 0, 0.0
+    reranker = None
+    if args.rerank:
+        from app.retrieval.rerank import get_reranker
+
+        reranker = get_reranker()
+        reranker.score("khởi động", ["mô hình"])  # tải mô hình trước khi đo thời gian
+    ranks: list[int | None] = []
+    timings: list[float] = []
     with psycopg.connect(get_settings().database_url) as conn:
         for question, number, article, must in CASES:
-            expanded = expand_query(question)
-            res = hybrid_search(
-                conn, expanded, embedder.encode([expanded])[0], top_k=args.k, plan=route(question)
-            )
-            rank = next(
-                (
-                    i
-                    for i, h in enumerate(res.hits, 1)
-                    if h.document_number == number
-                    and h.article == article
-                    and must.lower() in h.content.lower()
-                ),
-                None,
-            )
-            found += rank is not None
-            rr += 1 / rank if rank else 0
-            print(f"{str(rank or '-'):>4}  {article:9} {number:16} {question}")
-    print(f"\nRecall@{args.k}: {found}/{len(CASES)}   MRR: {rr / len(CASES):.3f}")
+            started = time.perf_counter()
+            if reranker is not None and args.rerank_query == "original":
+                expanded = expand_query(question)
+                res = hybrid_search(
+                    conn, expanded, embedder.encode([expanded])[0], top_k=args.k,
+                    plan=route(question),
+                )  # fmt: skip
+                hits = rerank(question, res.hits, reranker, top_n=args.k)
+            else:
+                # Cấu hình chuẩn của hệ thống: retrieve() rerank bằng câu đã mở rộng
+                hits = retrieve(
+                    conn, question, embedder, reranker, candidates=args.k, top_n=args.k
+                ).hits
+            timings.append(time.perf_counter() - started)
+            rank = _rank(hits, number, article, must)
+            ranks.append(rank)
+            score = f" {hits[rank - 1].rerank_score:.3f}" if rank and reranker else ""
+            print(f"{str(rank or '-'):>4}{score}  {article:9} {number:16} {question}")
+
+    n = len(CASES)
+
+    def recall(k: int) -> int:
+        return sum(1 for r in ranks if r and r <= k)
+
+    mrr = sum(1 / r for r in ranks if r) / n
+    print(
+        f"\nRecall@1: {recall(1)}/{n}  Recall@5: {recall(5)}/{n}  Recall@{args.k}: "
+        f"{recall(args.k)}/{n}  MRR: {mrr:.3f}  thời gian TB: {sum(timings) / n:.2f}s"
+    )
 
 
 if __name__ == "__main__":

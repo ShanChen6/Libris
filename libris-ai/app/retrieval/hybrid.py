@@ -74,6 +74,9 @@ class FusedHit:
     replaced_by: list[str] = field(default_factory=list)
     # ["repealed:168/2024/NĐ-CP"]: Điều/Khoản này (hoặc một phần) bị bãi bỏ / thay nội dung
     superseded_by: list[str] = field(default_factory=list)
+    # Do reranker (Task 3.3) gán: điểm liên quan [0, 1] và thứ hạng trước khi rerank
+    rerank_score: float | None = None
+    hybrid_rank: int | None = None
 
     @property
     def citation(self) -> str:

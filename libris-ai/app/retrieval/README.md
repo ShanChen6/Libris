@@ -1,4 +1,11 @@
-# Truy xuất (Task 3.1, 3.2)
+# Truy xuất (Task 3.1, 3.2, 3.3)
+
+```
+câu hỏi → Query Router → mở rộng thuật ngữ → embedding → Hybrid Search (RRF) → Cross-encoder rerank → Top 5
+```
+
+Toàn bộ luồng nằm trong `service.retrieve()`, được API, CLI, script đánh giá và bước sinh câu
+trả lời (Task 3.4) dùng chung.
 
 ```bash
 cd libris-ai
@@ -8,15 +15,17 @@ uv run uvicorn app.main:app --port 8000   # POST /search, xem /docs
 
 ```http
 POST /search
-{"query": "So sánh mức phạt vượt đèn đỏ cũ và mới", "top_k": 20}
+{"query": "So sánh mức phạt vượt đèn đỏ cũ và mới"}
 ```
 
-Tham số tùy chọn: `include_expired` (bật/tắt văn bản hết hiệu lực, ghi đè Router), `as_of`
+Tham số tùy chọn: `rerank` (mặc định `true`), `top_n` (mặc định 5), `candidates` (số ứng viên
+đưa vào reranker, mặc định `RERANK_CANDIDATES`), `include_expired` (bật/tắt văn bản hết hiệu lực, ghi đè Router), `as_of`
 (`YYYY-MM-DD`: chỉ lấy văn bản có hiệu lực tại ngày đó), `weights` (`vector`, `keyword`,
 `referenced`, `candidates`). Mỗi kết quả có `citation` (`[Điều 7, Khoản 2 - 168/2024/NĐ-CP]`),
 trạng thái hiệu lực, `replaced_by` (văn bản thay thế, nếu đã hết hiệu lực), vị trí
 `char_start`/`char_end`, và thứ hạng ở từng luồng (`vec_rank`, `kw_rank`, `ref_rank`) để giải thích
-vì sao đoạn đó được chọn.
+vì sao đoạn đó được chọn. Khi rerank, mỗi kết quả có thêm `rerank_score` (độ liên quan 0–1) và
+`hybrid_rank` (thứ hạng trước khi rerank).
 
 ## Hybrid Search với RRF (`hybrid.py`)
 
@@ -85,7 +94,8 @@ và từ khóa. Router vẫn phân tích câu gốc.
 ### Đánh giá nhanh
 
 ```bash
-uv run python eval/retrieval_smoke.py     # 10 câu hỏi mẫu, in Recall@20 và MRR
+uv run python eval/retrieval_smoke.py              # Hybrid Search
+uv run python eval/retrieval_smoke.py --rerank     # + cross-encoder (cấu hình thật của hệ thống)
 ```
 
 | Cấu hình | Recall@20 | Ghi chú |
@@ -94,5 +104,26 @@ uv run python eval/retrieval_smoke.py     # 10 câu hỏi mẫu, in Recall@20 v�
 | + mở rộng truy vấn | 10/10 | |
 | + lọc cấp Điều/Khoản | 10/10, MRR 0,53 | đoạn đúng lên hạng cao hơn vì bớt đoạn lỗi thời |
 
-Đoạn đúng thường nằm trong top 10 nhưng chưa ở hạng 1 (MRR 0,53). Xếp lại thứ tự là nhiệm vụ của
-reranker (Task 3.3).
+## Tái xếp hạng – Cross-encoder (`rerank.py`, Task 3.3)
+
+Hybrid Search so khớp gần đúng (vector của câu hỏi và vector của đoạn được tính riêng). Cross-encoder
+`BAAI/bge-reranker-v2-m3` đọc **đồng thời** câu hỏi và từng đoạn luật nên chấm mức độ liên quan
+chính xác hơn nhiều. Đổi lại, mô hình chậm, nên chỉ chấm lại Top N ứng viên rồi giữ Top 5 cho LLM.
+
+| Cấu hình (`eval/retrieval_smoke.py`) | Recall@1 | Recall@5 | MRR | Thời gian/câu (CPU 4 nhân) |
+|---|---|---|---|---|
+| Hybrid RRF (đã mở rộng + lọc cấp Điều) | 4/10 | 7/10 | 0,531 | 0,9 s |
+| + rerank bằng **câu gốc**, 20 ứng viên | 7/10 | 9/10 | 0,767 | 15,4 s |
+| + rerank bằng **câu đã mở rộng**, 20 ứng viên | 8/10 | **10/10** | 0,867 | 15,9 s |
+| + rerank bằng câu đã mở rộng, **10 ứng viên** | 8/10 | **10/10** | **0,883** | **9,3 s** |
+
+- Reranker nhận **câu đã mở rộng thuật ngữ**: "vượt đèn đỏ" khớp được với "không chấp hành hiệu
+  lệnh của đèn tín hiệu giao thông" (từ hạng 11 lên hạng 3).
+- `rerank_score` ∈ [0, 1]. Câu trả lời đúng thường đạt ≥ 0,85; đoạn không liên quan gần 0. Task 3.4
+  sẽ dùng ngưỡng này để từ chối trả lời khi kho không có điều luật đủ liên quan.
+- **Tốc độ trên CPU** khoảng 0,8 giây mỗi cặp (câu hỏi, đoạn). Mặc định 20 ứng viên theo roadmap; khi
+  chạy CPU (VD Render/Railway, Task 6.1) nên đặt `RERANK_CANDIDATES=10`: nhanh gấp đôi, không giảm
+  chất lượng trên bộ thử. Có GPU (`RERANKER_DEVICE=cuda`) thì 20 ứng viên chỉ mất dưới 1 giây.
+- Đã thử lượng tử hóa int8 (`torch.ao.quantization.quantize_dynamic`) nhưng không tương thích với
+  XLM-RoBERTa trên transformers 5 / torch 2.15. Hướng tăng tốc tiếp theo nếu cần: xuất ONNX (int8)
+  hoặc dùng dịch vụ rerank có GPU.

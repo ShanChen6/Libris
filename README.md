@@ -82,6 +82,14 @@ uv run python -m app.pipeline embed  # sinh embedding bge-m3 (lần đầu tải
 cd .. && docker compose run --rm migrate   # tạo chỉ mục HNSW + GIN
 ```
 
+Tra thử truy xuất (Router → Hybrid Search → Rerank), chi tiết trong
+[libris-ai/app/retrieval/README.md](libris-ai/app/retrieval/README.md):
+
+```bash
+cd libris-ai
+uv run python -m app.pipeline search "Đi xe máy không có gương chiếu hậu bên trái có bị phạt không?"
+```
+
 Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu ra: [libris-ai/crawler/README.md](libris-ai/crawler/README.md).
 
 ## Tài liệu

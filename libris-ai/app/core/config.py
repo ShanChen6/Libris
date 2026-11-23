@@ -20,6 +20,17 @@ class Settings(BaseSettings):
     embedding_batch_size: int = 16
     embedding_preload: bool = False  # tải mô hình ngay khi khởi động API
 
+    # Cross-encoder reranker (Task 3.3): chấm lại Top `rerank_candidates` từ Hybrid Search,
+    # giữ Top `rerank_top_n` đưa cho LLM. Trên CPU 4 nhân mất ~0,8 giây / cặp (câu hỏi, đoạn):
+    # 20 ứng viên ~16 giây, 10 ứng viên ~9 giây -> chạy CPU nên đặt RERANK_CANDIDATES=10.
+    reranker_model: str = "BAAI/bge-reranker-v2-m3"
+    reranker_device: str = "cpu"
+    reranker_max_length: int = 1024
+    reranker_batch_size: int = 10
+    rerank_candidates: int = 20
+    rerank_top_n: int = 5
+    reranker_preload: bool = False
+
 
 @lru_cache
 def get_settings() -> Settings:
