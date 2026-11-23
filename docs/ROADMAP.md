@@ -70,7 +70,7 @@
 ### GIAI ĐOẠN 4: Phát triển Backend API & Giao diện Trải nghiệm Người dùng (Tuần 8 – Tuần 10)
 *Mục tiêu: Xây dựng giao diện trợ lý pháp luật trực quan, phản hồi tức thì và cho phép kiểm chứng nguồn luật ngay trên màn hình.*
 
-- [ ] **Task 4.1: Xây dựng Backend Quản trị (NestJS)**
+- [x] **Task 4.1: Xây dựng Backend Quản trị (NestJS)**
   - Xây dựng hệ thống đăng ký/đăng nhập (JWT), phân quyền người dùng và quản trị viên.
   - Xây dựng API quản lý kho văn bản luật: Cho phép Admin tải lên văn bản luật mới (file `.docx` hoặc `.pdf`), hệ thống tự động gọi sang FastAPI để chạy pipeline bóc tách và cập nhật vào VectorDB.
 - [ ] **Task 4.2: Tích hợp Streaming Response (Server-Sent Events)**

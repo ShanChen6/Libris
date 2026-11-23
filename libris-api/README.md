@@ -1,126 +1,75 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# libris-api
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend NestJS 12 của Libris: đăng ký/đăng nhập (JWT), phân quyền người dùng và quản trị viên,
+quản lý kho văn bản luật. Phần xử lý văn bản (OCR, cắt đoạn, embedding) và hỏi đáp nằm ở
+`libris-ai`; libris-api gọi sang bằng token nội bộ.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## Chạy
 
 ```bash
-$ npm install
+cp .env.example .env          # điền JWT_SECRET (openssl rand -base64 32), AI_SERVICE_TOKEN
+npm install                    # npm 10 có lỗi với dependency của Nest 12: dùng npm 11+
+npm run start:dev              # http://localhost:4000
 ```
 
-## Compile and run the project
+Cần PostgreSQL đã chạy migration (`docker compose run --rm migrate` ở gốc repo). Đặt `ADMIN_EMAIL` và
+`ADMIN_PASSWORD` để tạo tài khoản quản trị đầu tiên khi khởi động (bỏ qua nếu email đã tồn tại).
+
+| Biến | Ý nghĩa |
+|---|---|
+| `DATABASE_URL` | PostgreSQL dùng chung với libris-ai |
+| `JWT_SECRET` | khóa ký access token, **≥ 32 byte** (ứng dụng không khởi động nếu ngắn hơn) |
+| `JWT_TTL` | thời hạn access token, mặc định `2h` |
+| `AI_SERVICE_URL`, `AI_SERVICE_TOKEN` | địa chỉ libris-ai; token phải trùng `INTERNAL_API_TOKEN` của libris-ai |
+| `WEB_ORIGIN` | origin của libris-web cho CORS (nhiều origin cách nhau dấu phẩy) |
+| `MAX_UPLOAD_MB` | dung lượng file tải lên tối đa, mặc định 30 |
+
+## API
+
+Mọi route mặc định **yêu cầu đăng nhập** (`Authorization: Bearer <accessToken>`); route không khai
+báo quyền bị từ chối.
+
+| Method & đường dẫn | Quyền | Mô tả |
+|---|---|---|
+| `GET /health` | công khai | kiểm tra dịch vụ |
+| `POST /auth/register` | công khai | `{ email, password (≥ 8 ký tự), fullName? }` → `{ user, accessToken, expiresIn }` |
+| `POST /auth/login` | công khai | `{ email, password }` → `{ user, accessToken, expiresIn }`; sai email hay sai mật khẩu đều trả 401 cùng nội dung |
+| `GET /auth/me` | đã đăng nhập | người dùng hiện tại |
+| `GET /documents?status=ACTIVE,AMENDED&type=Luật&q=đất đai` | đã đăng nhập | danh sách văn bản, kèm trạng thái hiệu lực và số đoạn |
+| `GET /documents/:id` | đã đăng nhập | chi tiết văn bản, quan hệ thay thế/sửa đổi, các Điều/Khoản bị bãi bỏ |
+| `POST /admin/documents` | ADMIN | multipart: `file` (.pdf/.doc/.docx), `documentNumber`, `title`, `documentType?`, `issuingBody?`, `signer?`, `issueDate?`, `effectiveDate?` → 202 `{ jobId, statusUrl }` |
+| `GET /admin/ingestions`, `GET /admin/ingestions/:id` | ADMIN | tiến trình xử lý: `queued → processing (extract, metadata, chunk, embed) → done / failed` |
+| `DELETE /admin/documents/:id` | ADMIN | xóa văn bản cùng các đoạn luật, tính lại trạng thái hiệu lực các văn bản liên quan |
+| `GET /admin/users?limit=&after=` | ADMIN | danh sách người dùng (phân trang theo con trỏ) |
+| `PATCH /admin/users/:id/role` | ADMIN | `{ role: "USER" \| "ADMIN" }`; không hạ được quản trị viên cuối cùng (409) |
+
+Lỗi validation trả 400 với `message` là danh sách lỗi theo trường; 401 là chưa đăng nhập hoặc
+token sai/hết hạn; 403 là không đủ quyền.
+
+## Thiết kế
+
+- **Xác thực**: `@nestjs/authentication`. Mật khẩu băm bằng scrypt (`PasswordHasher`); kiểm tra
+  mật khẩu luôn chạy cả khi email không tồn tại, nên thời gian phản hồi không làm lộ email nào đã
+  đăng ký. Access token JWT HS256 ngắn hạn, không dùng refresh token: hết hạn thì đăng nhập lại.
+  `/auth/*` giới hạn 10 lần mỗi phút mỗi IP.
+- **Phân quyền**: `@nestjs/authorization`, `AdminPolicy` cho mọi route `/admin/*`. Người dùng và
+  vai trò được **đọc lại từ DB ở mỗi request** (không lấy từ token), nên khóa tài khoản hay đổi vai
+  trò có hiệu lực ngay, kể cả với token đã phát.
+- **Dữ liệu**: `pg` với truy vấn có tham số; schema do migration SQL ở `db/migrations` quản lý
+  (chung với libris-ai). Email trùng được bắt bằng ràng buộc unique (409), không kiểm tra trước.
+- **Tải văn bản lên**: libris-api nhận file và kiểm tra quyền, định dạng, thông tin bắt buộc, rồi
+  chuyển sang `POST /ingest` của libris-ai kèm `X-Internal-Token`. libris-ai xử lý nền và ghi tiến
+  trình vào bảng `ingestion_jobs`, libris-api đọc thẳng từ đó. Khi văn bản mới thay thế hoặc bãi bỏ
+  văn bản cũ, hàm SQL `recompute_document_status()` cập nhật trạng thái văn bản cũ ngay.
+
+## Kiểm thử
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm test                                   # unit
+LIBRIS_TEST_DATABASE_URL=postgresql://libris:libris@localhost:5432/libris npm run test:e2e
+npm run lint
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Observability
-
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
-
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
-
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
-This project is already instrumented. To connect it, run this and approve the code it prints at [observe.nestjs.com/link](https://observe.nestjs.com/link) - signing up for free if you have no account:
-
-```bash
-$ npx @nestjs/observe link
-```
-
-It writes the app key and secret into `.env` and makes every `nest start` script (`start`, `start:dev`, `start:debug`) load it. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
-
-Or do it by hand: create an application and an API key at [observe.nestjs.com](https://observe.nestjs.com), and set the pair as `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment the app runs in.
-
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Test e2e chạy toàn bộ migration vào một schema PostgreSQL tạm, đi qua route thật (đăng ký, đăng
+nhập, phân quyền, tải văn bản lên với libris-ai giả lập, xóa văn bản và tính lại hiệu lực, giới hạn
+đăng nhập) rồi xóa schema đó.

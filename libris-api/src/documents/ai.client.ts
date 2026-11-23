@@ -1,0 +1,119 @@
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { Env } from '../config/env.js';
+
+export interface IngestMetadata {
+  documentNumber: string;
+  title: string;
+  documentType?: string;
+  issuingBody?: string;
+  signer?: string;
+  issueDate?: string;
+  effectiveDate?: string;
+}
+
+export interface UploadedFile {
+  originalname: string;
+  mimetype: string;
+  buffer: Buffer;
+}
+
+/** Gọi libris-ai (FastAPI) bằng token nội bộ. */
+@Injectable()
+export class AiClient {
+  private readonly logger = new Logger(AiClient.name);
+  private readonly baseUrl: string;
+  private readonly token: string;
+
+  constructor(config: ConfigService<Env, true>) {
+    this.baseUrl = config
+      .get('AI_SERVICE_URL', { infer: true })
+      .replace(/\/$/, '');
+    this.token = config.get('AI_SERVICE_TOKEN', { infer: true });
+  }
+
+  private headers(): Record<string, string> {
+    return this.token ? { 'X-Internal-Token': this.token } : {};
+  }
+
+  /** Gửi file sang pipeline nạp văn bản; trả về id của job xử lý nền. */
+  async ingest(
+    file: UploadedFile,
+    meta: IngestMetadata,
+    createdBy: string,
+  ): Promise<{ jobId: string }> {
+    const form = new FormData();
+    form.append(
+      'file',
+      new Blob([new Uint8Array(file.buffer)], { type: file.mimetype }),
+      file.originalname,
+    );
+    const fields: Record<string, string | undefined> = {
+      document_number: meta.documentNumber,
+      title: meta.title,
+      document_type: meta.documentType,
+      issuing_body: meta.issuingBody,
+      signer: meta.signer,
+      issue_date: meta.issueDate,
+      effective_date: meta.effectiveDate,
+      created_by: createdBy,
+    };
+    for (const [key, value] of Object.entries(fields)) {
+      if (value) form.append(key, value);
+    }
+
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/ingest`, {
+        method: 'POST',
+        headers: this.headers(),
+        body: form,
+        signal: AbortSignal.timeout(60_000),
+      });
+    } catch (error) {
+      this.logger.error(
+        `Không gọi được libris-ai: ${(error as Error).message}`,
+      );
+      throw new ServiceUnavailableException(
+        'Dịch vụ xử lý văn bản (libris-ai) không phản hồi',
+      );
+    }
+    const body = (await res.json().catch(() => ({}))) as {
+      job_id?: string;
+      detail?: unknown;
+    };
+    if (res.status === 422) {
+      throw new UnprocessableEntityException(
+        describeDetail(body.detail) ?? 'File không hợp lệ',
+      );
+    }
+    if (!res.ok || !body.job_id) {
+      this.logger.error(
+        `libris-ai trả về HTTP ${res.status}: ${JSON.stringify(body)}`,
+      );
+      throw new ServiceUnavailableException(
+        'Dịch vụ xử lý văn bản (libris-ai) lỗi',
+      );
+    }
+    return { jobId: body.job_id };
+  }
+}
+
+/** FastAPI trả `detail` dạng chuỗi (lỗi nghiệp vụ) hoặc danh sách lỗi validation. */
+function describeDetail(detail: unknown): string | undefined {
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    return detail
+      .map(
+        (d: { loc?: unknown[]; msg?: string }) =>
+          `${(d.loc ?? []).join('.')}: ${d.msg ?? ''}`,
+      )
+      .join('; ');
+  }
+  return undefined;
+}

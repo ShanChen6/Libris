@@ -45,12 +45,12 @@ uv sync
 uv run uvicorn app.main:app --reload --port 8000
 ```
 
-**3. libris-api** – http://localhost:4000
+**3. libris-api** – http://localhost:4000 (chi tiết API: [libris-api/README.md](libris-api/README.md))
 
 ```bash
 cd libris-api
-cp .env.example .env
-npm install
+cp .env.example .env    # điền JWT_SECRET (openssl rand -base64 32), ADMIN_EMAIL/ADMIN_PASSWORD
+npm install             # dùng npm 11+
 npm run start:dev
 ```
 
@@ -69,6 +69,9 @@ npm run dev
 |---|---|
 | libris-ai | `GET :8000/health`, `GET :8000/health/ready` (kiểm tra Postgres/pgvector & Redis) |
 | libris-api | `GET :4000/health` |
+
+`libris-api` gọi `libris-ai` bằng token nội bộ: đặt cùng một giá trị cho `AI_SERVICE_TOKEN`
+(libris-api) và `INTERNAL_API_TOKEN` (libris-ai), tạo bằng `openssl rand -hex 32`.
 
 ### Thu thập dữ liệu pháp luật
 
