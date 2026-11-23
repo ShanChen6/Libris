@@ -11,14 +11,15 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Literal
+from typing import Any, Literal
 
 import psycopg
 
 from app.generation.citations import Citation, extract_citations
-from app.generation.llm import Completion, LLMClient
+from app.generation.llm import Completion, LLMClient, LLMError
 from app.generation.prompt import REFUSAL_MARKER, build_messages
 from app.pipeline.embedding import Embedder
 from app.retrieval.hybrid import FusedHit
@@ -90,22 +91,32 @@ def validity_notices(citations: list[Citation]) -> list[str]:
     return notices
 
 
-def answer_question(
+@dataclass
+class Prepared:
+    """Kết quả bước truy xuất; ``refusal`` khác None nghĩa là đã từ chối trước khi gọi LLM."""
+
+    question: str
+    plan: RetrievalPlan
+    hits: list[FusedHit]
+    today: date
+    timings: dict[str, float]
+    refusal: AnswerResult | None = None
+
+
+def prepare(
     conn: psycopg.Connection,
     question: str,
     *,
     embedder: Embedder,
     reranker: Reranker | None,
-    llm: LLMClient,
     plan: RetrievalPlan | None = None,
     candidates: int = 20,
     top_n: int = 5,
     min_rerank_score: float = 0.2,
     today: date | None = None,
-) -> AnswerResult:
+) -> Prepared:
     today = today or date.today()
     timings: dict[str, float] = {}
-
     started = time.monotonic()
     retrieval = retrieve(
         conn, question, embedder, reranker, candidates=candidates, top_n=top_n, plan=plan
@@ -115,26 +126,33 @@ def answer_question(
 
     # Lớp 1: chặn trước khi gọi LLM
     if not hits:
-        return _refusal(question, "no_results", plan, hits, timings=timings)
+        refusal = _refusal(question, "no_results", plan, hits, timings=timings)
+        return Prepared(question, plan, hits, today, timings, refusal)
     best = max((h.rerank_score or 0.0) for h in hits) if retrieval.reranked else None
     if best is not None and best < min_rerank_score:
-        return _refusal(question, "low_relevance", plan, hits, timings=timings)
+        refusal = _refusal(question, "low_relevance", plan, hits, timings=timings)
+        return Prepared(question, plan, hits, today, timings, refusal)
     if retrieval.reranked:
         # Bỏ các đoạn gần như không liên quan để LLM không bám vào
         hits = [h for h in hits if (h.rerank_score or 0.0) >= min_rerank_score / 2]
+    return Prepared(question, plan, hits, today, timings)
 
-    # Lớp 2: LLM với system prompt nghiêm ngặt
-    started = time.monotonic()
-    completion: Completion = llm.complete(build_messages(question, hits, plan, today))
-    timings["llm"] = time.monotonic() - started
-    text = completion.text.strip()
-    meta = {"model": completion.model, "usage": completion.usage, "timings": timings}
 
-    if text.upper().startswith(REFUSAL_MARKER):
+def messages_for(prep: Prepared) -> list:
+    """Lớp 2: system prompt nghiêm ngặt + ngữ cảnh các đoạn luật."""
+    return build_messages(prep.question, prep.hits, prep.plan, prep.today)
+
+
+def finalize(prep: Prepared, raw_text: str, model: str | None, usage: dict[str, int]):
+    """Lớp 3: nhận diện từ chối, xác minh trích dẫn, gắn cảnh báo hiệu lực."""
+    question, plan, hits = prep.question, prep.plan, prep.hits
+    text = raw_text.strip()
+    meta = {"model": model, "usage": usage, "timings": prep.timings}
+
+    if is_refusal(text):
         detail = text[len(REFUSAL_MARKER) :].strip(" :\n") or None
         return _refusal(question, "model_refused", plan, hits, detail, **meta)
 
-    # Lớp 3: xác minh trích dẫn
     citations = extract_citations(text, hits)
     valid = [c for c in citations if c.valid]
     invalid = [c for c in citations if not c.valid]
@@ -155,3 +173,97 @@ def answer_question(
     if any(c.hit and c.hit.superseded_by for c in valid) and plan.mode == "current":
         warnings.append("Có trích dẫn tới Điều/Khoản đã bị bãi bỏ hoặc sửa đổi.")
     return AnswerResult(question, text, False, None, plan, hits, valid, warnings, **meta)
+
+
+def is_refusal(text: str) -> bool:
+    return text.lstrip().upper().startswith(REFUSAL_MARKER)
+
+
+def answer_question(
+    conn: psycopg.Connection,
+    question: str,
+    *,
+    embedder: Embedder,
+    reranker: Reranker | None,
+    llm: LLMClient,
+    plan: RetrievalPlan | None = None,
+    candidates: int = 20,
+    top_n: int = 5,
+    min_rerank_score: float = 0.2,
+    today: date | None = None,
+) -> AnswerResult:
+    prep = prepare(
+        conn, question, embedder=embedder, reranker=reranker, plan=plan,
+        candidates=candidates, top_n=top_n, min_rerank_score=min_rerank_score, today=today,
+    )  # fmt: skip
+    if prep.refusal:
+        return prep.refusal
+    started = time.monotonic()
+    completion: Completion = llm.complete(messages_for(prep))
+    prep.timings["llm"] = time.monotonic() - started
+    return finalize(prep, completion.text, completion.model, completion.usage)
+
+
+StreamEvent = tuple[str, Any]
+
+
+def stream_answer(
+    conn: psycopg.Connection,
+    question: str,
+    *,
+    embedder: Embedder,
+    reranker: Reranker | None,
+    llm: LLMClient,
+    plan: RetrievalPlan | None = None,
+    candidates: int = 20,
+    top_n: int = 5,
+    min_rerank_score: float = 0.2,
+    today: date | None = None,
+) -> Iterator[StreamEvent]:
+    """Các sự kiện theo thứ tự: ``meta`` (kế hoạch + nguồn) → ``delta``* (từng mẩu chữ) →
+    ``done`` (câu trả lời cuối cùng đã xác minh). Lỗi LLM: ``error``.
+
+    Câu trả lời cuối trong ``done`` là bản chính thức: có thể khác các ``delta`` đã gửi (thêm cảnh
+    báo hiệu lực, hoặc bị thay bằng lời từ chối khi không có trích dẫn hợp lệ).
+    """
+    prep = prepare(
+        conn, question, embedder=embedder, reranker=reranker, plan=plan,
+        candidates=candidates, top_n=top_n, min_rerank_score=min_rerank_score, today=today,
+    )  # fmt: skip
+    yield "meta", prep
+    if prep.refusal:
+        yield "done", prep.refusal
+        return
+
+    started = time.monotonic()
+    parts: list[str] = []
+    pending = ""  # giữ lại đầu câu trả lời cho tới khi biết đó có phải lời "TỪ CHỐI"
+    decided = streaming = False
+    try:
+        for chunk in llm.stream(messages_for(prep)):
+            if "first_token" not in prep.timings:
+                prep.timings["first_token"] = time.monotonic() - started
+            parts.append(chunk)
+            if streaming:
+                yield "delta", chunk
+            elif not decided:
+                pending += chunk
+                head = pending.lstrip().upper()
+                if len(head) >= len(REFUSAL_MARKER) or not REFUSAL_MARKER.startswith(head):
+                    decided = True
+                    # Lời từ chối: không phát ra giao diện, vẫn đọc hết để lấy lý do
+                    streaming = not is_refusal(pending)
+                    if streaming:
+                        yield "delta", pending
+    except LLMError as exc:
+        yield "error", {"message": f"Dịch vụ LLM tạm thời không khả dụng: {exc}"}
+        return
+    if not decided and pending and not is_refusal(pending):
+        yield "delta", pending  # câu trả lời ngắn hơn độ dài chữ "TỪ CHỐI"
+    prep.timings["llm"] = time.monotonic() - started
+    yield "done", finalize(prep, "".join(parts), _model_of(llm), {})
+
+
+def _model_of(llm: LLMClient) -> str | None:
+    """Mô hình đã thực sự phục vụ (có thể là mô hình dự phòng)."""
+    return getattr(llm, "last_model", None)

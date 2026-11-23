@@ -59,5 +59,10 @@ class FakeLLM:
         text = self.reply(messages) if callable(self.reply) else self.reply
         return Completion(text=text, model="fake-llm", usage={"total_tokens": 1})
 
+    last_model = "fake-llm"
+
     def stream(self, messages):
-        yield self.complete(messages).text
+        # Chia thành mẩu 4 ký tự như token thật
+        text = self.complete(messages).text
+        for i in range(0, len(text), 4):
+            yield text[i : i + 4]

@@ -116,3 +116,91 @@ def test_answer_endpoint(seeded) -> None:  # noqa: F811
         assert client.post("/answer", json={"question": ""}).status_code == 422
     finally:
         app.dependency_overrides.clear()
+
+
+# --- Streaming (Task 4.2) ---------------------------------------------------------------------
+from app.generation.answer import stream_answer  # noqa: E402
+
+
+def _stream(seeded, question: str, llm, **kw):  # noqa: F811
+    conninfo, emb = seeded
+    with psycopg.connect(conninfo) as conn:
+        return list(
+            stream_answer(
+                conn, question, embedder=emb, reranker=FakeReranker(), llm=llm, today=TODAY,
+                candidates=10, top_n=3, **kw,
+            )
+        )  # fmt: skip
+
+
+def test_stream_meta_deltas_done(seeded) -> None:  # noqa: F811
+    events = _stream(seeded, "xe mô tô không có gương chiếu hậu bị phạt", FakeLLM(_cite_first))
+    kinds = [k for k, _ in events]
+    assert kinds[0] == "meta" and kinds[-1] == "done" and set(kinds[1:-1]) == {"delta"}
+    streamed = "".join(d for k, d in events if k == "delta")
+    done = events[-1][1]
+    assert not done.refused and done.answer.startswith(streamed)
+    assert done.model == "fake-llm" and "first_token" in done.timings
+
+
+def test_stream_never_leaks_refusal_marker(seeded) -> None:  # noqa: F811
+    events = _stream(seeded, "gương chiếu hậu", FakeLLM("TỪ CHỐI\nTài liệu không đủ căn cứ."))
+    assert [k for k, _ in events] == ["meta", "done"]
+    assert events[-1][1].refusal_reason == "model_refused"
+
+
+def test_stream_ungrounded_answer_is_replaced_in_done(seeded) -> None:  # noqa: F811
+    events = _stream(seeded, "gương chiếu hậu", FakeLLM("Bị phạt 10 triệu đồng."))
+    assert "".join(d for k, d in events if k == "delta") == "Bị phạt 10 triệu đồng."
+    done = events[-1][1]
+    assert done.refused and done.refusal_reason == "ungrounded" and "10 triệu" not in done.answer
+
+
+def test_stream_short_answer_and_early_refusal(seeded) -> None:  # noqa: F811
+    short = _stream(seeded, "gương chiếu hậu", FakeLLM("Có."))
+    assert [d for k, d in short if k == "delta"] == ["Có."]
+    llm = FakeLLM("không được gọi")
+    early = _stream(seeded, "nấu phở bò", llm, min_rerank_score=0.5)
+    assert [k for k, _ in early] == ["meta", "done"] and llm.calls == []
+    assert early[-1][1].refusal_reason == "low_relevance"
+
+
+def test_stream_llm_error_event(seeded) -> None:  # noqa: F811
+    class Broken(FakeLLM):
+        def stream(self, messages):
+            yield "Bị phạt"
+            raise LLMError("đứt kết nối")
+
+    events = _stream(seeded, "gương chiếu hậu", Broken(""))
+    assert events[-1][0] == "error" and "đứt kết nối" in events[-1][1]["message"]
+
+
+def test_stream_endpoint(seeded) -> None:  # noqa: F811
+    import json
+
+    conninfo, emb = seeded
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url=conninfo, rerank_candidates=10, rerank_top_n=3
+    )
+    app.dependency_overrides[get_embedder] = lambda: emb
+    app.dependency_overrides[get_reranker] = FakeReranker
+    app.dependency_overrides[get_llm] = lambda: FakeLLM(_cite_first)
+    try:
+        with TestClient(app).stream(
+            "POST", "/answer/stream", json={"question": "gương chiếu hậu bị phạt"}
+        ) as res:
+            assert res.status_code == 200
+            assert res.headers["content-type"].startswith("text/event-stream")
+            body = "".join(res.iter_text())
+    finally:
+        app.dependency_overrides.clear()
+    events = [
+        (block.split("\n")[0].removeprefix("event: "), json.loads(block.split("\n")[1][6:]))
+        for block in body.strip().split("\n\n")
+    ]
+    assert events[0][0] == "meta" and events[0][1]["sources"]
+    assert events[0][1]["plan"]["mode"] == "current"
+    assert {k for k, _ in events[1:-1]} == {"delta"}
+    done = events[-1][1]
+    assert events[-1][0] == "done" and done["refused"] is False and done["citations"]
+    assert done["answer"].startswith("".join(d["text"] for k, d in events if k == "delta"))

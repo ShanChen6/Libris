@@ -2,18 +2,23 @@
 
 from __future__ import annotations
 
+import json
+import logging
+from collections.abc import Iterator
 from datetime import date
-from typing import Annotated
+from typing import Annotated, Any
 
 import psycopg
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.api.search import EmbedderDep, HitOut, PlanOut, RerankerDep, SettingsDep
-from app.generation.answer import answer_question
+from app.generation.answer import AnswerResult, answer_question, stream_answer
 from app.generation.llm import LLMClient, LLMError, get_llm
 from app.retrieval.service import make_plan
 
+log = logging.getLogger(__name__)
 router = APIRouter(tags=["answer"])
 LLMDep = Annotated[LLMClient, Depends(get_llm)]
 
@@ -55,6 +60,66 @@ class AnswerResponse(BaseModel):
     timings: dict[str, float]
 
 
+def _citations(res: AnswerResult) -> list[CitationOut]:
+    return [
+        CitationOut(
+            label=c.label,
+            start=c.start,
+            end=c.end,
+            chunk_id=c.hit.chunk_id,
+            document_number=c.hit.document_number,
+            document_title=c.hit.document_title,
+            status=c.hit.status,
+            article=c.hit.article,
+            clause=c.hit.clause,
+            point=c.hit.point,
+            char_start=c.hit.char_start,
+            char_end=c.hit.char_end,
+            superseded_by=c.hit.superseded_by,
+        )
+        for c in res.citations
+        if c.hit is not None
+    ]
+
+
+def _plan(plan) -> PlanOut:
+    return PlanOut(
+        mode=plan.mode,
+        statuses=list(plan.statuses),
+        period=plan.period,
+        referenced=plan.referenced,
+        reasons=plan.reasons,
+    )
+
+
+def _sources(hits) -> list[HitOut]:
+    return [HitOut(citation=h.citation, **vars(h)) for h in hits]
+
+
+def to_response(res: AnswerResult) -> AnswerResponse:
+    return AnswerResponse(
+        question=res.question,
+        answer=res.answer,
+        refused=res.refused,
+        refusal_reason=res.refusal_reason,
+        citations=_citations(res),
+        warnings=res.warnings,
+        plan=_plan(res.plan),
+        sources=_sources(res.hits),
+        model=res.model,
+        usage=res.usage,
+        timings=res.timings,
+    )
+
+
+def _options(settings) -> dict:
+    return {
+        "candidates": settings.rerank_candidates,
+        "top_n": settings.rerank_top_n,
+        "min_rerank_score": settings.answer_min_rerank_score,
+    }
+
+
 @router.post("/answer", response_model=AnswerResponse)
 def answer(
     req: AnswerRequest,
@@ -67,54 +132,71 @@ def answer(
     try:
         with psycopg.connect(settings.database_url) as conn:
             res = answer_question(
-                conn,
-                req.question,
-                embedder=embedder,
-                reranker=reranker,
-                llm=llm,
-                plan=plan,
-                candidates=settings.rerank_candidates,
-                top_n=settings.rerank_top_n,
-                min_rerank_score=settings.answer_min_rerank_score,
-            )
+                conn, req.question, embedder=embedder, reranker=reranker, llm=llm, plan=plan,
+                **_options(settings),
+            )  # fmt: skip
     except LLMError as exc:
         raise HTTPException(
             status_code=503, detail=f"Dịch vụ LLM tạm thời không khả dụng: {exc}"
         ) from exc
-    return AnswerResponse(
-        question=res.question,
-        answer=res.answer,
-        refused=res.refused,
-        refusal_reason=res.refusal_reason,
-        citations=[
-            CitationOut(
-                label=c.label,
-                start=c.start,
-                end=c.end,
-                chunk_id=c.hit.chunk_id,
-                document_number=c.hit.document_number,
-                document_title=c.hit.document_title,
-                status=c.hit.status,
-                article=c.hit.article,
-                clause=c.hit.clause,
-                point=c.hit.point,
-                char_start=c.hit.char_start,
-                char_end=c.hit.char_end,
-                superseded_by=c.hit.superseded_by,
-            )
-            for c in res.citations
-            if c.hit is not None
-        ],
-        warnings=res.warnings,
-        plan=PlanOut(
-            mode=res.plan.mode,
-            statuses=list(res.plan.statuses),
-            period=res.plan.period,
-            referenced=res.plan.referenced,
-            reasons=res.plan.reasons,
-        ),
-        sources=[HitOut(citation=h.citation, **vars(h)) for h in res.hits],
-        model=res.model,
-        usage=res.usage,
-        timings=res.timings,
+    return to_response(res)
+
+
+def _meta(prep) -> dict[str, Any]:
+    return {
+        "plan": _plan(prep.plan).model_dump(mode="json"),
+        "sources": [src.model_dump(mode="json") for src in _sources(prep.hits)],
+    }
+
+
+def sse(event: str, data: Any) -> str:
+    """Một sự kiện Server-Sent Events; ``data`` là JSON một dòng."""
+    payload = data.model_dump_json() if isinstance(data, BaseModel) else json.dumps(
+        data, ensure_ascii=False, default=str
+    )  # fmt: skip
+    return f"event: {event}\ndata: {payload}\n\n"
+
+
+@router.post("/answer/stream")
+def answer_stream(
+    req: AnswerRequest,
+    settings: SettingsDep,
+    embedder: EmbedderDep,
+    reranker: RerankerDep,
+    llm: LLMDep,
+) -> StreamingResponse:
+    """Như POST /answer nhưng trả về luồng SSE (Task 4.2):
+
+    - ``meta``: ``{plan, sources}`` ngay sau bước truy xuất
+    - ``delta``: ``{text}`` từng mẩu câu trả lời
+    - ``done``: toàn bộ kết quả như POST /answer – bản chính thức, client thay nội dung đã hiển thị
+      bằng ``answer`` ở đây (có thể thêm cảnh báo hiệu lực hoặc thành lời từ chối)
+    - ``error``: ``{message}``
+    """
+    plan = make_plan(req.question, include_expired=req.include_expired, as_of=req.as_of)
+
+    def events() -> Iterator[str]:
+        try:
+            with psycopg.connect(settings.database_url) as conn:
+                for kind, payload in stream_answer(
+                    conn, req.question, embedder=embedder, reranker=reranker, llm=llm, plan=plan,
+                    **_options(settings),
+                ):  # fmt: skip
+                    if kind == "meta":
+                        yield sse("meta", _meta(payload))
+                    elif kind == "delta":
+                        yield sse("delta", {"text": payload})
+                    elif kind == "done":
+                        yield sse("done", to_response(payload))
+                    else:
+                        yield sse("error", payload)
+        except Exception as exc:  # noqa: BLE001 – luồng đã mở: báo lỗi bằng sự kiện, không bằng HTTP
+            log.exception("Lỗi khi stream câu trả lời")
+            yield sse("error", {"message": f"Lỗi xử lý câu hỏi: {type(exc).__name__}"})
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        # Không để proxy (nginx...) gom luồng lại rồi mới gửi
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

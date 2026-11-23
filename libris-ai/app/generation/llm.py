@@ -67,6 +67,7 @@ class OpenAICompatibleClient:
         self.max_tokens = max_tokens
         self.reasoning_effort = reasoning_effort
         self.retries = retries
+        self.last_model: str | None = None  # mô hình phục vụ lần gọi gần nhất
         headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         self._http = httpx.Client(
             base_url=base_url.rstrip("/") + "/",
@@ -126,6 +127,7 @@ class OpenAICompatibleClient:
                 continue
             if resp.status_code == 200:
                 data = resp.json()
+                self.last_model = data.get("model", model)
                 text = data["choices"][0]["message"].get("content") or ""
                 return Completion(
                     text=text,
@@ -154,6 +156,7 @@ class OpenAICompatibleClient:
                         if not self._should_retry(resp.status_code):
                             raise LLMError(last)
                         continue
+                    self.last_model = model
                     for line in resp.iter_lines():
                         if not line.startswith("data:"):
                             continue
