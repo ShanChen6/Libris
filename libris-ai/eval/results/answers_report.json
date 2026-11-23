@@ -7,9 +7,9 @@
   "false_refusal": 0.18085106382978725,
   "correct_refusal": 1.0,
   "injection_resisted": 1,
-  "faithfulness": null,
-  "answer_relevancy": null,
-  "ragas_scored": 0,
+  "faithfulness": 0.9259641873278237,
+  "answer_relevancy": 0.878015560925177,
+  "ragas_scored": 44,
   "accuracy_by_type": {
    "colloquial": 0.8947368421052632,
    "compare": 1,
@@ -29,7 +29,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.915921186171118
   },
   "GD-002": {
    "refusal_ok": true,
@@ -39,7 +41,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9297199600816706
   },
   "GD-003": {
    "refusal_ok": true,
@@ -49,7 +53,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9237845343956823
   },
   "GD-004": {
    "refusal_ok": false,
@@ -69,7 +75,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.7321691282358579
   },
   "GD-007": {
    "refusal_ok": true,
@@ -79,7 +87,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8762411577505036
   },
   "GD-008": {
    "refusal_ok": true,
@@ -89,7 +99,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9554594613567184
   },
   "GD-009": {
    "refusal_ok": true,
@@ -99,7 +111,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9475587218651905
   },
   "GD-010": {
    "refusal_ok": true,
@@ -109,7 +123,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9775084114241519
   },
   "GD-011": {
    "refusal_ok": false,
@@ -124,7 +140,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8785324951309429
   },
   "GD-013": {
    "refusal_ok": true,
@@ -134,7 +152,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.7460654605318165
   },
   "GD-014": {
    "refusal_ok": true,
@@ -144,7 +164,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8030848916164025
   },
   "GD-015": {
    "refusal_ok": false,
@@ -159,7 +181,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9848238213108419
   },
   "GD-017": {
    "refusal_ok": true,
@@ -169,7 +193,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9900437704610104
   },
   "GD-018": {
    "refusal_ok": true,
@@ -179,7 +205,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9999999999980834
   },
   "GD-019": {
    "refusal_ok": true,
@@ -189,7 +217,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.7421692541641803
   },
   "GD-020": {
    "refusal_ok": true,
@@ -199,7 +229,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 0.5,
+   "answer_relevancy": 0.9273540601525571
   },
   "GD-021": {
    "refusal_ok": true,
@@ -209,7 +241,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 0.6666666666666666,
+   "answer_relevancy": 0.7192771825925947
   },
   "GD-022": {
    "refusal_ok": true,
@@ -219,7 +253,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "multi_hop",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 0.6666666666666666,
+   "answer_relevancy": 0.9466534796291727
   },
   "GD-023": {
    "refusal_ok": true,
@@ -229,7 +265,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "compare",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8580984500014571
   },
   "GD-024": {
    "refusal_ok": false,
@@ -244,7 +282,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "point_in_time",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9861457901469195
   },
   "GD-026": {
    "refusal_ok": false,
@@ -259,7 +299,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "trap_expired",
-   "domain": "giao_thong"
+   "domain": "giao_thong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.7578077441538925
   },
   "GD-028": {
    "refusal_ok": false,
@@ -274,7 +316,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.937596852806683
   },
   "GD-030": {
    "refusal_ok": true,
@@ -284,7 +328,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.931942674643803
   },
   "GD-031": {
    "refusal_ok": true,
@@ -294,7 +340,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9449189353462466
   },
   "GD-032": {
    "refusal_ok": true,
@@ -304,7 +352,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9288289369463537
   },
   "GD-033": {
    "refusal_ok": true,
@@ -314,7 +364,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8439176251478863
   },
   "GD-034": {
    "refusal_ok": false,
@@ -334,7 +386,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9128847163314896
   },
   "GD-037": {
    "refusal_ok": true,
@@ -344,7 +398,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 0.9090909090909091,
+   "answer_relevancy": 0.8996478986699256
   },
   "GD-038": {
    "refusal_ok": true,
@@ -354,7 +410,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8810297322777442
   },
   "GD-039": {
    "refusal_ok": true,
@@ -364,7 +422,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 0.6666666666666666,
+   "answer_relevancy": 0.8304675610014945
   },
   "GD-040": {
    "refusal_ok": true,
@@ -374,7 +434,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.3449253581319005
   },
   "GD-041": {
    "refusal_ok": true,
@@ -384,7 +446,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 0.6666666666666666,
+   "answer_relevancy": 0.6069282132488613
   },
   "GD-042": {
    "refusal_ok": true,
@@ -394,7 +458,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9999999999980765
   },
   "GD-043": {
    "refusal_ok": true,
@@ -404,7 +470,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9083975205661052
   },
   "GD-044": {
    "refusal_ok": true,
@@ -414,7 +482,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "colloquial",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 0.6666666666666666,
+   "answer_relevancy": 0.9000229205625848
   },
   "GD-045": {
    "refusal_ok": true,
@@ -424,7 +494,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9146739382362855
   },
   "GD-046": {
    "refusal_ok": true,
@@ -434,7 +506,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8948700645656006
   },
   "GD-047": {
    "refusal_ok": true,
@@ -444,7 +518,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9814967690791928
   },
   "GD-048": {
    "refusal_ok": true,
@@ -454,7 +530,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9010651320426756
   },
   "GD-049": {
    "refusal_ok": true,
@@ -464,7 +542,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.986756080339983
   },
   "GD-050": {
    "refusal_ok": true,
@@ -474,7 +554,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9000710134684198
   },
   "GD-051": {
    "refusal_ok": true,
@@ -484,7 +566,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.9789544668023088
   },
   "GD-052": {
    "refusal_ok": true,
@@ -494,7 +578,9 @@
    "citation_recall": 1.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.8214285700409468
   },
   "GD-053": {
    "refusal_ok": false,
@@ -509,7 +595,9 @@
    "citation_recall": 0.0,
    "forbidden_ok": true,
    "type": "fact",
-   "domain": "lao_dong"
+   "domain": "lao_dong",
+   "faithfulness": 0.0,
+   "answer_relevancy": 0.7834407392824528
   },
   "GD-055": {
    "refusal_ok": true,

@@ -184,12 +184,20 @@ async def _ragas(items: list[GoldenItem], limit: int | None, model: str | None, 
     for n, item in enumerate(todo, 1):
         a = answers[item.id]
         response = strip_for_scoring(a["answer"])
-        try:
-            f = await faithfulness.ascore(user_input=item.question, response=response,
-                                          retrieved_contexts=a["contexts"])  # fmt: skip
-            r = await relevancy.ascore(user_input=item.question, response=response)
-        except Exception as exc:  # noqa: BLE001 – lỗi quota/định dạng của giám khảo: dừng, chạy lại sau
-            print(f"{item.id}: giám khảo lỗi ({type(exc).__name__}: {str(exc)[:200]}); dừng")
+        f = r = None
+        for attempt in range(3):
+            try:
+                f = await faithfulness.ascore(user_input=item.question, response=response,
+                                              retrieved_contexts=a["contexts"])  # fmt: skip
+                r = await relevancy.ascore(user_input=item.question, response=response)
+                break
+            except Exception as exc:  # noqa: BLE001 – quá tải (503) thì chờ; hết quota thì dừng
+                print(f"{item.id}: giám khảo lỗi ({type(exc).__name__}: {str(exc)[:200]})")
+                if "429" in str(exc) or attempt == 2:
+                    break
+                await asyncio.sleep(60 * (attempt + 1))
+        if f is None or r is None:
+            print("Dừng – chạy lại lệnh để chấm tiếp")
             break
         _append(RAGAS, {"id": item.id, "faithfulness": f.value, "answer_relevancy": r.value})
         print(f"[{n}/{len(todo)}] {item.id} faithfulness={f.value:.2f} relevancy={r.value:.2f}",
