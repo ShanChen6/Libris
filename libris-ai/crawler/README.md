@@ -12,6 +12,7 @@ uv sync
 uv run python -m crawler crawl                 # crawl toàn bộ văn bản trong seeds.yaml
 uv run python -m crawler fetch 211194 198540   # crawl theo docid
 uv run python -m crawler list --org chinh-phu --type nghi-dinh --pages 2   # xem văn bản mới
+uv run python -m crawler reprocess             # làm sạch lại dữ liệu đã tải, không cần mạng
 ```
 
 Tùy chọn: `--force` (tải và xử lý lại), `--no-ocr`, `--delay 1.0` (số giây giữa 2 request tới
@@ -52,7 +53,8 @@ data/
 │   ├── resolved.json            # số hiệu -> docid
 │   └── <docid>/
 │       ├── detail.html          # trang chi tiết gốc (để parse lại khi cần)
-│       └── files/*.pdf          # file đính kèm gốc
+│       ├── files/*              # file đính kèm gốc (PDF/DOC/DOCX)
+│       └── extracted/*.json     # cache văn bản trích xuất/OCR theo trang (reprocess dùng lại)
 └── processed/vanban.chinhphu.vn/<docid>.json
 ```
 
@@ -95,7 +97,10 @@ bản trong kho**, cụ thể là từ điều khoản "Hiệu lực thi hành" 
 | "Bãi bỏ X" | X bị Y bãi bỏ |
 | "Bãi bỏ Điều/khoản … của X" | X bị bãi bỏ một phần |
 | Trích yếu "Sửa đổi, bổ sung … X" | X bị Y sửa đổi |
-| "X có hiệu lực thi hành từ ngày D" | Ngày hiệu lực của X là D (VD: Luật 43/2024/QH15 cho Luật Đất đai 2024 có hiệu lực sớm từ 01/8/2024) |
+| "Y này thay thế X" | X bị Y thay thế |
+| "X…; Điều 1 Nghị định số Z… hết hiệu lực" | X bị thay thế, Z bị bãi bỏ một phần |
+| Trong "Điều N. Sửa đổi, bổ sung … của X": "Bãi bỏ khoản 1 Điều 3; …" | X bị sửa đổi, bãi bỏ một phần |
+| "X có hiệu lực thi hành từ ngày D", hoặc trong "Điều N. Sửa đổi … của X": “Luật này có hiệu lực thi hành từ ngày D” | Ngày hiệu lực của X là D (VD: Luật 43/2024/QH15 cho Luật Đất đai 2024 có hiệu lực sớm từ 01/8/2024) |
 
 Trạng thái tại thời điểm `as_of`:
 
@@ -106,10 +111,12 @@ Trạng thái tại thời điểm `as_of`:
 | `EXPIRED` | Đã bị thay thế hoặc bãi bỏ toàn bộ, và văn bản thay thế đã có hiệu lực |
 | `PENDING` | Chưa đến ngày có hiệu lực (bổ sung so với roadmap, để bộ lọc ở Task 3.2 không trả lời theo văn bản chưa có hiệu lực) |
 
+Các cụm từ khóa được so khớp **chịu lỗi dấu của OCR** ("hệt hiệu lực", "bỗ sung", "Điêu"…).
 Parser tránh các bẫy thường gặp: không coi các luật "đã được sửa đổi, bổ sung theo …" là bị thay
 thế; bỏ qua số hiệu nằm trong đoạn trích dẫn “…”; không coi "có hiệu lực từ ngày Nghị quyết X hết
 hiệu lực" là X bị thay thế; không lấy ngày hiệu lực riêng của một Điều làm ngày hiệu lực của cả
-văn bản.
+văn bản; coi nội dung trong ngoặc kép của luật sửa đổi là nội dung của văn bản bị sửa, không phải
+của văn bản sửa đổi.
 
 Lưu ý: trạng thái chỉ chính xác trong phạm vi kho dữ liệu. Nếu văn bản thay thế chưa được crawl
 thì văn bản cũ vẫn hiện `ACTIVE`, vì vậy cần thêm văn bản liên quan vào `seeds.yaml`. Văn bản
@@ -117,6 +124,9 @@ thì văn bản cũ vẫn hiện `ACTIVE`, vì vậy cần thêm văn bản liê
 
 ## Giới hạn hiện tại
 
+- **Phần lớn PDF trên nguồn là bản scan** (12/17 văn bản trong seed, kể cả NĐ 168/2024), nên toàn
+  văn phải OCR và còn lỗi nhận dạng (dấu, số La Mã). Cần rà soát các văn bản `needs_review`, hoặc
+  thay bằng nguồn có lớp chữ (DOCX trên Công báo) trước khi dùng để trả lời người dùng.
 - **vbpl.vn** (CSDL quốc gia về pháp luật) chặn truy cập từ IP nước ngoài (HTTP 403 từ WAF của
   site), nên chưa dùng được làm nguồn khi chạy trên cloud.
 - File đính kèm không phải PDF/DOC/DOCX được ghi vào `skipped_attachments`.

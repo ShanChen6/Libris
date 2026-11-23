@@ -8,7 +8,7 @@ import re
 import subprocess
 import unicodedata
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
@@ -16,8 +16,14 @@ from typing import Any
 import yaml
 
 from crawler.clean import clean_text, is_colophon_page, strip_continuation_header
-from crawler.extract import SUPPORTED_EXTENSIONS, UnsupportedDocument, extract_document
+from crawler.extract import (
+    SUPPORTED_EXTENSIONS,
+    PageText,
+    UnsupportedDocument,
+    extract_document,
+)
 from crawler.http import FetchError, PoliteClient
+from crawler.models import DocumentDetail
 from crawler.sources import vanban_chinhphu as vbcp
 
 log = logging.getLogger(__name__)
@@ -137,19 +143,45 @@ def crawl_document(
     detail = vbcp.parse_detail(html, source_id)
     log.info("%s – %s", detail.document_number, detail.title)
 
-    pages_info: list[dict[str, Any]] = []
-    texts: list[str] = []
-    skipped: list[str] = []
     for att in detail.attachments:
         if not att.filename.lower().endswith(SUPPORTED_EXTENSIONS):
-            skipped.append(att.filename)
             continue
         path = raw_dir / "files" / att.filename
         if not path.exists() or force:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(client.download(att.url))
+
+    record = build_record(store, detail, ocr=ocr, reextract=force)
+    store.write_json(out_path, record)
+    return record
+
+
+def _extract_cached(path: Path, cache: Path, *, ocr: bool, reextract: bool) -> list[PageText]:
+    """Trích xuất file đính kèm; kết quả (kể cả OCR, vốn rất chậm) được cache cạnh file gốc."""
+    if cache.exists() and not reextract:
+        return [PageText(**p) for p in json.loads(cache.read_text(encoding="utf-8"))]
+    pages = extract_document(path.read_bytes(), path.name, ocr=ocr)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps([asdict(p) for p in pages], ensure_ascii=False), encoding="utf-8")
+    return pages
+
+
+def build_record(
+    store: Store, detail: DocumentDetail, *, ocr: bool = True, reextract: bool = False
+) -> dict[str, Any]:
+    """Dựng bản ghi đã xử lý từ trang chi tiết và các file đính kèm đã tải về."""
+    raw_dir = store.raw_dir(detail.source_id)
+    pages_info: list[dict[str, Any]] = []
+    texts: list[str] = []
+    skipped: list[str] = []
+    for att in detail.attachments:
+        path = raw_dir / "files" / att.filename
+        if not att.filename.lower().endswith(SUPPORTED_EXTENSIONS) or not path.exists():
+            skipped.append(att.filename)
+            continue
+        cache = raw_dir / "extracted" / f"{att.filename}.json"
         try:
-            pages = extract_document(path.read_bytes(), att.filename, ocr=ocr)
+            pages = _extract_cached(path, cache, ocr=ocr, reextract=reextract)
         except (UnsupportedDocument, subprocess.CalledProcessError) as exc:
             log.warning("Không trích xuất được %s: %s", att.filename, exc)
             skipped.append(att.filename)
@@ -171,7 +203,7 @@ def crawl_document(
         texts.append(strip_continuation_header("\n".join(kept)))
 
     methods = [p["method"] for p in pages_info if not p["dropped"]]
-    record = {
+    return {
         "metadata": detail.to_dict(),
         "text": clean_text("\n".join(texts)),
         "extraction": {
@@ -185,8 +217,19 @@ def crawl_document(
         },
         "crawled_at": datetime.now(UTC).isoformat(timespec="seconds"),
     }
-    store.write_json(out_path, record)
-    return record
+
+
+def reprocess_all(store: Store, *, ocr: bool = True, reextract: bool = False) -> int:
+    """Xử lý lại toàn bộ văn bản đã tải (không cần mạng), VD sau khi cải tiến bộ làm sạch."""
+    count = 0
+    for detail_html in sorted(store.raw.glob("*/detail.html")):
+        source_id = detail_html.parent.name
+        detail = vbcp.parse_detail(detail_html.read_text(encoding="utf-8"), source_id)
+        log.info("Xử lý lại %s – %s", detail.document_number, detail.title)
+        record = build_record(store, detail, ocr=ocr, reextract=reextract)
+        store.write_json(store.processed_path(source_id), record)
+        count += 1
+    return count
 
 
 def crawl_seeds(

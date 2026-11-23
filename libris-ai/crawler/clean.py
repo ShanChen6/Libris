@@ -38,6 +38,8 @@ _STRUCT_START_RE = re.compile(
 )
 # Dòng tiêu đề đứng riêng (Phần/Chương/Mục/Điều) -> đoạn sau cũng bắt đầu mới.
 _HEADING_RE = re.compile(r"^(?:(?:PHẦN|Phần|CHƯƠNG|Chương|MỤC|Mục)\s+\S+$|Điều\s+\d+[a-zđ]?\.\s)")
+_BROKEN_NUMBER_RE = re.compile(r"\b\d{1,4}/(?:19|20)\d{2}/[A-ZĐ][A-ZĐ0-9]*-?$")
+_NUMBER_TAIL_RE = re.compile(r"^[A-ZĐ][A-ZĐ0-9]*(?:-[A-ZĐ0-9]+)*\b(?![a-zà-ỹ])")
 _SENTENCE_END_RE = re.compile(r"[.:;!?”\"’)]$")
 
 
@@ -92,6 +94,12 @@ def join_paragraphs(lines: list[str]) -> list[str]:
             continue
         prev = paragraphs[-1]
         starts_lower = line[0].islower()
+        # Số hiệu bị ngắt dòng: "... Nghị định số 37/2019/NĐ" + "CP ngày 07 ..." / "NĐ-" + "CP"
+        broken = _BROKEN_NUMBER_RE.search(prev)
+        if broken and _NUMBER_TAIL_RE.match(line):
+            sep = "" if prev.endswith("-") else "-"
+            paragraphs[-1] = f"{prev}{sep}{line}"
+            continue
         if _STRUCT_START_RE.match(line):
             new_paragraph = True
         elif starts_lower and not _HEADING_RE.match(prev):

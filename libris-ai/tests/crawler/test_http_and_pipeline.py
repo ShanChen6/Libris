@@ -137,3 +137,28 @@ def test_extract_unsupported_format() -> None:
 
     with pytest.raises(UnsupportedDocument):
         extract_document(b"x", "bang.xls")
+
+
+def test_reprocess_uses_extraction_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from crawler import pipeline as pl
+
+    detail = (FIXTURES / "detail.html").read_text(encoding="utf-8")
+    pdf = _pdf_bytes(["Dieu 1. Pham vi dieu chinh\n" + "Noi dung van ban phap luat. " * 10])
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.host == "vanban.chinhphu.vn":
+            return httpx.Response(200, text=detail)
+        return httpx.Response(200, content=pdf)
+
+    store = Store(tmp_path)
+    with _client(handler) as c:
+        crawl_document(c, "198540", store, ocr=False)
+    assert (tmp_path / "raw/vanban.chinhphu.vn/198540/extracted/45.signed.pdf.json").exists()
+
+    def fail(*_a: object, **_k: object) -> None:
+        raise AssertionError("không được trích xuất lại khi đã có cache")
+
+    monkeypatch.setattr(pl, "extract_document", fail)
+    assert pl.reprocess_all(store, ocr=False) == 1
+    rec = json.loads(store.processed_path("198540").read_text(encoding="utf-8"))
+    assert rec["text"].startswith("Dieu 1. Pham vi dieu chinh")

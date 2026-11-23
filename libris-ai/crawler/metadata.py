@@ -30,29 +30,86 @@ from typing import Any, Literal
 Status = Literal["ACTIVE", "EXPIRED", "AMENDED", "PENDING"]
 RelationType = Literal["replaces", "repeals_part", "amends", "sets_effective_date"]
 
-_DOC_KINDS = (
-    r"(?:Bộ luật|Luật|Pháp lệnh|Nghị quyết|Nghị định|Quyết định|Thông tư liên tịch|Thông tư)"
-)
+# --- Regex chịu lỗi dấu của OCR -------------------------------------------------------------
+# OCR tiếng Việt hay nhầm dấu ("hệt hiệu lực", "bỗ sung", "Điêu"), nên các cụm từ khóa được so khớp
+# theo "họ" chữ cái: mọi biến thể dấu của cùng một chữ cái gốc đều được chấp nhận.
+_VN_LETTERS = "aàáảãạăằắẳẵặâầấẩẫậeèéẻẽẹêềếểễệiìíỉĩịoòóỏõọôồốổỗộơờớởỡợuùúủũụưừứửữựyỳýỷỹỵdđ"
+
+
+def _base_letter(c: str) -> str:
+    return "d" if c in "đĐ" else unicodedata.normalize("NFD", c.lower())[0]
+
+
+_FAMILIES: dict[str, set[str]] = {}
+for _ch in _VN_LETTERS:
+    _FAMILIES.setdefault(_base_letter(_ch), set()).update({_ch, _ch.upper()})
+
+
+def _fz(phrase: str) -> str:
+    """Regex khớp ``phrase`` bất kể sai lệch dấu và hoa/thường."""
+    out: list[str] = []
+    for c in phrase:
+        if c == " ":
+            out.append(r"\s+")
+        elif c.lower() in _VN_LETTERS:
+            out.append("[" + "".join(sorted(_FAMILIES[_base_letter(c)])) + "]")
+        elif c.isalpha():
+            out.append(f"[{c.lower()}{c.upper()}]")
+        else:
+            out.append(re.escape(c))
+    return "".join(out)
+
+
+_KINDS = [
+    "Bộ luật", "Luật", "Pháp lệnh", "Nghị quyết", "Nghị định", "Quyết định",
+    "Thông tư liên tịch", "Thông tư",
+]  # fmt: skip
+_DOC_KINDS = "(?:" + "|".join(_fz(k) for k in _KINDS) + ")"
 # Số hiệu: 45/2013/QH13, 168/2024/NĐ-CP, 38/2024/TT-BCA, 06/2012/TTLT-BTP-BNG ...
-_NUMBER_RE = re.compile(r"\b(\d{1,4}/(?:19|20)\d{2}/[A-ZĐ][A-ZĐ0-9]*(?:-[A-ZĐ0-9]+)*)")
-_REF_RE = re.compile(_DOC_KINDS + r"[^;:.]{0,250}?\bsố\s+" + _NUMBER_RE.pattern)
-_SELF_RE = r"(?:Bộ luật|Luật|Pháp lệnh|Nghị quyết|Nghị định|Quyết định|Thông tư)\s+này"
+# OCR đôi khi chèn khoảng trắng quanh dấu gạch ("NĐ- CP"); normalize_number sẽ bỏ khoảng trắng.
+_NUMBER_RE = re.compile(
+    r"\b(\d{1,4}/(?:19|20)\d{2}/[A-ZĐÐ][A-ZĐÐ0-9]*(?:\s?-\s?[A-ZĐÐ0-9]*[A-ZĐÐ][A-ZĐÐ0-9]*(?!\w))*)"
+)
+_REF_RE = re.compile(_DOC_KINDS + r"[^;:.]{0,250}?\b" + _fz("số") + r"\s+" + _NUMBER_RE.pattern)
+_SELF_RE = _DOC_KINDS + r"\s+" + _fz("này")
 
 _AMENDED_BY_CLAUSE_RE = re.compile(
-    r"(?:đã|được)\s+(?:được\s+)?sửa đổi,?\s*bổ sung[^()]*?(?=\(|hết hiệu lực|;|$)"
+    "(?:" + _fz("đã") + "|" + _fz("được") + r")\s+(?:" + _fz("được") + r"\s+)?"
+    + _fz("sửa đổi") + r",?\s*" + _fz("bổ sung")
+    + r"[^()]*?(?=\(|" + _fz("hết hiệu lực") + r"|;|$)"
+)  # fmt: skip
+_EXPIRE_RE = re.compile(_fz("hết hiệu lực") + r"(?:\s+" + _fz("thi hành") + ")?")
+_DATE_TAIL = r"\s+(\d{1,2})\s+" + _fz("tháng") + r"\s+(\d{1,2})\s+" + _fz("năm") + r"\s+(\d{4})"
+_FROM_DATE_RE = re.compile(_fz("kể từ ngày") + _DATE_TAIL)
+_LIST_INTRO_RE = re.compile(
+    _fz("sau đây") + r"\s+" + _EXPIRE_RE.pattern + "|" + _EXPIRE_RE.pattern + r"[^:]*:\s*$"
 )
-_EXPIRE_RE = re.compile(r"hết hiệu lực(?:\s+thi hành)?", re.IGNORECASE)
-_EXPIRE_DATE_RE = re.compile(r"kể từ ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})")
-_LIST_INTRO_RE = re.compile(r"sau đây\s+hết hiệu lực|hết hiệu lực[^:]*:\s*$", re.IGNORECASE)
 _LIST_ITEM_RE = re.compile(r"^(?:[a-zđ]\)|[-–+])\s")
-_REPEAL_RE = re.compile(r"^(?:[a-zđ\d]+[.)]\s*)?Bãi bỏ\s+(.*)$")
+_REPEAL_RE = re.compile(r"^\W*(?:[a-zđ\d]{1,2}[.)]?\s+)?" + _fz("Bãi bỏ") + r"\s+(.*)$")
 _PART_RE = re.compile(
-    r"^(?:một số\s+)?(?:Điều|khoản|điểm|Chương|Mục|Phụ lục|nội dung|cụm từ)", re.I
-)
+    r"^(?:" + _fz("một số") + r"\s+)?(?:"
+    + "|".join(_fz(w) for w in ["Điều", "khoản", "điểm", "Chương", "Mục", "Phụ lục",
+                                "nội dung", "cụm từ", "đoạn"])
+    + ")"
+)  # fmt: skip
 _EFFECTIVE_RE = re.compile(
-    r"có hiệu lực(?:\s+thi hành)?\s+(?:kể\s+)?từ ngày"
-    r"\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})"
+    _fz("có hiệu lực") + r"(?:\s+" + _fz("thi hành") + r")?\s+(?:" + _fz("kể") + r"\s+)?"
+    + _fz("từ ngày") + _DATE_TAIL
+)  # fmt: skip
+_SELF_EFFECTIVE_RE = re.compile(_SELF_RE + r"\s+" + _EFFECTIVE_RE.pattern)
+_SELF_REPLACES_RE = re.compile(_SELF_RE + r"\s+" + _fz("thay thế") + r"\s+(.*)$")
+_ARTICLE_RE = re.compile(r"^" + _fz("Điều") + r"\s+\d+[a-zđ]?\s*\.")
+_AMEND_RE = re.compile(_fz("sửa đổi"))
+_PARTIAL_EFFECTIVE_RE = re.compile(
+    r"\b(?:" + "|".join(_fz(w) for w in ["Điều", "khoản", "điểm"]) + r")\s+\d"
 )
+_NUMBERING_RE = re.compile(r"^\W*(?:\d{1,2}[.)]|[a-zđ]\))?\s*")
+_PART_WORDS = "|".join(_fz(w) for w in ["Điều", "khoản", "điểm", "Chương", "Mục", "Phụ lục"])
+# Ngay trước tên văn bản là "Điều 1 ", "khoản 2 Điều 86 của " ... -> chỉ một phần văn bản
+_PART_PREFIX_RE = re.compile(
+    r"(?:" + _PART_WORDS + r")\s+[\dIVXLa-zđ]+[.,]?\s*(?:" + _fz("của") + r"\s+)?$"
+)
+
 _TYPE_BY_SUFFIX = [
     (re.compile(r"/QH\d+$"), "Luật"),
     (re.compile(r"/NĐ-CP$"), "Nghị định"),
@@ -101,19 +158,29 @@ def _date(d: str, m: str, y: str) -> date | None:
 _QUOTED_RE = re.compile(r"[“\"][^”\"]*[”\"]")
 
 
-def _refs(text: str) -> list[str]:
-    """Số hiệu các văn bản được nhắc tới.
+def _refs_detailed(text: str) -> list[tuple[str, bool]]:
+    """(số hiệu, có phải chỉ một phần văn bản) cho các văn bản được nhắc tới.
 
     Bỏ qua đoạn trích dẫn trong ngoặc kép và các văn bản 'đã được sửa đổi, bổ sung theo'.
     """
     text = _QUOTED_RE.sub(" ", text)
     text = _AMENDED_BY_CLAUSE_RE.sub(" ", text)
-    seen: list[str] = []
+    seen: dict[str, bool] = {}
     for m in _REF_RE.finditer(text):
         n = normalize_number(m.group(1))
+        partial = _PART_PREFIX_RE.search(text[max(0, m.start() - 60) : m.start()]) is not None
         if n not in seen:
-            seen.append(n)
-    return seen
+            seen[n] = partial
+    return list(seen.items())
+
+
+def _refs(text: str) -> list[str]:
+    return [n for n, _ in _refs_detailed(text)]
+
+
+def _is_partial(segment: str) -> bool:
+    """'Điều 1 Nghị định số X', 'khoản 3 Điều 36 của Luật X'... -> chỉ một phần của X."""
+    return _PART_RE.match(_NUMBERING_RE.sub("", segment)) is not None
 
 
 @dataclass
@@ -138,46 +205,73 @@ def extract_relations(number: str, title: str | None, text: str) -> list[Relatio
         if target != me and not any(r.type == rtype and r.target == target for r in rels):
             rels.append(Relation(rtype, me, target, evidence[:500], when))
 
-    if title and re.match(r"(?:Luật\s+|Nghị định\s+)?sửa đổi,?\s*bổ sung", title, re.I):
+    def add_segments(subject: str, evidence: str, when: date | None) -> None:
+        # "Nghị định số A ...; Điều 1 Nghị định số B ..." -> A bị thay thế, B bị bãi bỏ một phần
+        for target, partial in _refs_detailed(subject):
+            add("repeals_part" if partial else "replaces", target, evidence, when)
+
+    if title and re.match(r"(?:" + _DOC_KINDS + r"\s+)?" + _fz("sửa đổi"), title):
         for target in _refs(title) or [normalize_number(n) for n in _NUMBER_RE.findall(title)]:
             add("amends", target, title, None)
 
+    # Ngữ cảnh: văn bản được nêu ở tiêu đề Điều hiện tại, VD
+    # "Điều 52. Sửa đổi, bổ sung một số điều của Nghị định số 100/2019/NĐ-CP"
+    context: list[str] = []
+    context_amends = False
+
     paragraphs = text.split("\n")
     for i, p in enumerate(paragraphs):
+        if _ARTICLE_RE.match(p):
+            context = _refs(p)
+            context_amends = _AMEND_RE.search(p) is not None
+            if context_amends:
+                for target in context:
+                    add("amends", target, p, None)
+
+        if p[:1] in '“"':
+            # Nội dung trích dẫn thuộc văn bản bị sửa đổi, không phải của văn bản này. Chỉ dùng để
+            # nhận biết ngày hiệu lực mới: Sửa đổi khoản 1 Điều 252 như sau: “1. Luật này có ..."
+            m = _SELF_EFFECTIVE_RE.search(p)
+            if m and context_amends and len(context) == 1:
+                if not _PARTIAL_EFFECTIVE_RE.search(p[: m.start()]):
+                    add("sets_effective_date", context[0], p, _date(*m.groups()[-3:]))
+            continue
+
         # Ngày hiệu lực của văn bản khác do văn bản này quy định
-        if _EFFECTIVE_RE.search(p) and not re.search(_SELF_RE + r"\s+có hiệu lực", p):
-            m = _EFFECTIVE_RE.search(p)
-            assert m is not None
+        m = _EFFECTIVE_RE.search(p)
+        if m and not _SELF_EFFECTIVE_RE.search(p):
             before = p[: m.start()]
             targets = _refs(before)
             when = _date(*m.groups())
             # Bỏ qua khi chỉ một phần (Điều/khoản/điểm) của văn bản kia có ngày hiệu lực riêng
-            partial = re.search(r"\b(?:Điều|khoản|điểm)\s+\d", before, re.IGNORECASE)
-            if len(targets) == 1 and when and not partial:
+            if len(targets) == 1 and when and not _PARTIAL_EFFECTIVE_RE.search(before):
                 add("sets_effective_date", targets[0], p, when)
 
+        # "Nghị định này thay thế Nghị định số X"
+        m = _SELF_REPLACES_RE.search(p)
+        if m:
+            add_segments(m.group(1), p, None)
+
         # Hết hiệu lực
-        if _EXPIRE_RE.search(p):
-            m_date = _EXPIRE_DATE_RE.search(p)
+        m = _EXPIRE_RE.search(p)
+        if m:
+            m_date = _FROM_DATE_RE.search(p, m.end())
             when = _date(*m_date.groups()) if m_date else None
             if _LIST_INTRO_RE.search(p):
                 for item in paragraphs[i + 1 :]:
                     if not _LIST_ITEM_RE.match(item):
                         break
-                    for target in _refs(item)[:1]:
-                        add("replaces", target, f"{p} {item}", when)
+                    add_segments(item, f"{p} {item}", when)
             else:
-                subject = p[: _EXPIRE_RE.search(p).start()]  # type: ignore[union-attr]
+                subject = p[: m.start()]
                 # "... có hiệu lực từ ngày Nghị quyết số X hết hiệu lực": X chỉ là mốc thời gian
-                subject = re.split(r"(?:kể\s+)?từ ngày\s+(?=" + _DOC_KINDS + ")", subject)[0]
-                for target in _refs(subject):
-                    add("replaces", target, p, when)
+                subject = re.split(_fz("từ ngày") + r"\s+(?=" + _DOC_KINDS + ")", subject)[0]
+                add_segments(subject, p, when)
 
         # Bãi bỏ
-        m_rep = _REPEAL_RE.match(p)
-        if m_rep:
-            obj = m_rep.group(1)
-            partial = _PART_RE.match(obj) is not None
+        m = _REPEAL_RE.match(p)
+        if m:
+            obj = m.group(1)
             items = [obj]
             if obj.rstrip().endswith(":"):
                 items = []
@@ -186,14 +280,17 @@ def extract_relations(number: str, title: str | None, text: str) -> list[Relatio
                         break
                     items.append(it)
             for item in items:
-                targets = _refs(item)
-                if not targets:
-                    continue
-                part = partial or _PART_RE.match(re.sub(r"^\W+|^[a-zđ]\)\s*", "", item)) is not None
+                body = re.sub(r"^\W*[a-zđ]\)\s*(?:" + _fz("Bãi bỏ") + r"\s+)?", "", item)
+                partial = _is_partial(obj) or _is_partial(body)
+                targets = _refs(body)
+                if not targets and context_amends and partial:
+                    # "Bãi bỏ khoản 1 Điều 3;" trong Điều sửa đổi văn bản X -> bãi bỏ một phần X
+                    targets = context
+                evidence = p if item is obj else f"{p} {item}"
+                rtype: RelationType = "repeals_part" if partial else "replaces"
                 # "Bãi bỏ Điều 57 của Luật A; Điều 2 của Luật B" -> mỗi văn bản bị bãi bỏ một phần
-                rtype: RelationType = "repeals_part" if part else "replaces"
-                for target in targets if part else targets[:1]:
-                    add(rtype, target, f"{p} {item}" if item is not obj else p, None)
+                for target in targets if partial else targets[:1]:
+                    add(rtype, target, evidence, None)
     return rels
 
 
@@ -226,8 +323,13 @@ class CatalogEntry:
 
 
 def _self_effective_date(text: str) -> date | None:
-    m = re.search(_SELF_RE + r"\s+" + _EFFECTIVE_RE.pattern, text)
-    return _date(*m.groups()) if m else None
+    for p in text.split("\n"):
+        if p[:1] in '“"':
+            continue
+        m = _SELF_EFFECTIVE_RE.search(p)
+        if m:
+            return _date(*m.groups()[-3:])
+    return None
 
 
 def build_catalog(records: list[dict[str, Any]], as_of: date) -> list[CatalogEntry]:
@@ -300,6 +402,8 @@ def build_catalog(records: list[dict[str, Any]], as_of: date) -> list[CatalogEnt
             target.amended_by.append(r.source)
 
     for e in entries.values():
+        for name in ("replaced_by", "amended_by", "replaces", "amends"):
+            setattr(e, name, list(dict.fromkeys(getattr(e, name))))
         if e.effective_date and e.effective_date > as_of:
             e.status = "PENDING"
         elif e.expiry_date and e.expiry_date <= as_of:

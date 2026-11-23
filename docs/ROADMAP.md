@@ -19,10 +19,10 @@
 - [x] **Task 1.1: Khởi tạo hạ tầng & Môi trường phát triển**
   - Khởi tạo 3 phân hệ: `libris-web` (Next.js), `libris-api` (NestJS), và `libris-ai` (Python FastAPI).
   - Cấu hình Docker Compose chạy PostgreSQL (đã kích hoạt `CREATE EXTENSION vector;`) và Redis.
-- [ ] **Task 1.2: Thu thập dữ liệu pháp luật (Data Crawling)**
+- [x] **Task 1.2: Thu thập dữ liệu pháp luật (Data Crawling)**
   - Viết script Python (Playwright / BeautifulSoup) thu thập văn bản từ Cổng thông tin điện tử Chính phủ / Cơ sở dữ liệu quốc gia về pháp luật.
   - Tập trung làm sạch dữ liệu cho các bộ luật trọng điểm (VD: Luật Đất đai, Luật Trật tự an toàn giao thông đường bộ, Bộ luật Lao động, Luật Hôn nhân và Gia đình) cùng các Nghị định, Thông tư hướng dẫn liên quan.
-- [ ] **Task 1.3: Bóc tách Siêu dữ liệu (Metadata Extraction)**
+- [x] **Task 1.3: Bóc tách Siêu dữ liệu (Metadata Extraction)**
   - Chuẩn hóa các trường định danh bắt buộc cho mỗi văn bản:
     - `document_number`: Số hiệu văn bản (VD: `168/2024/NĐ-CP`).
     - `document_type`: Loại văn bản (`Luật`, `Nghị định`, `Thông tư`, `Quyết định`).

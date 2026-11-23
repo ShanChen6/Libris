@@ -70,3 +70,18 @@ def test_strip_continuation_header() -> None:
     )
     assert strip_continuation_header(text) == "Chương II\nĐiều 24. A"
     assert strip_continuation_header("Chương I\nĐiều 1. A") == "Chương I\nĐiều 1. A"
+
+
+def test_joins_document_number_broken_across_lines() -> None:
+    raw = "Điều 110. Sửa đổi, bổ sung một số điều của Nghị định số 37/2019/NĐ\nCP ngày 07 tháng 5"
+    assert clean_text(raw) == (
+        "Điều 110. Sửa đổi, bổ sung một số điều của Nghị định số 37/2019/NĐ-CP ngày 07 tháng 5"
+    )
+    assert clean_text("theo Nghị định số 37/2019/NĐ-\nCP ngày 07") == (
+        "theo Nghị định số 37/2019/NĐ-CP ngày 07"
+    )
+    # Dòng mới là nội dung bình thường thì không nối
+    assert (
+        clean_text("Luật số: 36/2024/QH15\nCỘNG HÒA XÃ HỘI")
+        == "Luật số: 36/2024/QH15\nCỘNG HÒA XÃ HỘI"
+    )

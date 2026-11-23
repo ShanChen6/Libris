@@ -4,6 +4,7 @@ Ví dụ:
     uv run python -m crawler crawl                       # crawl theo crawler/seeds.yaml
     uv run python -m crawler fetch 198540                # crawl 1 văn bản theo docid
     uv run python -m crawler list --org quoc-hoi --type luat --pages 2
+    uv run python -m crawler reprocess               # xử lý lại dữ liệu đã tải (offline)
     uv run python -m crawler normalize               # chuẩn hóa metadata -> data/catalog.json
 """
 
@@ -17,7 +18,7 @@ from pathlib import Path
 
 from crawler.http import PoliteClient
 from crawler.metadata import build_catalog, load_records, write_catalog
-from crawler.pipeline import Store, crawl_document, crawl_seeds
+from crawler.pipeline import Store, crawl_document, crawl_seeds, reprocess_all
 from crawler.sources import vanban_chinhphu as vbcp
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -47,6 +48,10 @@ def main() -> None:
     p_list.add_argument("--type", choices=sorted(vbcp.TYPE_GROUPS))
     p_list.add_argument("--pages", type=int, default=1)
 
+    p_re = sub.add_parser("reprocess", help="xử lý lại dữ liệu đã tải (offline)")
+    p_re.add_argument("--no-ocr", action="store_true")
+    p_re.add_argument("--reextract", action="store_true", help="bỏ qua cache trích xuất/OCR")
+
     p_norm = sub.add_parser("normalize", help="chuẩn hóa metadata, suy ra trạng thái hiệu lực")
     p_norm.add_argument("--as-of", type=date.fromisoformat, default=date.today(), help="YYYY-MM-DD")
 
@@ -69,6 +74,9 @@ def main() -> None:
             for docid in args.docids:
                 rec = crawl_document(client, docid, store, ocr=not args.no_ocr, force=args.force)
                 print(store.processed_path(docid), rec["extraction"]["total_pages"], "trang")
+    elif args.cmd == "reprocess":
+        n = reprocess_all(Store(args.data_dir), ocr=not args.no_ocr, reextract=args.reextract)
+        print(f"Đã xử lý lại {n} văn bản")
     elif args.cmd == "normalize":
         store = Store(args.data_dir)
         entries = build_catalog(load_records(store.processed), args.as_of)
