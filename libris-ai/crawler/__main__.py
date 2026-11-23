@@ -6,6 +6,7 @@ Ví dụ:
     uv run python -m crawler list --org quoc-hoi --type luat --pages 2
     uv run python -m crawler reprocess               # xử lý lại dữ liệu đã tải (offline)
     uv run python -m crawler normalize               # chuẩn hóa metadata -> data/catalog.json
+    uv run python -m crawler load-db                 # nạp vào PostgreSQL (cần chạy migration trước)
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ from datetime import date
 from pathlib import Path
 
 from crawler.http import PoliteClient
-from crawler.metadata import build_catalog, load_records, write_catalog
+from crawler.metadata import analyze, load_records, write_catalog
 from crawler.pipeline import Store, crawl_document, crawl_seeds, reprocess_all
 from crawler.sources import vanban_chinhphu as vbcp
 
@@ -55,6 +56,11 @@ def main() -> None:
     p_norm = sub.add_parser("normalize", help="chuẩn hóa metadata, suy ra trạng thái hiệu lực")
     p_norm.add_argument("--as-of", type=date.fromisoformat, default=date.today(), help="YYYY-MM-DD")
 
+    p_load = sub.add_parser("load-db", help="nạp catalog + nguyên văn vào PostgreSQL")
+    p_load.add_argument(
+        "--database-url", help="mặc định: biến môi trường DATABASE_URL hoặc .env của libris-ai"
+    )
+
     args = parser.parse_args()
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
@@ -79,13 +85,27 @@ def main() -> None:
         print(f"Đã xử lý lại {n} văn bản")
     elif args.cmd == "normalize":
         store = Store(args.data_dir)
-        entries = build_catalog(load_records(store.processed), args.as_of)
+        catalog = analyze(load_records(store.processed), args.as_of)
         out = args.data_dir / "catalog.json"
-        write_catalog(entries, out, args.as_of)
-        for e in entries:
+        write_catalog(catalog, out)
+        for e in catalog.documents:
             flags = " ⚠" if e.warnings or e.needs_review else ""
             print(f"{e.status:8} {e.document_number:18} {e.effective_date} {e.title}{flags}")
         print(f"-> {out}")
+    elif args.cmd == "load-db":
+        from app.core.config import get_settings
+        from crawler.db import load
+
+        store = Store(args.data_dir)
+        res = load(
+            args.database_url or get_settings().database_url,
+            args.data_dir / "catalog.json",
+            store.processed,
+        )
+        print(
+            f"Thêm mới {res.inserted}, cập nhật {res.updated} văn bản; "
+            f"{res.relations} quan hệ; xóa {res.chunks_invalidated} chunk lỗi thời"
+        )
     elif args.cmd == "list":
         with PoliteClient(min_interval=args.delay) as client:
             for item in vbcp.iter_listing(

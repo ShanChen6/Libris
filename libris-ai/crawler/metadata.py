@@ -332,7 +332,34 @@ def _self_effective_date(text: str) -> date | None:
     return None
 
 
+@dataclass
+class Catalog:
+    as_of: date
+    documents: list[CatalogEntry]
+    relations: list[Relation]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "as_of": self.as_of.isoformat(),
+            "documents": [e.to_dict() for e in self.documents],
+            "relations": [
+                {
+                    "type": r.type,
+                    "source": r.source,
+                    "target": r.target,
+                    "effective": r.effective.isoformat() if r.effective else None,
+                    "evidence": r.evidence,
+                }
+                for r in self.relations
+            ],
+        }
+
+
 def build_catalog(records: list[dict[str, Any]], as_of: date) -> list[CatalogEntry]:
+    return analyze(records, as_of).documents
+
+
+def analyze(records: list[dict[str, Any]], as_of: date) -> Catalog:
     entries: dict[str, CatalogEntry] = {}
     relations: list[Relation] = []
 
@@ -414,14 +441,16 @@ def build_catalog(records: list[dict[str, Any]], as_of: date) -> list[CatalogEnt
             e.status = "ACTIVE"
         if e.effective_date is None:
             e.warnings.append("Không xác định được ngày có hiệu lực")
-    return sorted(entries.values(), key=lambda e: (e.issue_date or date.min, e.document_number))
+    documents = sorted(
+        entries.values(), key=lambda e: (e.issue_date or date.min, e.document_number)
+    )
+    return Catalog(as_of=as_of, documents=documents, relations=relations)
 
 
 def load_records(processed_dir: Path) -> list[dict[str, Any]]:
     return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(processed_dir.glob("*.json"))]
 
 
-def write_catalog(entries: list[CatalogEntry], path: Path, as_of: date) -> None:
+def write_catalog(catalog: Catalog, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {"as_of": as_of.isoformat(), "documents": [e.to_dict() for e in entries]}
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(catalog.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")

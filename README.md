@@ -18,6 +18,7 @@ Libris/
 ├── libris-web/          # Next.js 16 (App Router) + TailwindCSS 4 + shadcn/ui
 ├── libris-api/          # NestJS 12 – Auth, quản lý hội thoại, gateway
 ├── libris-ai/           # FastAPI (Python 3.12, uv) – RAG pipeline
+├── db/                  # Migration SQL (dbmate) + schema.sql – xem db/README.md
 ├── docker/postgres/     # Script khởi tạo PostgreSQL (CREATE EXTENSION vector)
 ├── docker-compose.yml   # PostgreSQL 17 + pgvector, Redis
 └── docs/ROADMAP.md
@@ -32,6 +33,7 @@ Yêu cầu: Docker, Node.js 22+, [uv](https://docs.astral.sh/uv/).
 ```bash
 cp .env.example .env
 docker compose up -d --wait
+docker compose run --rm migrate      # tạo bảng (xem db/README.md)
 ```
 
 **2. libris-ai** – http://localhost:8000 (tài liệu API: `/docs`)
@@ -72,7 +74,9 @@ npm run dev
 
 ```bash
 cd libris-ai
-uv run python -m crawler crawl   # văn bản trong crawler/seeds.yaml -> libris-ai/data/
+uv run python -m crawler crawl       # văn bản trong crawler/seeds.yaml -> libris-ai/data/
+uv run python -m crawler normalize   # chuẩn hóa metadata, trạng thái hiệu lực -> data/catalog.json
+uv run python -m crawler load-db     # nạp vào PostgreSQL
 ```
 
 Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu ra: [libris-ai/crawler/README.md](libris-ai/crawler/README.md).

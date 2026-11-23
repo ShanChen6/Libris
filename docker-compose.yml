@@ -33,6 +33,21 @@ services:
       timeout: 3s
       retries: 10
 
+  # Chạy migration: docker compose run --rm migrate      (rollback: ... migrate rollback)
+  migrate:
+    image: amacneil/dbmate:2.38.2
+    profiles: ["tools"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-libris}:${POSTGRES_PASSWORD:-libris}@postgres:5432/${POSTGRES_DB:-libris}?sslmode=disable
+      DBMATE_MIGRATIONS_DIR: /db/migrations
+      DBMATE_SCHEMA_FILE: /db/schema.sql
+    volumes:
+      - ./db:/db
+    command: ["--wait", "up"]
+
 volumes:
   postgres-data:
   redis-data:
