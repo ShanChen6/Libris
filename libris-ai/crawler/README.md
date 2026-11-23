@@ -1,8 +1,8 @@
 # Crawler văn bản pháp luật (Task 1.2)
 
 Thu thập văn bản quy phạm pháp luật từ **Hệ thống văn bản của Chính phủ**
-([vanban.chinhphu.vn](https://vanban.chinhphu.vn)). Toàn văn lấy từ file PDF bản Công báo trên
-`datafiles.chinhphu.vn`.
+([vanban.chinhphu.vn](https://vanban.chinhphu.vn)). Toàn văn lấy từ file đính kèm trên
+`datafiles.chinhphu.vn`: PDF bản Công báo, hoặc `.doc`/`.docx` với các văn bản cũ.
 
 ## Cách chạy
 
@@ -17,11 +17,12 @@ uv run python -m crawler list --org chinh-phu --type nghi-dinh --pages 2   # xem
 Tùy chọn: `--force` (tải và xử lý lại), `--no-ocr`, `--delay 1.0` (số giây giữa 2 request tới
 cùng một host), `--data-dir`.
 
-OCR cho PDF dạng ảnh scan cần Tesseract kèm dữ liệu tiếng Việt:
+Công cụ hệ thống: Tesseract kèm dữ liệu tiếng Việt (OCR cho PDF scan) và `catdoc` (đọc file
+Word `.doc` cũ):
 
 ```bash
-sudo apt-get install -y tesseract-ocr tesseract-ocr-vie   # Ubuntu/Debian
-brew install tesseract tesseract-lang                     # macOS
+sudo apt-get install -y tesseract-ocr tesseract-ocr-vie catdoc   # Ubuntu/Debian
+brew install tesseract tesseract-lang catdoc                     # macOS
 ```
 
 Nếu không có Tesseract, trang scan được ghi là `empty` và văn bản được gắn `needs_review: true`.
@@ -35,7 +36,7 @@ Nếu không có Tesseract, trang scan được ghi là `empty` và văn bản �
 2. **Trang chi tiết**: lấy số hiệu, loại văn bản, cơ quan ban hành, người ký, trích yếu, ngày
    ban hành, **ngày có hiệu lực** và các file đính kèm.
 3. **Trích xuất**: lấy lớp chữ của PDF bằng PyMuPDF. Trang không có chữ (bản scan) được OCR bằng
-   Tesseract (`vie`, 300 dpi).
+   Tesseract (`vie`, 300 dpi). File `.doc` đọc bằng `catdoc`, file `.docx` đọc trực tiếp XML.
 4. **Làm sạch** (`clean.py`):
    - chuẩn hóa Unicode NFC;
    - bỏ khối chữ ký số, header trang Công báo, số trang, trang bìa sau và header
@@ -118,4 +119,4 @@ thì văn bản cũ vẫn hiện `ACTIVE`, vì vậy cần thêm văn bản liê
 
 - **vbpl.vn** (CSDL quốc gia về pháp luật) chặn truy cập từ IP nước ngoài (HTTP 403 từ WAF của
   site), nên chưa dùng được làm nguồn khi chạy trên cloud.
-- Crawler chỉ tải file PDF; file đính kèm định dạng khác được ghi vào `skipped_attachments`.
+- File đính kèm không phải PDF/DOC/DOCX được ghi vào `skipped_attachments`.

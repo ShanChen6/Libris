@@ -105,3 +105,35 @@ def test_crawl_document_end_to_end(tmp_path: Path) -> None:
     assert (tmp_path / "raw/vanban.chinhphu.vn/198540/files/45.signed.pdf").exists()
     saved = json.loads(store.processed_path("198540").read_text(encoding="utf-8"))
     assert saved["metadata"]["effective_date"] == "2021-01-01"
+
+
+def _docx_bytes(paragraphs: list[str], *, backslash_names: bool = False) -> bytes:
+    import io
+    import zipfile
+
+    ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    body = "".join(f"<w:p><w:r><w:t>{p}</w:t></w:r></w:p>" for p in paragraphs)
+    xml = f'<?xml version="1.0"?><w:document xmlns:w="{ns}"><w:body>{body}</w:body></w:document>'
+    buf = io.BytesIO()
+    name = "word\\document.xml" if backslash_names else "word/document.xml"
+    with zipfile.ZipFile(buf, "w") as z:
+        z.writestr(name, xml.encode("utf-8"))
+    return buf.getvalue()
+
+
+@pytest.mark.parametrize("backslash_names", [False, True])
+def test_extract_docx(backslash_names: bool) -> None:
+    from crawler.extract import extract_document
+
+    paragraphs = ["Điều 1. Phạm vi điều chỉnh", "Luật này quy định."]
+    data = _docx_bytes(paragraphs, backslash_names=backslash_names)
+    (page,) = extract_document(data, "luat.docx")
+    assert page.method == "docx"
+    assert page.text == "Điều 1. Phạm vi điều chỉnh\nLuật này quy định."
+
+
+def test_extract_unsupported_format() -> None:
+    from crawler.extract import UnsupportedDocument, extract_document
+
+    with pytest.raises(UnsupportedDocument):
+        extract_document(b"x", "bang.xls")

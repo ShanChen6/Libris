@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import subprocess
 import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass
@@ -15,7 +16,7 @@ from typing import Any
 import yaml
 
 from crawler.clean import clean_text, is_colophon_page, strip_continuation_header
-from crawler.extract import extract_pdf
+from crawler.extract import SUPPORTED_EXTENSIONS, UnsupportedDocument, extract_document
 from crawler.http import FetchError, PoliteClient
 from crawler.sources import vanban_chinhphu as vbcp
 
@@ -140,14 +141,19 @@ def crawl_document(
     texts: list[str] = []
     skipped: list[str] = []
     for att in detail.attachments:
-        if not att.filename.lower().endswith(".pdf"):
+        if not att.filename.lower().endswith(SUPPORTED_EXTENSIONS):
             skipped.append(att.filename)
             continue
         path = raw_dir / "files" / att.filename
         if not path.exists() or force:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(client.download(att.url))
-        pages = extract_pdf(path.read_bytes(), ocr=ocr)
+        try:
+            pages = extract_document(path.read_bytes(), att.filename, ocr=ocr)
+        except (UnsupportedDocument, subprocess.CalledProcessError) as exc:
+            log.warning("Không trích xuất được %s: %s", att.filename, exc)
+            skipped.append(att.filename)
+            continue
         kept = []
         for p in pages:
             dropped = is_colophon_page(p.text)
