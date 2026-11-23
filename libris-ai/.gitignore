@@ -6,3 +6,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Dữ liệu crawl (PDF gốc, văn bản đã xử lý)
+data/

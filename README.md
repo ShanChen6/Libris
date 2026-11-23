@@ -68,6 +68,15 @@ npm run dev
 | libris-ai | `GET :8000/health`, `GET :8000/health/ready` (kiểm tra Postgres/pgvector & Redis) |
 | libris-api | `GET :4000/health` |
 
+### Thu thập dữ liệu pháp luật
+
+```bash
+cd libris-ai
+uv run python -m crawler crawl   # văn bản trong crawler/seeds.yaml -> libris-ai/data/
+```
+
+Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu ra: [libris-ai/crawler/README.md](libris-ai/crawler/README.md).
+
 ## Tài liệu
 
 - [Lộ trình triển khai (12 tuần)](docs/ROADMAP.md)

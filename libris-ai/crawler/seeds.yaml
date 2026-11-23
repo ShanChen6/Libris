@@ -1,0 +1,31 @@
+# Danh sách văn bản cần thu thập (Task 1.2).
+#   number : số hiệu văn bản (khớp với cột "Số ký hiệu" trên vanban.chinhphu.vn)
+#   org    : nhóm cơ quan ban hành  (quoc-hoi | chinh-phu | thu-tuong | bo-nganh | lien-bo | ubnd-tinh)
+#   type   : nhóm loại văn bản      (luat | nghi-dinh | quyet-dinh | thong-tu | ...)
+#   source_id (tùy chọn): docid trên vanban.chinhphu.vn, nếu đã biết thì bỏ qua bước tra cứu.
+# Văn bản cũ (đã hết hiệu lực/bị thay thế) được giữ lại để kiểm thử bộ lọc hiệu lực (Task 3.2).
+
+documents:
+  # --- Đất đai ---
+  - { number: 31/2024/QH15, org: quoc-hoi, type: luat, note: "Luật Đất đai 2024" }
+  - { number: 45/2013/QH13, org: quoc-hoi, type: luat, note: "Luật Đất đai 2013 (văn bản cũ)" }
+  - { number: 102/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Quy định chi tiết thi hành Luật Đất đai" }
+  - { number: 101/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Điều tra cơ bản đất đai; đăng ký, cấp Giấy chứng nhận" }
+  - { number: 88/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất" }
+  - { number: 123/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Xử phạt vi phạm hành chính trong lĩnh vực đất đai" }
+
+  # --- Giao thông đường bộ ---
+  - { number: 36/2024/QH15, org: quoc-hoi, type: luat, note: "Luật Trật tự, an toàn giao thông đường bộ" }
+  - { number: 23/2008/QH12, org: quoc-hoi, type: luat, note: "Luật Giao thông đường bộ 2008 (văn bản cũ)" }
+  - { number: 168/2024/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Xử phạt VPHC về trật tự, an toàn giao thông đường bộ" }
+  - { number: 100/2019/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Xử phạt VPHC giao thông đường bộ và đường sắt (văn bản cũ)" }
+
+  # --- Lao động ---
+  - { number: 45/2019/QH14, org: quoc-hoi, type: luat, note: "Bộ luật Lao động 2019" }
+  - { number: 10/2012/QH13, org: quoc-hoi, type: luat, note: "Bộ luật Lao động 2012 (văn bản cũ)" }
+  - { number: 145/2020/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Chi tiết Bộ luật Lao động về điều kiện lao động và quan hệ lao động" }
+  - { number: 12/2022/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Xử phạt VPHC lĩnh vực lao động, bảo hiểm xã hội" }
+
+  # --- Hôn nhân và gia đình ---
+  - { number: 52/2014/QH13, org: quoc-hoi, type: luat, note: "Luật Hôn nhân và gia đình 2014" }
+  - { number: 126/2014/NĐ-CP, org: chinh-phu, type: nghi-dinh, note: "Chi tiết thi hành Luật Hôn nhân và gia đình" }
