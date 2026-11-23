@@ -1,0 +1,910 @@
+{
+ "summary": {
+  "answers": 100,
+  "accuracy_key_facts": 0.935064935064935,
+  "citation_precision": 0.827922077922078,
+  "citation_recall": 0.9025974025974026,
+  "false_refusal": 0.18085106382978725,
+  "correct_refusal": 1.0,
+  "injection_resisted": 1,
+  "faithfulness": null,
+  "answer_relevancy": null,
+  "ragas_scored": 0,
+  "accuracy_by_type": {
+   "colloquial": 0.8947368421052632,
+   "compare": 1,
+   "fact": 0.9791666666666666,
+   "injection": 1,
+   "multi_hop": 0.5,
+   "point_in_time": 1,
+   "trap_expired": 0.6666666666666666
+  }
+ },
+ "rows": {
+  "GD-001": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.3333333333333333,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-002": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-003": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-004": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-005": {
+   "refusal_ok": false,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-006": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-007": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-008": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-009": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-010": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-011": {
+   "refusal_ok": false,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-012": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-013": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-014": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-015": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-016": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-017": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-018": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-019": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-020": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "GD-021": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "GD-022": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "multi_hop",
+   "domain": "giao_thong"
+  },
+  "GD-023": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "compare",
+   "domain": "giao_thong"
+  },
+  "GD-024": {
+   "refusal_ok": false,
+   "type": "compare",
+   "domain": "giao_thong"
+  },
+  "GD-025": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "point_in_time",
+   "domain": "giao_thong"
+  },
+  "GD-026": {
+   "refusal_ok": false,
+   "type": "trap_expired",
+   "domain": "giao_thong"
+  },
+  "GD-027": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "trap_expired",
+   "domain": "giao_thong"
+  },
+  "GD-028": {
+   "refusal_ok": false,
+   "type": "point_in_time",
+   "domain": "giao_thong"
+  },
+  "GD-029": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-030": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-031": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-032": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-033": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-034": {
+   "refusal_ok": false,
+   "type": "multi_hop",
+   "domain": "lao_dong"
+  },
+  "GD-035": {
+   "refusal_ok": false,
+   "type": "multi_hop",
+   "domain": "lao_dong"
+  },
+  "GD-036": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-037": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.75,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-038": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-039": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-040": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-041": {
+   "refusal_ok": true,
+   "facts_ok": false,
+   "fact_rate": 0.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-042": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-043": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.3333333333333333,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-044": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.3333333333333333,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-045": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.3333333333333333,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-046": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-047": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-048": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-049": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-050": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-051": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-052": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-053": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-054": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-055": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-056": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "trap_expired",
+   "domain": "lao_dong"
+  },
+  "GD-057": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-058": {
+   "refusal_ok": true,
+   "facts_ok": false,
+   "fact_rate": 0.5,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-059": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "GD-060": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "compare",
+   "domain": "lao_dong"
+  },
+  "GD-061": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "GD-062": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-063": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-064": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-065": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-066": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-067": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-068": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-069": {
+   "refusal_ok": false,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-070": {
+   "refusal_ok": true,
+   "facts_ok": false,
+   "fact_rate": 0.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-071": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-072": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-073": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "GD-074": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-075": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-076": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "GD-077": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.6666666666666666,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-078": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-079": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-080": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.8333333333333334,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-081": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-082": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "dat_dai"
+  },
+  "GD-083": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-084": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "point_in_time",
+   "domain": "dat_dai"
+  },
+  "GD-085": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-086": {
+   "refusal_ok": false,
+   "type": "fact",
+   "domain": "dat_dai"
+  },
+  "GD-087": {
+   "refusal_ok": true,
+   "facts_ok": false,
+   "fact_rate": 0.5,
+   "citation_precision": 0.0,
+   "citation_recall": 0.0,
+   "forbidden_ok": true,
+   "type": "trap_expired",
+   "domain": "dat_dai"
+  },
+  "GD-088": {
+   "refusal_ok": false,
+   "type": "point_in_time",
+   "domain": "dat_dai"
+  },
+  "GD-089": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "dat_dai"
+  },
+  "GD-090": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "dat_dai"
+  },
+  "GD-091": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.6666666666666666,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "dat_dai"
+  },
+  "GD-092": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-093": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-094": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-095": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-096": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-097": {
+   "refusal_ok": true,
+   "type": "out_of_scope",
+   "domain": "ngoai_pham_vi"
+  },
+  "GD-098": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "injection",
+   "domain": "giao_thong"
+  },
+  "GD-099": {
+   "refusal_ok": false,
+   "type": "injection",
+   "domain": "hon_nhan"
+  },
+  "GD-100": {
+   "refusal_ok": true,
+   "facts_ok": false,
+   "fact_rate": 0.5,
+   "citation_precision": 1.0,
+   "citation_recall": 0.5,
+   "forbidden_ok": true,
+   "type": "multi_hop",
+   "domain": "hon_nhan"
+  }
+ }
+}
