@@ -52,3 +52,36 @@ Với bản OCR, một số tiêu đề Điều bị nhận dạng hỏng tới 
 liền tiêu đề Điều trên cùng một dòng). Nội dung của Điều đó khi ấy nằm trong đoạn của Điều liền
 trước, nên trích dẫn có thể lệch một Điều. Danh sách Điều bị thiếu hiện trong báo cáo `chunk`. Các
 văn bản này đều có `needs_review = true`.
+
+## Task 2.2 – Embedding & chỉ mục tìm kiếm
+
+```bash
+cd libris-ai
+uv run python -m app.pipeline embed           # sinh embedding cho các đoạn chưa có
+docker compose run --rm migrate               # (ở gốc repo) tạo chỉ mục HNSW + GIN
+uv run python -m app.pipeline search "Đi xe máy không có gương chiếu hậu bên trái có bị phạt không?"
+```
+
+- **Mô hình**: `BAAI/bge-m3` (dense, 1024 chiều, đa ngôn ngữ, hỗ trợ tiếng Việt). Lần đầu chạy sẽ
+  tải khoảng 2,3 GB về `~/.cache/huggingface`. Cấu hình qua `EMBEDDING_*` trong `.env`.
+- **Văn bản được nhúng** là `context_prefix + "\n" + content`, để vector mang cả ngữ cảnh "văn bản
+  nào, Chương/Điều nào".
+- Vector được **chuẩn hóa L2**, nên tìm kiếm dùng khoảng cách cosine (`<=>`).
+- `embed` chỉ xử lý các đoạn có `embedding IS NULL` và commit theo từng lô (`--batch-size`). Bị
+  ngắt thì chạy lại để làm tiếp. Dùng `--force` để sinh lại toàn bộ, VD khi đổi mô hình.
+- `token_count` lưu số token thực của từng đoạn. Lệnh báo số đoạn vượt `EMBEDDING_MAX_SEQ_LENGTH`
+  (mặc định 1024 token, phần vượt bị mô hình cắt bỏ).
+- **PyTorch bản CPU** được lấy từ index `download.pytorch.org/whl/cpu` (xem `pyproject.toml`). Máy
+  có GPU: đổi index sang bản CUDA và đặt `EMBEDDING_DEVICE=cuda`.
+
+**Chỉ mục** (`db/migrations/20261123000005_search_indexes.sql`):
+
+| Cột | Chỉ mục | Dùng cho |
+|---|---|---|
+| `embedding` | HNSW `vector_cosine_ops` (m=16, ef_construction=64) | tìm kiếm ngữ nghĩa |
+| `search_vector` | GIN | tìm kiếm từ khóa, số hiệu văn bản |
+
+`search.py` cung cấp `semantic_search` và `keyword_search`, mặc định chỉ trả về văn bản `ACTIVE`/
+`AMENDED`. Vì bộ lọc trạng thái áp dụng sau khi quét HNSW, truy vấn bật
+`hnsw.iterative_scan = relaxed_order` (pgvector ≥ 0.8), để vẫn đủ k kết quả khi nhiều đoạn gần
+nhất thuộc văn bản đã hết hiệu lực. Task 3.1 sẽ hợp nhất hai luồng này bằng RRF.
