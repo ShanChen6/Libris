@@ -115,7 +115,7 @@ def test_specialized_domains_are_demoted_unless_asked() -> None:
     assert [h.article for h in asked] == ["Điều 8", "Điều 7"]
 
 
-def test_keyword_weight_is_lower_without_reranker(monkeypatch) -> None:
+def test_vector_only_without_reranker(monkeypatch) -> None:
     from app.retrieval import service
 
     seen = []
@@ -134,7 +134,7 @@ def test_keyword_weight_is_lower_without_reranker(monkeypatch) -> None:
 
     service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), None)
     service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), FakeReranker())
-    assert seen[0].keyword == 0.25 and seen[1] is None  # None: SearchWeights() mặc định (1)
+    assert seen[0].keyword == 0 and seen[1] is None  # None: SearchWeights() mặc định (1)
 
 
 def test_vehicle_type_mismatch_is_demoted() -> None:
