@@ -76,9 +76,16 @@ class CrossEncoderReranker:
 
 
 @lru_cache
-def get_reranker() -> CrossEncoderReranker:
-    """Reranker dùng chung cho cả tiến trình (mô hình chỉ tải một lần)."""
+def get_reranker() -> CrossEncoderReranker | None:
+    """Reranker dùng chung cho cả tiến trình (mô hình chỉ tải một lần).
+
+    ``RERANKER_ENABLED=false``: không tải mô hình (tiết kiệm ~2,3 GB RAM khi triển khai trên máy
+    nhỏ); truy xuất chỉ dùng Hybrid Search, chất lượng giảm (Context Precision@5 0,775 -> 0,588 trên
+    Golden Dataset) và không còn bước từ chối trước khi gọi LLM theo điểm rerank.
+    """
     s = get_settings()
+    if not s.reranker_enabled:
+        return None
     return CrossEncoderReranker(
         s.reranker_model,
         device=s.reranker_device,

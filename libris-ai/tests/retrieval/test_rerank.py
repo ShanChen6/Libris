@@ -83,3 +83,15 @@ def test_balance_old_and_new() -> None:
     assert sum(1 for h in picked if not h.superseded_by) == 2
     assert [h.article for h in picked] == ["Điều 1", "Điều 2", "Điều 3", "Điều 6", "Điều 7"]
     assert balance_old_and_new(old, 3) == old[:3]  # không có đoạn mới -> theo thứ hạng
+
+
+def test_reranker_can_be_disabled(monkeypatch) -> None:
+    from app.core.config import Settings
+    from app.retrieval import rerank as module
+
+    monkeypatch.setattr(module, "get_settings", lambda: Settings(reranker_enabled=False))
+    module.get_reranker.cache_clear()
+    try:
+        assert module.get_reranker() is None  # không tải mô hình
+    finally:
+        module.get_reranker.cache_clear()

@@ -163,6 +163,15 @@ def corpus_version(conn) -> str:
     return hashlib.sha1(repr(row).encode()).hexdigest()[:12]
 
 
+def supports_vector_sets(client) -> bool:
+    """Redis 8 có vector set; Valkey, Upstash, Redis 7... thì không (không có lệnh VCARD)."""
+    try:
+        client.execute_command("VCARD", "libris:probe")
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
 _cache: SemanticCache | None = None
 
 
@@ -177,11 +186,15 @@ def get_cache() -> SemanticCache | None:
     if _cache is None:
         import redis
 
-        client = redis.Redis.from_url(s.redis_url, socket_timeout=0.5, socket_connect_timeout=0.5)
+        url = s.redis_url if "://" in s.redis_url else f"redis://{s.redis_url}"  # host:port
+        client = redis.Redis.from_url(url, socket_timeout=0.5, socket_connect_timeout=0.5)
         try:
             client.ping()
         except Exception:  # noqa: BLE001
-            log.warning("Không kết nối được Redis (%s): tắt semantic cache", s.redis_url)
+            log.warning("Không kết nối được Redis: tắt semantic cache")
+            return None
+        if not supports_vector_sets(client):
+            log.warning("Redis không hỗ trợ vector set (cần Redis 8+): tắt semantic cache")
             return None
         _cache = SemanticCache(
             client, threshold=s.semantic_cache_threshold, ttl=s.semantic_cache_ttl

@@ -15,8 +15,8 @@ async def lifespan(_: FastAPI):
     settings = get_settings()
     if settings.embedding_preload:
         _ = get_embedder().dim
-    if settings.reranker_preload:
-        get_reranker().score("khởi động", ["mô hình"])
+    if settings.reranker_preload and (reranker := get_reranker()) is not None:
+        reranker.score("khởi động", ["mô hình"])
     yield
 
 

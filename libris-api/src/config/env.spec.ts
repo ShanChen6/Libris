@@ -13,6 +13,17 @@ describe('validateEnv', () => {
     expect(env.ADMIN_EMAIL).toBeUndefined();
   });
 
+  it('accepts the AI service address as host:port', () => {
+    expect(
+      validateEnv({ ...base, AI_SERVICE_URL: 'libris-ai:10000' })
+        .AI_SERVICE_URL,
+    ).toBe('http://libris-ai:10000');
+    expect(
+      validateEnv({ ...base, AI_SERVICE_URL: 'https://ai.example.com' })
+        .AI_SERVICE_URL,
+    ).toBe('https://ai.example.com');
+  });
+
   it('rejects a JWT secret shorter than 32 bytes', () => {
     expect(() => validateEnv({ ...base, JWT_SECRET: 'short' })).toThrow(
       /JWT_SECRET.*32 byte/,

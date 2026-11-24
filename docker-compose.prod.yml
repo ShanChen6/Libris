@@ -1,0 +1,46 @@
+# Bản production của libris-ai + libris-api chạy cùng Postgres/Redis trong docker-compose.yml (Task 6.1):
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# Cần đặt JWT_SECRET, INTERNAL_API_TOKEN, LLM_API_KEY trong file .env ở gốc repo (xem .env.example).
+# Migration: docker compose run --rm migrate
+services:
+  libris-ai:
+    build: ./libris-ai
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-libris}:${POSTGRES_PASSWORD:-libris}@postgres:5432/${POSTGRES_DB:-libris}
+      REDIS_URL: redis://redis:6379/0
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Đặt INTERNAL_API_TOKEN trong .env}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      RERANK_CANDIDATES: ${RERANK_CANDIDATES:-20}
+      RERANKER_ENABLED: ${RERANKER_ENABLED:-true}
+    volumes:
+      - models:/models  # mô hình bge-m3 + reranker (~4,5 GB) tải lần đầu rồi giữ lại
+      - uploads:/app/data/uploads
+    ports:
+      - "${AI_PORT:-8000}:8000"
+
+  libris-api:
+    build: ./libris-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-libris}:${POSTGRES_PASSWORD:-libris}@postgres:5432/${POSTGRES_DB:-libris}
+      JWT_SECRET: ${JWT_SECRET:?Đặt JWT_SECRET trong .env (openssl rand -base64 32)}
+      AI_SERVICE_URL: http://libris-ai:8000
+      AI_SERVICE_TOKEN: ${INTERNAL_API_TOKEN}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    ports:
+      - "${API_PORT:-4000}:4000"
+
+volumes:
+  models:
+  uploads:

@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # Cross-encoder reranker (Task 3.3): chấm lại Top `rerank_candidates` từ Hybrid Search,
     # giữ Top `rerank_top_n` đưa cho LLM. Trên CPU 4 nhân mất ~0,8 giây / cặp (câu hỏi, đoạn):
     # 20 ứng viên ~16 giây, 10 ứng viên ~9 giây -> chạy CPU nên đặt RERANK_CANDIDATES=10.
+    reranker_enabled: bool = True  # false: bỏ bước rerank để chạy trên máy ít RAM (xem rerank.py)
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     reranker_device: str = "cpu"
     reranker_max_length: int = 1024

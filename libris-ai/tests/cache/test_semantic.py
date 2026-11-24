@@ -129,5 +129,18 @@ def test_refusals_are_not_cached(seeded, redis_client) -> None:  # noqa: F811
         app.dependency_overrides.clear()
 
 
+def test_vector_set_support_is_detected(redis_client) -> None:
+    from app.cache.semantic import supports_vector_sets
+
+    client, _ = redis_client
+    assert supports_vector_sets(client)  # Redis 8
+
+    class OldRedis:
+        def execute_command(self, *args):
+            raise Exception("ERR unknown command 'VCARD'")
+
+    assert not supports_vector_sets(OldRedis())
+
+
 def test_fake_embedder_dimension_is_used() -> None:
     assert FakeEmbedder().encode(["a"]).shape[1] == 1024

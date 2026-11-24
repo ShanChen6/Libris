@@ -75,7 +75,7 @@ class SearchResponse(BaseModel):
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 EmbedderDep = Annotated[Embedder, Depends(get_embedder)]
-RerankerDep = Annotated[Reranker, Depends(get_reranker)]
+RerankerDep = Annotated[Reranker | None, Depends(get_reranker)]
 
 
 @router.post("/search", response_model=SearchResponse)

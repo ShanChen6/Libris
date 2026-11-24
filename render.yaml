@@ -1,0 +1,72 @@
+# Render Blueprint (Task 6.1): Dashboard Render -> New -> Blueprint -> chọn repo này.
+# Render hỏi các biến `sync: false` khi tạo (chuỗi kết nối Neon/Supabase, khóa Gemini...).
+# Hướng dẫn đầy đủ: docs/DEPLOY.md
+services:
+  # API công khai cho giao diện (Vercel gọi vào đây)
+  - type: web
+    name: libris-api
+    runtime: docker
+    rootDir: libris-api
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: starter
+    branch: main
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL # chuỗi kết nối PostgreSQL trên Neon/Supabase (sslmode=require)
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WEB_ORIGIN # domain Vercel, VD https://libris.vercel.app (nhiều domain: ngăn cách bởi dấu phẩy)
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: AI_SERVICE_URL # host:port nội bộ của libris-ai
+        fromService:
+          type: pserv
+          name: libris-ai
+          property: hostport
+      - key: AI_SERVICE_TOKEN
+        fromService:
+          type: pserv
+          name: libris-ai
+          envVarKey: INTERNAL_API_TOKEN
+
+  # RAG pipeline: dịch vụ riêng tư, chỉ libris-api gọi được. Cần >= 2 GB RAM (đo thực tế: docs/DEPLOY.md)
+  - type: pserv
+    name: libris-ai
+    runtime: docker
+    rootDir: libris-ai
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: standard
+    branch: main
+    disk: # giữ mô hình bge-m3 + reranker (~4,5 GB) giữa các lần deploy
+      name: models
+      mountPath: /models
+      sizeGB: 10
+    envVars:
+      - key: INTERNAL_API_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: LLM_API_KEY # khóa Gemini từ Google AI Studio
+        sync: false
+      - key: RERANK_CANDIDATES
+        value: "10" # 20 cho chất lượng tốt hơn một chút nhưng chậm gấp đôi trên CPU
+      - key: REDIS_URL
+        fromService:
+          type: pserv
+          name: libris-redis
+          property: hostport
+
+  # Semantic Cache cần Redis 8 (vector set) – Key Value của Render là Valkey, không có vector set
+  - type: pserv
+    name: libris-redis
+    runtime: image
+    image:
+      url: docker.io/library/redis:8.2-alpine
+    region: singapore
+    plan: starter

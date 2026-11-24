@@ -18,7 +18,12 @@ export const envSchema = z.object({
       'JWT_SECRET phải dài ít nhất 32 byte (tạo bằng: openssl rand -base64 32)',
   }),
   JWT_TTL: z.string().default('2h'),
-  AI_SERVICE_URL: z.string().url().default('http://localhost:8000'),
+  // Nhận cả dạng host:port (Render, Railway cung cấp địa chỉ dịch vụ nội bộ không kèm http://)
+  AI_SERVICE_URL: z.preprocess(
+    (v) =>
+      typeof v === 'string' && v && !/^https?:\/\//.test(v) ? `http://${v}` : v,
+    z.string().url().default('http://localhost:8000'),
+  ),
   // Trùng với INTERNAL_API_TOKEN của libris-ai
   AI_SERVICE_TOKEN: z.string().default(''),
   MAX_UPLOAD_MB: z.coerce.number().int().positive().default(30),
