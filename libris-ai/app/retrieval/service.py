@@ -59,8 +59,7 @@ def retrieve(
 ) -> Retrieval:
     plan = plan or route(query)
     if weights is None and reranker is None:
-        # Không có reranker lọc lại thì luồng từ khóa nhiễu hơn: trọng số 0,25 tốt hơn 1
-        # (Golden Dataset, không rerank: CP@5 0,661 so với 0,540)
+        # Không có reranker lọc lại thì luồng từ khóa làm nhiễu thứ hạng (xem NO_RERANK_WEIGHTS)
         weights = NO_RERANK_WEIGHTS
     subs = sub_questions(query) if plan.mode != "compare" else [query]
     if len(subs) > 1 and reranker is not None:
@@ -98,7 +97,11 @@ def retrieve(
     return Retrieval(query, expanded, result.plan, hits[:top_n], reranker is not None)
 
 
-NO_RERANK_WEIGHTS = SearchWeights(vector=1.0, keyword=0.25)
+# Không có reranker: chỉ dùng vector (cùng luồng văn bản được nêu tên và luồng định nghĩa). Trọng số
+# từ khóa 0,25 từng được chọn vì tốt hơn 1 trên Golden Dataset, nhưng chưa so với vector thuần;
+# CP@5 / Hit@1 vector thuần so với từ khóa 0,25: Golden 0,686/0,574 vs 0,674/0,543, hold-out
+# 0,710/0,650 vs 0,675/0,550, bộ 152 câu tự động 0,716/0,612 vs 0,535/0,395.
+NO_RERANK_WEIGHTS = SearchWeights(vector=1.0, keyword=0.0)
 
 # Lĩnh vực chuyên biệt: đoạn có tiêu đề (context_prefix) thuộc lĩnh vực này bị giảm điểm rerank khi
 # câu hỏi không nhắc tới lĩnh vực đó. "xe máy" trong câu hỏi đời thường là mô tô/xe gắn máy, không

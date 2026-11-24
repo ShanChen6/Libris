@@ -50,7 +50,7 @@ class SearchWeights:
     # Đo trên Golden Dataset (eval/eval_retrieval.py), có rerank: khi luồng từ khóa còn là OR từng
     # âm tiết, trọng số 0,25 tốt hơn (CP@5 0,681 -> 0,744). Sau khi chuyển sang cụm hai âm tiết và
     # hiệu đính OCR, trọng số 1 tốt nhất: CP@5 0,789 (0,25) / 0,794 (0,5) / 0,798 (1). Không có
-    # reranker thì retrieve() dùng 0,25 (service.NO_RERANK_WEIGHTS).
+    # reranker thì retrieve() chỉ dùng vector (service.NO_RERANK_WEIGHTS).
     keyword: float = 1.0
     referenced: float = 1.0
     definition: float = 1.0

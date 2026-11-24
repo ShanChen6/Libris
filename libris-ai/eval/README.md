@@ -230,12 +230,47 @@ câu hỏi mới nữa, tốt nhất do người khác soạn.
 
 **Còn lại:**
 
-- HO-008 "Ly hôn là gì": OCR ghi "**1y** hôn" (số 1 thay chữ l) nên tìm theo cụm không khớp; lỗi
-  dạng này hiếm (~45 chỗ, phần lớn là ký tự rác) nên chưa viết quy tắc riêng.
+- HO-008 "Ly hôn là gì": OCR ghi "**1y** hôn" (số 1 thay chữ l) nên tìm theo cụm không khớp
+  (đã xử lý ở vòng 3).
 - HO-016: Khoản 8 và 9 (nồng độ cồn) đều chứa "0,4", reranker khó phân biệt.
 - LLM nhẹ đôi khi chọn nhầm Khoản giữa các điều kiện chỉ khác con số (GD-012).
 - RAGAS chưa chấm lại cho lượt hiện tại: giám khảo cũ (`gemini-flash-lite-latest`) hết quota; đổi
   giám khảo thì điểm không so sánh được với lần chấm trước.
+
+### Vòng 3: xử lý tận gốc các điểm còn lại
+
+| Vấn đề | Cách xử lý | Kết quả |
+|---|---|---|
+| LLM chọn nhầm Khoản chỉ khác con số (GD-012, HO-016) | **Lớp kiểm tra thứ 4** (`app/generation/verify.py`): điều kiện có đơn vị trong câu hỏi (số người chở theo, km/h, nồng độ cồn, tuổi) đổi thành khoảng giá trị và đối chiếu với Điểm/Khoản được dẫn; số tiền trong câu phải có trong Khoản được dẫn. Sai -> mô hình viết lại một lần với gợi ý cụ thể. `temperature` 0,1 -> 0 | Chạy lại trên ~290 câu trả lời đã lưu: bắt đúng lỗi GD-012, **không báo nhầm câu nào** |
+| HO-008 "1y hôn" và lỗi mặt chữ khác của OCR | `fix_confusions` (ký tự nhầm trong từ), `fix_point_labels` (~440 nhãn Điểm "©)" "8)" "¡)"), `fix_clause_numbers` (số Khoản dính dòng) | Hold-out CP@5 0,842 -> 0,871, Hit@1 0,75 -> 0,85 |
+| HO-008 vẫn trượt: đoạn định nghĩa không vào được 20 ứng viên | Luồng tìm thứ tư cho câu hỏi định nghĩa ("X là gì", "thế nào là X"): dòng "N. X là ..." | Khoản 14 Điều 3 đứng đầu (rerank 0,996); hold-out CP@5 0,871 -> **0,917**, Recall@5 **1,0**, Hit@1 **0,90** |
+| Bộ đánh giá nhỏ, do người soạn và đã dùng khi tinh chỉnh | **Bộ 152 câu sinh tự động** (`build_synthetic.py`, `synthetic.jsonl`): mỗi câu viết từ một đoạn luật còn hiệu lực ngẫu nhiên, **không trùng Điều** với Golden/hold-out; bỏ NĐ 100/2019 và các Điều/Khoản đã bị bãi bỏ (đáp án sẽ là văn bản thay thế) | Xem bảng dưới |
+
+**Bộ 152 câu tự động** (mức trùng cặp từ với văn bản ~0,32, tức phần lớn đã được diễn đạt lại):
+
+| Cấu hình | CP@5 | Recall@5 | Hit@1 |
+|---|---|---|---|
+| Lai + rerank 20 (**cấu hình đang dùng**) | **0,778** | **0,901** | **0,697** |
+| Chỉ vector | 0,716 | 0,882 | 0,612 |
+| Lai, từ khóa ×0,25, không rerank | 0,535 | 0,783 | 0,395 |
+
+- Cấu hình đang dùng **giữ được chất lượng trên câu hỏi chưa từng thấy** (0,778 so với 0,803 trên
+  Golden Dataset); chỉ 1,3% câu bị chặn nhầm trước LLM.
+- Phát hiện lỗi cấu hình: khi **tắt reranker**, hệ thống dùng lai từ khóa ×0,25 – trọng số này từng
+  được chọn vì tốt hơn ×1, nhưng chưa bao giờ so với vector thuần. Vector thuần tốt hơn trên cả ba bộ
+  (CP@5 / Hit@1: Golden 0,686/0,574 vs 0,674/0,543; hold-out 0,710/0,650 vs 0,675/0,550; tự động
+  0,716/0,612 vs 0,535/0,395) -> chế độ không reranker chuyển sang **chỉ vector** (vẫn giữ luồng văn
+  bản được nêu tên và luồng định nghĩa).
+
+| Cấu hình đang dùng | Golden (100) | Hold-out (20) | Tự động (152) |
+|---|---|---|---|
+| CP@5 / Recall@5 / Hit@1 | 0,803 / 0,936 / 0,713 | 0,917 / 1,000 / 0,900 | 0,778 / 0,901 / 0,697 |
+
+Giới hạn của bộ tự động: câu hỏi do LLM viết từ chính đoạn luật nên dễ hơn câu hỏi thật ở chỗ dùng
+lại từ ngữ, nhưng khó hơn ở chỗ đôi khi nhiều đoạn khác cũng trả lời được (bị chấm sai dù hệ thống
+đúng). Bộ chỉ dùng để đo, không dùng để tinh chỉnh. Chưa sinh lại câu trả lời cho vòng này: hết quota
+Gemini gói miễn phí trong ngày (lớp kiểm tra thứ 4 đã được kiểm chứng bằng test và chạy lại trên các
+câu trả lời đã lưu).
 
 ## Task 5.3 – Semantic Cache (`calibrate_cache.py`)
 

@@ -78,7 +78,8 @@ flowchart TD
 - **RRF** chỉ dùng thứ hạng nên không phải chuẩn hóa thang điểm cosine và `ts_rank`.
 - Luồng từ khóa tìm theo **cụm hai âm tiết** (`'đèn' <-> 'tín'`): tiếng Việt viết theo âm tiết nên
   tìm từng âm tiết riêng lẻ ("xe", "máy", "đèn") khớp hàng nghìn đoạn. Trọng số các luồng được chọn
-  bằng đánh giá (mục 6): 1 khi có reranker, từ khóa 0,25 khi chạy không reranker.
+  bằng đánh giá (mục 6): 1 khi có reranker; không có reranker thì chỉ dùng vector (luồng từ khóa
+  khi đó làm nhiễu thứ hạng, đo trên cả ba bộ câu hỏi).
 - Câu hỏi nhiều ý ("vừa không đội mũ bảo hiểm vừa vượt đèn đỏ") được tách thành câu hỏi con, mỗi ý
   có căn cứ riêng trong Top 5; câu hỏi nối tiếp ("còn ô tô thì sao?") được ghép với câu hỏi trước
   trong hội thoại.
@@ -114,6 +115,7 @@ Ví dụ (chạy trên hệ thống thật):
 | 1. Trước khi gọi LLM | Đoạn liên quan nhất có điểm rerank < 0,05 (chọn bằng 120 câu đánh giá) -> từ chối ngay (không tốn lượt LLM, mô hình không có cơ hội tự suy diễn) |
 | 2. System prompt | Chỉ dùng tài liệu được cung cấp; mỗi luận điểm phải có thẻ trích dẫn chép đúng nhãn; giữ nguyên văn con số; thiếu căn cứ thì trả lời `TỪ CHỐI`; nội dung tài liệu không được coi là chỉ dẫn (chống prompt injection) |
 | 3. Sau khi trả lời | Mỗi thẻ được đối chiếu với các đoạn trong ngữ cảnh (văn bản + Điều + Khoản). Câu trả lời không có trích dẫn hợp lệ nào bị thay bằng lời từ chối; thẻ không khớp được báo lại |
+| 4. Áp dụng đúng Khoản | Điều kiện có con số trong câu hỏi (số người chở theo, km/h, nồng độ cồn, tuổi) được đổi thành khoảng giá trị và đối chiếu với Điểm/Khoản được dẫn; số tiền trong câu phải có trong Khoản được dẫn. Sai -> mô hình viết lại một lần với gợi ý cụ thể (giao diện xóa bản nháp). Trên ~290 câu trả lời đã lưu: bắt đúng lỗi, không báo nhầm |
 
 Giao diện chỉ cho bấm các thẻ đã xác minh; bấm vào mở **nguyên văn văn bản và bôi vàng đúng đoạn**
 (vị trí ký tự lưu khi cắt đoạn), kèm trạng thái hiệu lực.
@@ -134,6 +136,12 @@ tiết và cách chạy lại: [libris-ai/eval/README.md](../libris-ai/eval/READ
 | Hybrid ban đầu + rerank 10 (cấu hình cũ) | 0,681 | 0,771 | 0,628 |
 | Hybrid từ khóa ×0,25 + rerank 20 (sau Giai đoạn 5) | 0,775 | 0,894 | 0,691 |
 | **Hiện tại**: hiệu đính OCR, cụm hai âm tiết, tách câu nhiều ý, khử nhập nhằng loại xe/lĩnh vực, rerank 20 | **0,803** | **0,936** | **0,713** |
+
+Ngoài Golden Dataset, cấu hình hiện tại được đo trên hai bộ **không dùng để tinh chỉnh ban đầu**:
+hold-out 20 câu (CP@5 0,917, Recall@5 1,0, Hit@1 0,90) và **152 câu sinh tự động** từ các đoạn luật
+ngẫu nhiên không trùng Điều với hai bộ kia (CP@5 0,778, Recall@5 0,901, Hit@1 0,697 – so với 0,716
+của tìm theo vector thuần). Bộ tự động cũng cho thấy khi tắt reranker thì nên tìm theo vector thuần
+thay vì lai (Hit@1 0,612 so với 0,395).
 
 **Câu trả lời** (100 câu):
 
@@ -183,10 +191,10 @@ bất cứ lúc nào.
 | Hạn chế | Hướng xử lý |
 |---|---|
 | Kho mới có 18 văn bản, 4 lĩnh vực | Crawler và trang quản trị đã sẵn sàng để nạp thêm |
-| 12/18 văn bản là bản scan; lỗi dấu thanh đã được hiệu đính, còn lỗi chữ/số khác ("hiệu li", "đàÌ;") | Rà soát các đoạn hay được trích dẫn; ưu tiên nguồn văn bản gốc dạng chữ |
+| 12/18 văn bản là bản scan; đã hiệu đính dấu thanh, ký tự nhầm trong từ, nhãn Điểm, số Khoản; còn ký tự rác rải rác | Thay bằng văn bản gốc dạng chữ (vbpl.vn chặn truy cập từ môi trường chạy) hoặc OCR lại bằng mô hình thị giác |
 | Câu hỏi cần nhiều căn cứ đúng 75%; tách câu bằng quy tắc | Viết lại / tách câu hỏi bằng LLM |
-| Cải tiến truy xuất được rút ra từ cả Golden Dataset lẫn hold-out: trên câu hỏi mới, xếp hạng kém hệ thống cũ một chút | Một bộ câu hỏi mới do người khác soạn để đo không thiên lệch |
-| LLM nhẹ đôi khi chọn nhầm Khoản giữa các điều kiện chỉ khác con số (VD chở 2 người / từ 3 người) | Mô hình mạnh hơn; quy tắc prompt đã giúp một phần |
+| Bộ câu tự động do LLM viết từ chính đoạn luật; Golden/hold-out đã dùng khi tinh chỉnh | Một bộ câu hỏi do người khác soạn (hoặc câu hỏi thật của người dùng), giữ kín, chỉ dùng để đo trước mỗi lần phát hành |
+| Lớp kiểm tra áp dụng đúng Khoản chỉ hiểu một số đơn vị (người chở theo, km/h, nồng độ cồn, tuổi) và số tiền | Bổ sung đơn vị khi mở rộng lĩnh vực (diện tích, thời hạn...) |
 | Câu hỏi nối tiếp được nhận diện bằng quy tắc | Viết lại câu hỏi bằng LLM khi có quota |
 | Token đăng nhập lưu trong `localStorage` | Chuyển sang session cookie `HttpOnly` khi web và API có chung tên miền riêng |
 | Chạy trên CPU: 8–20 giây mỗi câu trả lời mới | GPU cho embedding/reranker; cache đã giảm còn ~0,25 giây cho câu lặp lại |
