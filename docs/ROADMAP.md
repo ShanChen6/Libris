@@ -87,14 +87,14 @@
 ### GIAI ĐOẠN 5: Đánh giá Độ chính xác (RAG Evaluation) & Tối ưu Hiệu năng (Tuần 11)
 *Mục tiêu: Đo lường chất lượng trả lời của Libris bằng các chỉ số định lượng khoa học.*
 
-- [ ] **Task 5.1: Xây dựng Bộ dữ liệu Kiểm thử Chuẩn (Golden Dataset)**
+- [x] **Task 5.1: Xây dựng Bộ dữ liệu Kiểm thử Chuẩn (Golden Dataset)**
   - Biên soạn 100 câu hỏi tình huống pháp luật thực tế (từ dễ đến phức tạp, bao gồm cả câu hỏi bẫy về luật hết hiệu lực) kèm đáp án chuẩn và mã điều luật tham chiếu.
-- [ ] **Task 5.2: Đánh giá tự động bằng Framework RAGAS**
+- [x] **Task 5.2: Đánh giá tự động bằng Framework RAGAS**
   - Chạy đánh giá tự động để tối ưu hóa tham số (chunk size, trọng số Hybrid Search) dựa trên 3 chỉ số:
     - **Faithfulness (Độ trung thực):** Đảm bảo câu trả lời bám sát 100% văn bản luật, không bịa đặt.
     - **Context Precision (Độ chính xác truy xuất):** Đảm bảo điều luật đúng luôn nằm trong Top đầu kết quả tìm kiếm.
     - **Answer Relevancy (Độ liên quan):** Câu trả lời đi thẳng vào trọng tâm thắc mắc của người dùng.
-- [ ] **Task 5.3: Tối ưu Tốc độ với Semantic Caching (Redis)**
+- [x] **Task 5.3: Tối ưu Tốc độ với Semantic Caching (Redis)**
   - Lưu bộ nhớ đệm (Cache) các câu hỏi pháp luật phổ biến trên Redis giúp phản hồi gần như tức thì (< 0.5 giây) và tiết kiệm chi phí gọi API mô hình ngôn ngữ.
 
 ---

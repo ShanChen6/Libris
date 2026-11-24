@@ -107,6 +107,7 @@ Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu r
 - [Lộ trình triển khai (12 tuần)](docs/ROADMAP.md)
 - Hỏi đáp có trích dẫn: [libris-ai/app/generation/README.md](libris-ai/app/generation/README.md)
 - Phân tích hợp đồng: [libris-ai/app/analysis/README.md](libris-ai/app/analysis/README.md)
+- Đánh giá (Golden Dataset, RAGAS, Semantic Cache): [libris-ai/eval/README.md](libris-ai/eval/README.md)
 - API cho giao diện: [libris-api/README.md](libris-api/README.md); giao diện: [libris-web/README.md](libris-web/README.md)
 
 ## Quy trình nhánh
