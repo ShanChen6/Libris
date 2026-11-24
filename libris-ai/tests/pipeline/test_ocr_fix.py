@@ -1,10 +1,11 @@
 from app.pipeline.ocr_fix import LanguageModel, base, fix_text
 
-CLEAN = [
-    "Người điều khiển xe bị phạt tiền từ 400.000 đồng đến 600.000 đồng. Giấy phép lái xe bị tước."
-] * 20 + ["a) Tạo điều kiện."] * 20 + [
-    "Quyền sử dụng đất của người sử dụng đất. Giấy tờ giả bị thu hồi. Giấy phép hết hạn."
-] * 20
+CLEAN = (
+    ["Người điều khiển xe bị phạt tiền từ 400.000 đồng đến 600.000 đồng. Giấy phép lái xe bị tước."]
+    * 20
+    + ["a) Tạo điều kiện."] * 20
+    + ["Quyền sử dụng đất của người sử dụng đất. Giấy tờ giả bị thu hồi. Giấy phép hết hạn."] * 20
+)
 
 
 def test_base_drops_only_tone_marks() -> None:
