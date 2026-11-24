@@ -94,7 +94,10 @@ trong ngữ cảnh. Khi đó `service.retrieve()`:
 
 ## Giới hạn
 
-- Câu hỏi được xử lý độc lập. Lịch sử hội thoại đã được lưu (Task 4.2) nhưng chưa đưa vào LLM, nên
-  câu hỏi nối tiếp kiểu "còn ô tô thì sao?" cần viết lại câu hỏi dựa trên lịch sử.
+- **Câu hỏi nối tiếp** ("Còn ô tô thì sao?", "Trường hợp đó bị phạt gì?", câu ≤ 4 từ): libris-api
+  gửi kèm tối đa 3 câu hỏi trước trong hội thoại (`history`); `followup.py` nhận diện câu nối tiếp
+  bằng quy tắc và ghép với câu hỏi gần nhất ("Xe máy vượt đèn đỏ bị phạt bao nhiêu? Hỏi tiếp: Còn ô tô
+  thì sao?") trước khi truy xuất, hỏi LLM và tra Semantic Cache. Câu độc lập giữ nguyên. Chưa viết
+  lại câu hỏi bằng LLM (tốn thêm một lượt gọi).
 - Văn bản bản OCR (`needs_review`) có thể sai số hoặc dấu; câu trả lời chép nguyên văn nên cũng mang
   theo lỗi đó. Trước khi demo nên rà soát các đoạn luật hay được trích dẫn.

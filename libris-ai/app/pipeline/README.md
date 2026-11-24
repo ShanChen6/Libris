@@ -20,6 +20,7 @@ OCR:
 
 | Tình huống | Cách xử lý |
 |---|---|
+| Số Khoản OCR hỏng ("%, Phạt tiền..." thay cho "5. Phạt tiền...") | Nhận là Khoản kế tiếp khi dòng bắt đầu bằng 1–2 ký hiệu hay bị nhầm với chữ số, theo sau là chữ hoa, và Khoản trước đã kết thúc bằng dấu chấm (trước đây cả Khoản 5 Điều 6 NĐ 168/2024 bị gộp vào Khoản 4) |
 | Số Chương OCR hỏng ("Chương HI", "Chương ]", "Chương") | Đánh số Chương theo thứ tự xuất hiện; chỉ dùng số đọc được khi hợp lệ và khớp thứ tự |
 | "Điều I." / "À Điều 2." / "“Điều 80." (rác OCR) | Quy đổi `I`/`l` → `1`, chấp nhận ký tự rác ở đầu dòng; ngoặc kép chỉ được chấp nhận khi đúng số Điều kế tiếp |
 | "Chương II và Chương IV Nghị định này…", "Điều 5 của Luật này…" | Là câu văn, không phải tiêu đề |
@@ -52,6 +53,31 @@ Với bản OCR, một số tiêu đề Điều bị nhận dạng hỏng tới 
 liền tiêu đề Điều trên cùng một dòng). Nội dung của Điều đó khi ấy nằm trong đoạn của Điều liền
 trước, nên trích dẫn có thể lệch một Điều. Danh sách Điều bị thiếu hiện trong báo cáo `chunk`. Các
 văn bản này đều có `needs_review = true`.
+
+### Hiệu đính dấu thanh sau OCR (`ocr_fix.py`)
+
+Tesseract (vie) hay bỏ dấu thanh trên â/ê/ô: "đất" -> "đât" (4.400 lần trong kho), "điều" -> "điêu",
+"cầm" -> "câm"... khiến tìm theo từ khóa trượt ("cầm điện thoại" không khớp "câm điện thoại") và văn
+bản hiển thị khó đọc. `ocr_fix.py` sửa theo **ngữ cảnh hai âm tiết**, học từ 6 văn bản không qua OCR
+của kho (~213.000 âm tiết):
+
+- chỉ thay bằng âm tiết khác **dấu thanh** (giữ nguyên chữ cái, kể cả â/ê/ô/ư/ơ/đ): "dưỡng" không
+  thể thành "đường";
+- dạng mới phải hợp với **cả từ trước lẫn từ sau** (điểm = tích hai phía), dạng gốc chưa từng gặp
+  trong ngữ cảnh đó; dấu câu không được tính là bằng chứng ("b) Tảo hôn" giữ nguyên);
+- con số và độ dài văn bản không đổi, nên vị trí trích dẫn (`char_start`/`char_end`) vẫn đúng.
+
+Kết quả: ~29.000 chỗ sửa trên 12 văn bản OCR; lấy ngẫu nhiên 40 chỗ để kiểm tra tay: cả 40 đúng.
+Chạy cho kho có sẵn (sau đó tự cắt đoạn và sinh embedding lại):
+
+```bash
+uv run python -m app.pipeline ocrfix --dry-run   # chỉ đếm
+uv run python -m app.pipeline ocrfix
+```
+
+Văn bản Admin tải lên có trang OCR được hiệu đính tự động khi nạp. Văn bản vẫn giữ `needs_review`
+vì lỗi khác (số, ký hiệu rác) không sửa được bằng cách này. Cắt lại đoạn làm trích dẫn trong lịch
+sử chat cũ mất liên kết tới đoạn luật (`chunk_id` thành NULL); nhãn và nội dung trích dẫn vẫn giữ.
 
 ## Task 2.2 – Embedding & chỉ mục tìm kiếm
 

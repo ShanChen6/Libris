@@ -49,6 +49,16 @@ Precision@5 sau rerank tăng từ 0,681 lên 0,744 so với trọng số 1 – x
 Số ứng viên mỗi luồng là `candidates` (mặc định 50); Top `RERANK_CANDIDATES` kết quả được đưa qua
 reranker (Task 3.3).
 
+### Câu hỏi nhiều ý (`decompose.py`)
+
+Một lượt truy xuất cho câu nhiều ý thường chỉ lấy được căn cứ cho một ý. Hai dạng được tách thành câu
+hỏi con, mỗi câu truy xuất và rerank riêng, mỗi ý giữ tối thiểu ⌊Top N / số ý⌋ chỗ:
+
+- "Đi xe máy **vừa** không đội mũ bảo hiểm **vừa** vượt đèn đỏ thì bị phạt..." -> một câu cho mỗi
+  hành vi;
+- nhiều vế hỏi: "Công ty bắt tôi thử việc 90 ngày... Như vậy **có đúng luật không**, công ty **bị phạt
+  thế nào**?" -> mỗi vế hỏi kèm câu bối cảnh.
+
 ## Lọc hiệu lực & Query Router (`router.py`)
 
 | Câu hỏi | Chế độ | Phạm vi văn bản |
