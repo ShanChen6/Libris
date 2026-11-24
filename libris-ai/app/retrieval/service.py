@@ -121,8 +121,29 @@ _SPECIALIZED = [
 SPECIALIZED_PENALTY = 0.5
 
 
+# Loại xe: câu hỏi chỉ về xe máy mà tiêu đề Điều chỉ về ô tô (hoặc ngược lại) -> giảm điểm. Sau khi
+# hiệu đính OCR, "dùng tay cầm và sử dụng điện thoại" của Điều 6 (ô tô) xếp trên Điều 7 (xe máy) cho
+# câu "chạy xe máy vừa nhắn tin điện thoại" (bộ hold-out HO-013).
+_VEHICLES = {
+    "moto": re.compile(r"xe máy(?! chuyên dùng)|mô tô|xe gắn máy|xe tay ga|xe số", re.I),
+    "car": re.compile(r"\bô tô\b|xe hơi|xe con\b|xe tải|xe khách", re.I),
+}
+
+
+def _vehicles(text: str) -> set[str]:
+    return {name for name, pattern in _VEHICLES.items() if pattern.search(text)}
+
+
+def _article_heading(hit: FusedHit) -> str:
+    """Tên Điều trong tiền tố ngữ cảnh: '... | Điều 6: Xử phạt ... xe ô tô ... | Khoản 9]'."""
+    if not hit.article or f"{hit.article}:" not in hit.context_prefix:
+        return ""
+    return hit.context_prefix.split(f"{hit.article}:", 1)[1].split("|", 1)[0]
+
+
 def disambiguate(query: str, hits: list[FusedHit]) -> list[FusedHit]:
-    """Giảm điểm đoạn thuộc lĩnh vực chuyên biệt mà câu hỏi không nhắc tới, rồi xếp lại."""
+    """Giảm điểm đoạn thuộc lĩnh vực chuyên biệt hoặc loại xe khác với câu hỏi, rồi xếp lại."""
+    asked_vehicles = _vehicles(query)
     out = []
     for h in hits:
         score = h.rerank_score
@@ -130,6 +151,9 @@ def disambiguate(query: str, hits: list[FusedHit]) -> list[FusedHit]:
             for heading, asked in _SPECIALIZED:
                 if heading.search(h.context_prefix) and not asked.search(query):
                     score *= SPECIALIZED_PENALTY
+            passage_vehicles = _vehicles(_article_heading(h))
+            if asked_vehicles and passage_vehicles and not asked_vehicles & passage_vehicles:
+                score *= SPECIALIZED_PENALTY
         out.append(replace(h, rerank_score=score) if score != h.rerank_score else h)
     return sorted(out, key=lambda h: -(h.rerank_score or 0))
 

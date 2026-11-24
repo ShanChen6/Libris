@@ -135,3 +135,33 @@ def test_keyword_weight_is_lower_without_reranker(monkeypatch) -> None:
     service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), None)
     service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), FakeReranker())
     assert seen[0].keyword == 0.25 and seen[1] is None  # None: SearchWeights() mặc định (1)
+
+
+def test_vehicle_type_mismatch_is_demoted() -> None:
+    from dataclasses import replace
+
+    from app.retrieval.service import disambiguate
+
+    car = replace(
+        _hit(6, "x"),
+        article="Điều 6",
+        context_prefix="[Văn bản | Điều 6: Xử phạt người điều khiển xe ô tô | Khoản 5]",
+        rerank_score=0.9,
+    )
+    moto = replace(
+        _hit(7, "x"),
+        article="Điều 7",
+        context_prefix="[Văn bản | Điều 7: Xử phạt người điều khiển xe mô tô, xe gắn máy | K4]",
+        rerank_score=0.7,
+    )
+    order = [h.article for h in disambiguate("chạy xe máy nhắn tin điện thoại", [car, moto])]
+    assert order == ["Điều 7", "Điều 6"]
+    # Câu hỏi về ô tô, hoặc không nêu loại xe: giữ nguyên thứ tự
+    assert [h.article for h in disambiguate("lái ô tô nhắn tin", [car, moto])] == [
+        "Điều 6",
+        "Điều 7",
+    ]
+    assert [h.article for h in disambiguate("nhắn tin khi lái xe", [car, moto])] == [
+        "Điều 6",
+        "Điều 7",
+    ]
