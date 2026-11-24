@@ -46,8 +46,11 @@ class Settings(BaseSettings):
     llm_retries: int = 2
 
     # Chống ảo giác (Task 3.4): từ chối trước khi gọi LLM nếu đoạn liên quan nhất có điểm
-    # rerank dưới ngưỡng này (câu trả lời đúng thường >= 0,85; không liên quan gần 0).
-    answer_min_rerank_score: float = 0.2
+    # rerank dưới ngưỡng này. Chọn bằng 120 câu (Golden Dataset + hold-out): câu ngoài phạm vi có
+    # điểm cao nhất 0,013; ngưỡng 0,2 chặn nhầm 5/114 câu trả lời được (cách hỏi đời thường như
+    # "mang bầu", "đặt cọc" bị chấm thấp), 0,05 chặn nhầm 2/114 mà vẫn chặn đủ 6/6 câu ngoài
+    # phạm vi.
+    answer_min_rerank_score: float = 0.05
 
     # Xác thực giữa libris-api và libris-ai (header X-Internal-Token). Trống: không kiểm tra –
     # chỉ dùng khi phát triển trên máy; môi trường triển khai bắt buộc đặt giá trị bí mật.

@@ -182,7 +182,7 @@ def analyze_contract(
     max_issues: int = 6,
     passages_per_issue: int = 3,
     candidates: int = 10,
-    min_rerank_score: float = 0.2,
+    min_rerank_score: float = 0.05,
     today: date | None = None,
 ) -> Iterator[tuple[str, Any]]:
     """Sinh ``("progress", {step, message})`` trong lúc xử lý, cuối cùng ``("done",

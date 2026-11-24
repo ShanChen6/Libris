@@ -113,7 +113,7 @@ def prepare(
     plan: RetrievalPlan | None = None,
     candidates: int = 20,
     top_n: int = 5,
-    min_rerank_score: float = 0.2,
+    min_rerank_score: float = 0.05,
     today: date | None = None,
 ) -> Prepared:
     today = today or date.today()
@@ -207,7 +207,7 @@ def answer_question(
     plan: RetrievalPlan | None = None,
     candidates: int = 20,
     top_n: int = 5,
-    min_rerank_score: float = 0.2,
+    min_rerank_score: float = 0.05,
     today: date | None = None,
 ) -> AnswerResult:
     prep = prepare(
@@ -237,7 +237,7 @@ def stream_answer(
     plan: RetrievalPlan | None = None,
     candidates: int = 20,
     top_n: int = 5,
-    min_rerank_score: float = 0.2,
+    min_rerank_score: float = 0.05,
     today: date | None = None,
 ) -> Iterator[StreamEvent]:
     """Các sự kiện theo thứ tự: ``meta`` (kế hoạch + nguồn) → ``delta``* (từng mẩu chữ) →
