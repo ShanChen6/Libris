@@ -182,16 +182,60 @@ câu trước đây trượt nay đúng: "ô tô vượt đèn đỏ" -> 18–20
 "vừa lái xe máy vừa cầm điện thoại" -> `[Điều 7, Khoản 4 - 168/2024/NĐ-CP]`; "trước và sau năm 2025"
 -> nêu cả mức cũ 200–300 nghìn lẫn mức mới 400–600 nghìn.
 
+### Vòng 2: kiểm tra độc lập (hold-out) và vá tiếp
+
+Để kiểm tra rủi ro "học thuộc đề", bộ **hold-out** (`holdout.jsonl`, 20 câu, `build_holdout.py`)
+được soạn sau khi tinh chỉnh: 12 câu về các Điều chưa có trong Golden Dataset (nghỉ hằng tuần, phép
+thâm niên, nghỉ khi kết hôn, lao động nữ mang thai, đăng ký kết hôn, chấm dứt hôn nhân, đăng ký biến
+động đất, chở người trên xe máy/xe đạp, tuổi bằng hạng C), 6 cách hỏi mới cho tình huống đã có và 2
+câu nhiều ý. Hệ thống cũ (code commit `7c7a074` + dữ liệu sao lưu trước khi hiệu đính OCR) được dựng
+lại để so sánh trên cùng bộ câu và cùng mô hình sinh (`gemini-3.1-flash-lite`):
+
+| Hold-out (20 câu) | Hệ thống cũ (sau GĐ 5) | Hiện tại |
+|---|---|---|
+| Context Precision@5 | **0,892** | 0,842 |
+| Recall@5 | 0,950 | 0,950 |
+| Hit@1 | **0,850** | 0,750 |
+| Đúng dữ kiện (câu đã trả lời) | 94,1% (16/17) | **100%** (18/18) |
+| Từ chối nhầm | 15% (3/20) | **10%** (2/20) |
+
+Kết luận trung thực: **xếp hạng** của hệ thống hiện tại kém hệ thống cũ trên câu hỏi mới (đúng dấu
+hiệu "học thuộc đề" đã cảnh báo), nhưng **câu trả lời** đúng hơn và ít từ chối nhầm hơn vì đoạn đúng
+vẫn nằm trong Top 5. Phân tích từng câu dẫn tới các bản vá:
+
+| Phát hiện trên hold-out | Xử lý |
+|---|---|
+| "chạy **xe máy** nhắn tin điện thoại": Điều 6 (**ô tô**) xếp trên Điều 7 | Giảm điểm đoạn có loại xe (theo tên Điều) khác với câu hỏi |
+| "mang bầu", "đặt cọc": đoạn đúng đứng số 1 nhưng điểm rerank 0,021 / 0,014 < ngưỡng 0,2 nên bị **chặn trước LLM** (ở cả hệ thống cũ) | Ngưỡng 0,2 -> **0,05**: trên 120 câu, câu ngoài phạm vi cao nhất 0,013; chặn nhầm 5 -> 2/114, vẫn chặn đủ 6/6. Ánh xạ "mang bầu" -> "mang thai", "đặt cọc" -> "biện pháp bảo đảm bằng tiền" |
+| GD-100 "muốn ly hôn **và** giành quyền nuôi con" | Tách khi có động từ tình thái ("muốn", "định"...) + "A và B" + phần hỏi; "nam và nữ" không bị tách |
+| Bộ chấm: "không có căn cứ để khẳng định nữ đủ 16 tuổi là được kết hôn" bị tính là nói theo nội dung cài | Bỏ qua lần xuất hiện trong câu phủ định |
+| GD-012: LLM chọn Khoản "chở từ 03 người" thay cho "chở 02 người" dù ngữ cảnh có Khoản đúng | Thêm quy tắc prompt đối chiếu con số/điều kiện; chạy lặp lại 3 lần: đúng 2/3 – vẫn còn ngẫu nhiên với mô hình nhẹ |
+| Thử thêm: truy vấn từ khóa = cụm hai âm tiết + từng âm tiết | **Không áp dụng**: kém hơn trên cả hai bộ (0,744 / 0,842 so với 0,803 / 0,867) |
+
+**Kết quả cuối** (toàn bộ câu trả lời sinh lại bằng code hiện tại: `answers_current.jsonl`,
+`answers_holdout_current.jsonl`; `gemini-3.1-flash-lite`):
+
+| | Golden Dataset (100) | Hold-out (20) |
+|---|---|---|
+| Context Precision@5 / Recall@5 / Hit@1 | 0,803 / 0,936 / 0,713 | 0,842 / 0,950 / 0,750 |
+| Đúng dữ kiện | 94,4% | 100% |
+| Trích dẫn – precision / recall | 81,6% / 96,1% | 91,4% / 97,2% |
+| Từ chối nhầm | **4,3%** | 10% |
+| Từ chối đúng câu ngoài phạm vi / chống chèn lệnh | 6/6 / 2/2 | – |
+| Câu nhiều căn cứ | **75%** | 100% (2/2) |
+
+**Lưu ý về cách đọc số liệu:** sau vòng 2, bộ hold-out cũng đã được dùng để tìm lỗi (loại xe, ngưỡng,
+"mang bầu", "đặt cọc") nên không còn hoàn toàn độc lập. Muốn ước lượng không thiên lệch cần một bộ
+câu hỏi mới nữa, tốt nhất do người khác soạn.
+
 **Còn lại:**
 
-- GD-100 ("muốn ly hôn **và** giành quyền nuôi con") vẫn trượt Điều 51: tách câu theo "và" nói chung
-  dễ sai ("nam và nữ") nên chưa làm.
-- Một số lỗi OCR không phải lỗi dấu thanh ("hiệu li" thay cho "hiệu lệnh", "đàÌ;") và chỗ thiếu bằng
-  chứng ngữ cảnh ("tay câm" ở Điều 7) chưa sửa được.
-- Một vài thay đổi (ánh xạ "điện thoại", hư từ "vừa", lĩnh vực chuyên biệt) được rút ra từ chính các
-  câu trượt trong bộ dữ liệu: là quy tắc chung nhưng có rủi ro "học thuộc đề" – nên kiểm tra thêm
-  bằng câu hỏi mới ngoài bộ dữ liệu.
-- RAGAS chưa chấm lại cho lượt hiện tại (quota giám khảo).
+- HO-008 "Ly hôn là gì": OCR ghi "**1y** hôn" (số 1 thay chữ l) nên tìm theo cụm không khớp; lỗi
+  dạng này hiếm (~45 chỗ, phần lớn là ký tự rác) nên chưa viết quy tắc riêng.
+- HO-016: Khoản 8 và 9 (nồng độ cồn) đều chứa "0,4", reranker khó phân biệt.
+- LLM nhẹ đôi khi chọn nhầm Khoản giữa các điều kiện chỉ khác con số (GD-012).
+- RAGAS chưa chấm lại cho lượt hiện tại: giám khảo cũ (`gemini-flash-lite-latest`) hết quota; đổi
+  giám khảo thì điểm không so sánh được với lần chấm trước.
 
 ## Task 5.3 – Semantic Cache (`calibrate_cache.py`)
 

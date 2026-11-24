@@ -76,11 +76,11 @@ Chạy image production với giới hạn RAM bằng `docker update --memory`, 
 
 Khuyến nghị gói **≥ 2 GB** (Render `standard`) để còn dư cho tải văn bản/phân tích hợp đồng
 (OCR). Máy nhỏ hơn: đặt `RERANKER_ENABLED=false` (bỏ mô hình reranker) – chất lượng truy xuất giảm
-rõ (Context Precision@5 0,809 -> 0,661, xem `libris-ai/eval/README.md`).
+rõ (Context Precision@5 0,803 -> 0,661, xem `libris-ai/eval/README.md`).
 
 Thời gian trả lời: 8–20 giây (rerank trên CPU + LLM); câu hỏi đã có trong Semantic Cache ~0,25 giây
 tính cả đường đi qua libris-api. `RERANK_CANDIDATES=10` (mặc định trong `render.yaml`) nhanh gấp đôi
-20 trên CPU, đổi lại Context Precision@5 0,757 thay vì 0,809.
+20 trên CPU, đổi lại Context Precision@5 0,752 thay vì 0,803.
 
 ## 3. Giao diện trên Vercel
 

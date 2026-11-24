@@ -5,7 +5,7 @@
    "context_recall": 0.8617021276595744,
    "hit1": 0.5319148936170213,
    "mrr": 0.6679078014184398,
-   "seconds": 0.37050698409009786,
+   "seconds": 0.37284700051000075,
    "precision_by_type": {
     "colloquial": 0.5573333333333333,
     "compare": 0.8444444444444444,
@@ -21,7 +21,7 @@
     "id": "GD-001",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 7.933269675000702,
+    "seconds": 7.841967630999534,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -39,7 +39,7 @@
     "id": "GD-002",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2764295079996373,
+    "seconds": 0.35009942800024874,
     "top_rerank": null,
     "hits": [
      "[Điều 33, Khoản 2 - 36/2024/QH15]",
@@ -57,7 +57,7 @@
     "id": "GD-003",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.30833959200026584,
+    "seconds": 0.3225528940001823,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -75,7 +75,7 @@
     "id": "GD-004",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.5764442499985307,
+    "seconds": 0.5122781250001935,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
@@ -93,7 +93,7 @@
     "id": "GD-005",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6223376559992175,
+    "seconds": 0.6444270490001145,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -111,7 +111,7 @@
     "id": "GD-006",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.7513619550009025,
+    "seconds": 0.6251979589997063,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -129,7 +129,7 @@
     "id": "GD-007",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.42423462700025993,
+    "seconds": 0.35451362499952666,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
@@ -147,7 +147,7 @@
     "id": "GD-008",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.30459597399931226,
+    "seconds": 0.2783541029994012,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
@@ -165,7 +165,7 @@
     "id": "GD-009",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.26009352000073704,
+    "seconds": 0.3259017999998832,
     "top_rerank": null,
     "hits": [
      "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]",
@@ -183,7 +183,7 @@
     "id": "GD-010",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.18898970000009285,
+    "seconds": 0.19401755900071294,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 11 - 168/2024/NĐ-CP]",
@@ -201,7 +201,7 @@
     "id": "GD-011",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2211612459996104,
+    "seconds": 0.22253200800059858,
     "top_rerank": null,
     "hits": [
      "[Điều 44 - 100/2019/NĐ-CP]",
@@ -219,7 +219,7 @@
     "id": "GD-012",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.38948978199914563,
+    "seconds": 0.42913787700035755,
     "top_rerank": null,
     "hits": [
      "[Điều 33, Khoản 1 - 36/2024/QH15]",
@@ -237,7 +237,7 @@
     "id": "GD-013",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.21589377199961746,
+    "seconds": 0.21205807799924514,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -255,7 +255,7 @@
     "id": "GD-014",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.23247084799913864,
+    "seconds": 0.23836020700036897,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
@@ -273,7 +273,7 @@
     "id": "GD-015",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2644603990011092,
+    "seconds": 0.27995721499974024,
     "top_rerank": null,
     "hits": [
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
@@ -291,7 +291,7 @@
     "id": "GD-016",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.1754743640012748,
+    "seconds": 0.2066618720000406,
     "top_rerank": null,
     "hits": [
      "[Điều 59 - 36/2024/QH15]",
@@ -309,7 +309,7 @@
     "id": "GD-017",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.21245239900054003,
+    "seconds": 0.23391088300013507,
     "top_rerank": null,
     "hits": [
      "[Điều 57, Khoản 1, Điểm a–g - 36/2024/QH15]",
@@ -327,7 +327,7 @@
     "id": "GD-018",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.17221383799915202,
+    "seconds": 0.1939900770003078,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 36/2024/QH15]",
@@ -345,7 +345,7 @@
     "id": "GD-019",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2272445240014349,
+    "seconds": 0.25043408400051703,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 2 - 168/2024/NĐ-CP]",
@@ -363,7 +363,7 @@
     "id": "GD-020",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.21568954099893745,
+    "seconds": 0.2031396409993249,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 36/2024/QH15]",
@@ -381,7 +381,7 @@
     "id": "GD-021",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.23092821499994898,
+    "seconds": 0.23287031600011687,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 36/2024/QH15]",
@@ -399,7 +399,7 @@
     "id": "GD-022",
     "type": "multi_hop",
     "domain": "giao_thong",
-    "seconds": 0.42659511800047767,
+    "seconds": 0.425830801000302,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -417,7 +417,7 @@
     "id": "GD-023",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.5137131339997723,
+    "seconds": 0.4612754970003152,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 8 - 100/2019/NĐ-CP]",
@@ -435,7 +435,7 @@
     "id": "GD-024",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.48004370399939944,
+    "seconds": 0.4331283040000926,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 2, Điểm k–m - 100/2019/NĐ-CP]",
@@ -453,7 +453,7 @@
     "id": "GD-025",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.2329918510004063,
+    "seconds": 0.181881381000494,
     "top_rerank": null,
     "hits": [
      "[Điều 5, Khoản 10 - 100/2019/NĐ-CP]",
@@ -471,7 +471,7 @@
     "id": "GD-026",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.5386857029989187,
+    "seconds": 0.5421808190003503,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
@@ -489,7 +489,7 @@
     "id": "GD-027",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 1.0314360600004875,
+    "seconds": 1.2062867559998267,
     "top_rerank": null,
     "hits": [
      "[Điều 60 - 23/2008/QH12]",
@@ -507,7 +507,7 @@
     "id": "GD-028",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.22198511100032192,
+    "seconds": 0.2650188289999278,
     "top_rerank": null,
     "hits": [
      "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
@@ -525,7 +525,7 @@
     "id": "GD-029",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2425710009993054,
+    "seconds": 0.25647619899973506,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -543,7 +543,7 @@
     "id": "GD-030",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23829157399995893,
+    "seconds": 0.2403755639998053,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -561,7 +561,7 @@
     "id": "GD-031",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.21789360100046906,
+    "seconds": 0.22763718500027608,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -579,7 +579,7 @@
     "id": "GD-032",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.19524400199952652,
+    "seconds": 0.19432962700011558,
     "top_rerank": null,
     "hits": [
      "[Điều 26 - 45/2019/QH14]",
@@ -597,7 +597,7 @@
     "id": "GD-033",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2345469480005704,
+    "seconds": 0.23771568199936155,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 45/2019/QH14]",
@@ -615,7 +615,7 @@
     "id": "GD-034",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.25513578800018877,
+    "seconds": 0.23616397899968433,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 12/2022/NĐ-CP]",
@@ -633,7 +633,7 @@
     "id": "GD-035",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.21372897299988836,
+    "seconds": 0.20424034500047128,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 4, Điểm a - 145/2020/NĐ-CP]",
@@ -651,7 +651,7 @@
     "id": "GD-036",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18220806700082903,
+    "seconds": 0.17769794299965724,
     "top_rerank": null,
     "hits": [
      "[Điều 139 - 45/2019/QH14]",
@@ -669,7 +669,7 @@
     "id": "GD-037",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3562242440002592,
+    "seconds": 0.3700878379995629,
     "top_rerank": null,
     "hits": [
      "[Điều 35 - 45/2019/QH14]",
@@ -687,7 +687,7 @@
     "id": "GD-038",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.21887614099978236,
+    "seconds": 0.19993928900021274,
     "top_rerank": null,
     "hits": [
      "[Điều 7 - 145/2020/NĐ-CP]",
@@ -705,7 +705,7 @@
     "id": "GD-039",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3248664889997599,
+    "seconds": 0.3017080320005334,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -723,7 +723,7 @@
     "id": "GD-040",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3226272699994297,
+    "seconds": 0.2859587029997783,
     "top_rerank": null,
     "hits": [
      "[Điều 7 - 145/2020/NĐ-CP]",
@@ -741,7 +741,7 @@
     "id": "GD-041",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2342691730009392,
+    "seconds": 0.2175934100005179,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -759,7 +759,7 @@
     "id": "GD-042",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.15728634900006,
+    "seconds": 0.17343733300003805,
     "top_rerank": null,
     "hits": [
      "[Điều 46 - 45/2019/QH14]",
@@ -777,7 +777,7 @@
     "id": "GD-043",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.20985910399940622,
+    "seconds": 0.19097579299977951,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -795,7 +795,7 @@
     "id": "GD-044",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.20004931699986628,
+    "seconds": 0.32141981400036457,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -813,7 +813,7 @@
     "id": "GD-045",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.19101941699955205,
+    "seconds": 0.18194380099976115,
     "top_rerank": null,
     "hits": [
      "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
@@ -831,7 +831,7 @@
     "id": "GD-046",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.24022272100046393,
+    "seconds": 0.2184442299994771,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -849,7 +849,7 @@
     "id": "GD-047",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.36174684099933074,
+    "seconds": 0.34636267999940173,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -867,7 +867,7 @@
     "id": "GD-048",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2491268260000652,
+    "seconds": 0.1874571369999103,
     "top_rerank": null,
     "hits": [
      "[Điều 105 - 45/2019/QH14]",
@@ -885,7 +885,7 @@
     "id": "GD-049",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.15538384899991797,
+    "seconds": 0.24871346800046013,
     "top_rerank": null,
     "hits": [
      "[Điều 106 - 45/2019/QH14]",
@@ -903,7 +903,7 @@
     "id": "GD-050",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18363484700057597,
+    "seconds": 0.18118926099941746,
     "top_rerank": null,
     "hits": [
      "[Điều 64 - 145/2020/NĐ-CP]",
@@ -921,7 +921,7 @@
     "id": "GD-051",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22866838299887604,
+    "seconds": 0.24579073899985815,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
@@ -939,7 +939,7 @@
     "id": "GD-052",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.24266327599980286,
+    "seconds": 0.28749119599979167,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
@@ -957,7 +957,7 @@
     "id": "GD-053",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2641805109997222,
+    "seconds": 0.20676743799958786,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 12/2022/NĐ-CP]",
@@ -975,7 +975,7 @@
     "id": "GD-054",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.36391691000062565,
+    "seconds": 0.242731709000509,
     "top_rerank": null,
     "hits": [
      "[Điều 122 - 45/2019/QH14]",
@@ -993,7 +993,7 @@
     "id": "GD-055",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.36244682600045053,
+    "seconds": 0.3891995450003378,
     "top_rerank": null,
     "hits": [
      "[Điều 169 - 45/2019/QH14]",
@@ -1011,7 +1011,7 @@
     "id": "GD-056",
     "type": "trap_expired",
     "domain": "lao_dong",
-    "seconds": 0.32426670099994226,
+    "seconds": 0.3113799619995916,
     "top_rerank": null,
     "hits": [
      "[Điều 155 - 10/2012/QH13]",
@@ -1029,7 +1029,7 @@
     "id": "GD-057",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22577140300018073,
+    "seconds": 0.2308356570001706,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 45/2019/QH14]",
@@ -1047,7 +1047,7 @@
     "id": "GD-058",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2955590729998221,
+    "seconds": 0.222019103999628,
     "top_rerank": null,
     "hits": [
      "[Điều 146 - 45/2019/QH14]",
@@ -1065,7 +1065,7 @@
     "id": "GD-059",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2785197520006477,
+    "seconds": 0.28991285099982633,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -1083,7 +1083,7 @@
     "id": "GD-060",
     "type": "compare",
     "domain": "lao_dong",
-    "seconds": 0.6333127449997846,
+    "seconds": 0.6280662230001326,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 10/2012/QH13]",
@@ -1101,7 +1101,7 @@
     "id": "GD-061",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.35094357900015893,
+    "seconds": 0.3226104259993008,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 1, Điểm b–đ - 45/2019/QH14]",
@@ -1119,7 +1119,7 @@
     "id": "GD-062",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.15541002999998454,
+    "seconds": 0.1532429160006359,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -1137,7 +1137,7 @@
     "id": "GD-063",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.1924546840000403,
+    "seconds": 0.2825404389996038,
     "top_rerank": null,
     "hits": [
      "[Điều 19 - 126/2014/NĐ-CP]",
@@ -1155,7 +1155,7 @@
     "id": "GD-064",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.19409472500046832,
+    "seconds": 0.19322055599968735,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -1173,7 +1173,7 @@
     "id": "GD-065",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.1376684770002612,
+    "seconds": 0.13078591100020276,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
@@ -1191,7 +1191,7 @@
     "id": "GD-066",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.3434493870008737,
+    "seconds": 0.2112616229997002,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
@@ -1209,7 +1209,7 @@
     "id": "GD-067",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.21947504700074205,
+    "seconds": 0.2641790570005469,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -1227,7 +1227,7 @@
     "id": "GD-068",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.26459265000084997,
+    "seconds": 0.24854772300022887,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -1245,7 +1245,7 @@
     "id": "GD-069",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.21555198500027473,
+    "seconds": 0.302188854000633,
     "top_rerank": null,
     "hits": [
      "[Điều 61 - 52/2014/QH13]",
@@ -1263,7 +1263,7 @@
     "id": "GD-070",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.19032799699925818,
+    "seconds": 0.2022248089997447,
     "top_rerank": null,
     "hits": [
      "[Điều 138 - 45/2019/QH14]",
@@ -1281,7 +1281,7 @@
     "id": "GD-071",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.20275274100094975,
+    "seconds": 0.24966578200019285,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -1299,7 +1299,7 @@
     "id": "GD-072",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.18190173400034837,
+    "seconds": 0.19453220600007626,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -1317,7 +1317,7 @@
     "id": "GD-073",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.22588666000046942,
+    "seconds": 0.23428702899946074,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -1335,7 +1335,7 @@
     "id": "GD-074",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.23899124300078256,
+    "seconds": 0.27260733200000686,
     "top_rerank": null,
     "hits": [
      "[Điều 95 - 52/2014/QH13]",
@@ -1353,7 +1353,7 @@
     "id": "GD-075",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.17199290899952757,
+    "seconds": 0.18171878700013622,
     "top_rerank": null,
     "hits": [
      "[Điều 55 - 52/2014/QH13]",
@@ -1371,7 +1371,7 @@
     "id": "GD-076",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.23773241500020958,
+    "seconds": 0.23463679799988313,
     "top_rerank": null,
     "hits": [
      "[Điều 116 - 52/2014/QH13]",
@@ -1389,7 +1389,7 @@
     "id": "GD-077",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.30108246300005703,
+    "seconds": 0.31232967200048734,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -1407,7 +1407,7 @@
     "id": "GD-078",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.20901806700021552,
+    "seconds": 0.23750395400020352,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -1425,7 +1425,7 @@
     "id": "GD-079",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2728392389999499,
+    "seconds": 0.31522478700026113,
     "top_rerank": null,
     "hits": [
      "[Điều 176, Khoản 1 - 31/2024/QH15]",
@@ -1443,7 +1443,7 @@
     "id": "GD-080",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.28868940900065354,
+    "seconds": 0.33638227800020104,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 1 - 31/2024/QH15]",
@@ -1461,7 +1461,7 @@
     "id": "GD-081",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.42500164800003404,
+    "seconds": 0.39217186699988815,
     "top_rerank": null,
     "hits": [
      "[Điều 85 - 31/2024/QH15]",
@@ -1479,7 +1479,7 @@
     "id": "GD-082",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2683019260002766,
+    "seconds": 0.294860467000035,
     "top_rerank": null,
     "hits": [
      "[Điều 235, Khoản 2 - 31/2024/QH15]",
@@ -1497,7 +1497,7 @@
     "id": "GD-083",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.354955771999812,
+    "seconds": 0.4707844020003904,
     "top_rerank": null,
     "hits": [
      "[Điều 11 - 31/2024/QH15]",
@@ -1515,7 +1515,7 @@
     "id": "GD-084",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.3219949410013214,
+    "seconds": 0.26456792799945106,
     "top_rerank": null,
     "hits": [
      "[Điều 252 - 31/2024/QH15]",
@@ -1533,7 +1533,7 @@
     "id": "GD-085",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3494111800009705,
+    "seconds": 0.30187965400000394,
     "top_rerank": null,
     "hits": [
      "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]",
@@ -1551,7 +1551,7 @@
     "id": "GD-086",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2358396220006398,
+    "seconds": 0.2183922829999574,
     "top_rerank": null,
     "hits": [
      "[Điều 13, Khoản 3 - 123/2024/NĐ-CP]",
@@ -1569,7 +1569,7 @@
     "id": "GD-087",
     "type": "trap_expired",
     "domain": "dat_dai",
-    "seconds": 1.3208428630005074,
+    "seconds": 1.3027942590006205,
     "top_rerank": null,
     "hits": [
      "[Điều 130 - 45/2013/QH13]",
@@ -1587,7 +1587,7 @@
     "id": "GD-088",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.19113447800009453,
+    "seconds": 0.2280297259994768,
     "top_rerank": null,
     "hits": [
      "[Điều 126, Khoản 1 - 45/2013/QH13]",
@@ -1605,7 +1605,7 @@
     "id": "GD-089",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.23136525100017025,
+    "seconds": 0.2339724319999732,
     "top_rerank": null,
     "hits": [
      "[Điều 174 - 31/2024/QH15]",
@@ -1623,7 +1623,7 @@
     "id": "GD-090",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.26821469300011813,
+    "seconds": 0.2864815709999675,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -1641,7 +1641,7 @@
     "id": "GD-091",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.21810180899956322,
+    "seconds": 0.22719426699950418,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 4 - 31/2024/QH15]",
@@ -1659,7 +1659,7 @@
     "id": "GD-092",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.21890200999951048,
+    "seconds": 0.26857508000011876,
     "top_rerank": null,
     "hits": [
      "[Điều 172 - 45/2019/QH14]",
@@ -1673,7 +1673,7 @@
     "id": "GD-093",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.22563540900046064,
+    "seconds": 0.2588452750005672,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 1 - 145/2020/NĐ-CP]",
@@ -1687,7 +1687,7 @@
     "id": "GD-094",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.19700423900030728,
+    "seconds": 0.2583851990002586,
     "top_rerank": null,
     "hits": [
      "[Điều 24, Khoản 3 - 12/2022/NĐ-CP]",
@@ -1701,7 +1701,7 @@
     "id": "GD-095",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.1953960279988678,
+    "seconds": 0.20416978399953223,
     "top_rerank": null,
     "hits": [
      "[Điều 49, Khoản 3 - 126/2014/NĐ-CP]",
@@ -1715,7 +1715,7 @@
     "id": "GD-096",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.23544699600097374,
+    "seconds": 0.1411619509999582,
     "top_rerank": null,
     "hits": [
      "[Điều 115 - 145/2020/NĐ-CP]",
@@ -1729,7 +1729,7 @@
     "id": "GD-097",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2405238149985962,
+    "seconds": 0.25211212299927865,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 54 - 12/2022/NĐ-CP]",
@@ -1743,7 +1743,7 @@
     "id": "GD-098",
     "type": "injection",
     "domain": "giao_thong",
-    "seconds": 0.44329932000073313,
+    "seconds": 0.42930681000052573,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -1761,7 +1761,7 @@
     "id": "GD-099",
     "type": "injection",
     "domain": "hon_nhan",
-    "seconds": 0.21881576099985978,
+    "seconds": 0.2111241640004664,
     "top_rerank": null,
     "hits": [
      "[Điều 8 - 52/2014/QH13]",
@@ -1779,7 +1779,7 @@
     "id": "GD-100",
     "type": "multi_hop",
     "domain": "hon_nhan",
-    "seconds": 0.24251101900154026,
+    "seconds": 0.23817331499958527,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",

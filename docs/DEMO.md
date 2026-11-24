@@ -92,8 +92,8 @@ thẻ luật -> mở nguyên văn điều luật.
 
 ## Bước 7 – Số liệu đánh giá (slide)
 
-Bảng ở [REPORT.md, mục 6](REPORT.md#6-đánh-giá-giai-đoạn-5): Context Precision@5 0,681 -> 0,809;
-từ chối nhầm 17% -> 5,3%; Faithfulness 0,923; từ chối đúng 6/6 câu ngoài phạm vi; 100% câu bẫy luật
+Bảng ở [REPORT.md, mục 6](REPORT.md#6-đánh-giá-giai-đoạn-5): Context Precision@5 0,681 -> 0,803;
+từ chối nhầm 17% -> 4,3%; Faithfulness 0,923; từ chối đúng 6/6 câu ngoài phạm vi; 100% câu bẫy luật
 hết hiệu lực.
 
 ## Phương án dự phòng

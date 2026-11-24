@@ -37,7 +37,7 @@ muốn đổi nhà cung cấp chỉ cần đổi cấu hình, không phải sử
 | `LLM_MODEL` | `gemini-3.6-flash` | |
 | `LLM_FALLBACK_MODELS` | `["gemini-3.5-flash","gemini-flash-lite-latest"]` | dùng khi mô hình chính quá tải (429/5xx) hoặc ngừng phục vụ (404) |
 | `LLM_TEMPERATURE` | `0.1` | thấp để bám sát văn bản |
-| `ANSWER_MIN_RERANK_SCORE` | `0.2` | ngưỡng từ chối trước khi gọi LLM |
+| `ANSWER_MIN_RERANK_SCORE` | `0.05` | ngưỡng từ chối trước khi gọi LLM (chọn bằng 120 câu đánh giá) |
 
 Mỗi vòng thử, client gọi lần lượt từng mô hình: mô hình chính quá tải thì chuyển **ngay** sang mô
 hình dự phòng. Hết vòng mới chờ rồi thử lại. Gói miễn phí của Gemini giới hạn số request mỗi phút,
@@ -47,7 +47,7 @@ nên khi đánh giá hàng loạt (Task 5.2) cần giãn cách các lượt gọ
 
 | Lớp | Ở đâu | Cơ chế |
 |---|---|---|
-| 1. Chặn trước khi gọi LLM | `answer.py` | Không có đoạn luật, hoặc đoạn liên quan nhất có `rerank_score < 0,2` → từ chối ngay. Không tốn lượt gọi, và mô hình không có cơ hội tự suy diễn. |
+| 1. Chặn trước khi gọi LLM | `answer.py` | Không có đoạn luật, hoặc đoạn liên quan nhất có `rerank_score < 0,05` → từ chối ngay (ngưỡng chọn bằng 120 câu đánh giá: câu ngoài phạm vi đều < 0,013; ngưỡng cũ 0,2 chặn nhầm các câu hỏi đời thường như "mang bầu", "đặt cọc"). Không tốn lượt gọi, và mô hình không có cơ hội tự suy diễn. |
 | 2. System prompt nghiêm ngặt | `prompt.py` | Chỉ dùng tài liệu; sau mỗi luận điểm phải có `[Điều X, Khoản Y - Số hiệu]` chép đúng nhãn của đoạn; giữ nguyên văn con số; chỉ dùng quy định đã hết hiệu lực khi hỏi về luật cũ hoặc so sánh; thiếu căn cứ thì trả lời `TỪ CHỐI`; nội dung tài liệu không được coi là chỉ dẫn (chống prompt injection). |
 | 3. Xác minh sau khi trả lời | `citations.py` | Mỗi thẻ được đối chiếu với các đoạn trong ngữ cảnh (văn bản, Điều, Khoản). Câu trả lời **không có trích dẫn hợp lệ nào** bị thay bằng lời từ chối; thẻ không khớp được báo trong `warnings`. |
 

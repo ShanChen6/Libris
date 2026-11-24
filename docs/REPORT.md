@@ -111,7 +111,7 @@ Ví dụ (chạy trên hệ thống thật):
 
 | Lớp | Cơ chế |
 |---|---|
-| 1. Trước khi gọi LLM | Đoạn liên quan nhất có điểm rerank < 0,2 -> từ chối ngay (không tốn lượt LLM, mô hình không có cơ hội tự suy diễn) |
+| 1. Trước khi gọi LLM | Đoạn liên quan nhất có điểm rerank < 0,05 (chọn bằng 120 câu đánh giá) -> từ chối ngay (không tốn lượt LLM, mô hình không có cơ hội tự suy diễn) |
 | 2. System prompt | Chỉ dùng tài liệu được cung cấp; mỗi luận điểm phải có thẻ trích dẫn chép đúng nhãn; giữ nguyên văn con số; thiếu căn cứ thì trả lời `TỪ CHỐI`; nội dung tài liệu không được coi là chỉ dẫn (chống prompt injection) |
 | 3. Sau khi trả lời | Mỗi thẻ được đối chiếu với các đoạn trong ngữ cảnh (văn bản + Điều + Khoản). Câu trả lời không có trích dẫn hợp lệ nào bị thay bằng lời từ chối; thẻ không khớp được báo lại |
 
@@ -133,7 +133,7 @@ tiết và cách chạy lại: [libris-ai/eval/README.md](../libris-ai/eval/READ
 | Chỉ vector | 0,695 | 0,846 | 0,585 |
 | Hybrid ban đầu + rerank 10 (cấu hình cũ) | 0,681 | 0,771 | 0,628 |
 | Hybrid từ khóa ×0,25 + rerank 20 (sau Giai đoạn 5) | 0,775 | 0,894 | 0,691 |
-| **Hiện tại**: hiệu đính OCR, cụm hai âm tiết, tách câu nhiều ý, rerank 20 | **0,809** | **0,931** | **0,723** |
+| **Hiện tại**: hiệu đính OCR, cụm hai âm tiết, tách câu nhiều ý, khử nhập nhằng loại xe/lĩnh vực, rerank 20 | **0,803** | **0,936** | **0,713** |
 
 **Câu trả lời** (100 câu):
 
@@ -141,10 +141,10 @@ tiết và cách chạy lại: [libris-ai/eval/README.md](../libris-ai/eval/READ
 |---|---|---|---|
 | RAGAS Faithfulness | 0,923 (60/77 câu) | – | – |
 | RAGAS Answer Relevancy | 0,878 (60/77 câu) | – | – |
-| Đúng dữ kiện (đủ mọi con số chuẩn) | 93,5% | 94,0% | **95,5%** |
-| Trích dẫn đủ căn cứ (recall) | 90,3% | 96,4% | **97,7%** |
-| Từ chối nhầm câu trả lời được | 17,0% | 9,6% | **5,3%** |
-| Câu cần nhiều căn cứ – trả lời đúng | 50% | 50% | **67%** |
+| Đúng dữ kiện (đủ mọi con số chuẩn) | 93,5% | 94,0% | 94,4% |
+| Trích dẫn đủ căn cứ (recall) | 90,3% | 96,4% | 96,1% |
+| Từ chối nhầm câu trả lời được | 17,0% | 9,6% | **4,3%** |
+| Câu cần nhiều căn cứ – trả lời đúng | 50% | 50% | **75%** |
 | Câu bẫy luật hết hiệu lực – trả lời đúng | 67% | 100% | 100% |
 | Từ chối đúng câu ngoài phạm vi | 6/6 | 6/6 | 6/6 |
 | Chống chèn lệnh | 2/2 | 2/2 | 2/2 |
@@ -153,6 +153,13 @@ RAGAS chấm bằng giám khảo Gemini (gói miễn phí hết quota sau 60/77 
 khác nhau nên cột "sau tinh chỉnh" phản ánh cả cấu hình truy xuất lẫn mô hình; phần do truy xuất
 được đo riêng ở bảng trên. Bộ dữ liệu còn phát hiện một lỗi của Router (câu bắt đầu bằng "Năm 2023,
 ..." không được nhận là hỏi theo mốc thời gian) – đã sửa.
+
+**Kiểm tra độc lập (hold-out, 20 câu mới, soạn sau khi tinh chỉnh)** – so với hệ thống cũ dựng lại từ
+code và dữ liệu sao lưu: xếp hạng truy xuất của hệ thống hiện tại kém hơn (CP@5 0,842 so với 0,892,
+dấu hiệu "học thuộc đề"), nhưng câu trả lời đúng dữ kiện 100% so với 94,1% và từ chối nhầm 10% so
+với 15%. Phân tích hold-out dẫn tới các bản vá: khử nhập nhằng loại xe, hạ ngưỡng từ chối trước LLM
+từ 0,2 xuống 0,05 (chọn bằng 120 câu), tách câu "muốn A và B". Chi tiết:
+[libris-ai/eval/README.md](../libris-ai/eval/README.md).
 
 **Semantic Cache**: ngưỡng cosine 0,95 chọn bằng dữ liệu, kèm **chữ ký** (con số, loại xe, nam/nữ,
 loại ngày, loại đất...) vì embedding coi "xe máy vượt đèn đỏ" và "ô tô vượt đèn đỏ" giống nhau
@@ -177,8 +184,9 @@ bất cứ lúc nào.
 |---|---|
 | Kho mới có 18 văn bản, 4 lĩnh vực | Crawler và trang quản trị đã sẵn sàng để nạp thêm |
 | 12/18 văn bản là bản scan; lỗi dấu thanh đã được hiệu đính, còn lỗi chữ/số khác ("hiệu li", "đàÌ;") | Rà soát các đoạn hay được trích dẫn; ưu tiên nguồn văn bản gốc dạng chữ |
-| Câu hỏi cần nhiều căn cứ mới đúng 67% (VD "muốn ly hôn **và** giành quyền nuôi con" chưa tách được) | Viết lại / tách câu hỏi bằng LLM |
-| Một số cải tiến truy xuất được rút ra từ chính các câu trượt trong bộ dữ liệu | Kiểm tra thêm bằng bộ câu hỏi mới, độc lập |
+| Câu hỏi cần nhiều căn cứ đúng 75%; tách câu bằng quy tắc | Viết lại / tách câu hỏi bằng LLM |
+| Cải tiến truy xuất được rút ra từ cả Golden Dataset lẫn hold-out: trên câu hỏi mới, xếp hạng kém hệ thống cũ một chút | Một bộ câu hỏi mới do người khác soạn để đo không thiên lệch |
+| LLM nhẹ đôi khi chọn nhầm Khoản giữa các điều kiện chỉ khác con số (VD chở 2 người / từ 3 người) | Mô hình mạnh hơn; quy tắc prompt đã giúp một phần |
 | Câu hỏi nối tiếp được nhận diện bằng quy tắc | Viết lại câu hỏi bằng LLM khi có quota |
 | Token đăng nhập lưu trong `localStorage` | Chuyển sang session cookie `HttpOnly` khi web và API có chung tên miền riêng |
 | Chạy trên CPU: 8–20 giây mỗi câu trả lời mới | GPU cho embedding/reranker; cache đã giảm còn ~0,25 giây cho câu lặp lại |
