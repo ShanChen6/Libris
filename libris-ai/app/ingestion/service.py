@@ -16,7 +16,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from app.pipeline.embedding import Embedder
-from app.pipeline.ocr_fix import clean_corpus_model, fix_text
+from app.pipeline.ocr_fix import clean_corpus_model, corpus_model, fix_ocr
 from app.pipeline.store import chunk_documents, embed_chunks
 from crawler.clean import clean_text, is_colophon_page, strip_continuation_header
 from crawler.extract import SUPPORTED_EXTENSIONS, extract_document
@@ -174,7 +174,7 @@ def _run(
         )
     if stats["ocr_pages"]:
         # Hiệu đính dấu thanh bị OCR làm mất, dựa trên văn bản sạch đã có trong kho
-        text, fixes = fix_text(text, clean_corpus_model(conn))
+        text, fixes = fix_ocr(text, clean_corpus_model(conn), corpus_model(conn))
         if fixes.replaced:
             warnings.append(f"Đã hiệu đính tự động {fixes.replaced} chỗ mất dấu do OCR")
 

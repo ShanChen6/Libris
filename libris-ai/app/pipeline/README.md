@@ -68,6 +68,20 @@ của kho (~213.000 âm tiết):
 - con số và độ dài văn bản không đổi, nên vị trí trích dẫn (`char_start`/`char_end`) vẫn đúng.
 
 Kết quả: ~29.000 chỗ sửa trên 12 văn bản OCR; lấy ngẫu nhiên 40 chỗ để kiểm tra tay: cả 40 đúng.
+
+Ngoài dấu thanh, `fix_ocr` sửa thêm ba loại lỗi mặt chữ (độ dài văn bản vẫn không đổi):
+
+| Bước | Lỗi | Cách sửa | Số chỗ |
+|---|---|---|---|
+| `fix_confusions` | ký tự dễ nhầm trong từ: "1y hôn", "g1ao", "ø1a" | thay 1→l/i/t, 0→o/ô/ơ, 8→g, ø→g, j→l/i...; dạng mới phải là âm tiết tiếng Việt (có nguyên âm, không phải số La Mã), có trong từ vựng của **cả kho** (kho sạch không có luật hôn nhân nên thiếu "ly hôn") và được ngữ cảnh xác nhận; bỏ qua số hiệu như "khoản 8a" | ~50 |
+| `fix_point_labels` | nhãn Điểm đọc sai: "©)" "8)" "¡)" "1)" "])" | dựa vào thứ tự a, b, c, d, đ, e, g, h, i, k, l... của Điểm liền trước: nhãn sai được thay bằng chữ kế tiếp nếu là ký tự hay bị nhầm với chữ đó; "đ)" ngay sau "c)" chỉ thành "d)" khi Điểm sau là "đ)" hoặc "e)" | ~440 |
+| `fix_clause_numbers` | số Khoản đọc sai và dính vào Khoản trước: "...mục đích khác. l6. Thành viên" | khi bằng đúng số Khoản kế tiếp trong Điều: sửa số và đưa xuống dòng (thay khoảng trắng đứng trước) | 1 |
+
+Nhãn Điểm đúng giúp cắt đoạn ghi đúng "Điểm g" thay vì gộp sai, và giúp bộ kiểm tra trích dẫn
+(`generation/verify.py`) tìm đúng dòng của Điểm được dẫn. Không có bản văn bản gốc dạng chữ: từ môi
+trường chạy, vbpl.vn trả 403 và congbao.chinhphu.vn ngắt kết nối; vanban.chinhphu.vn chỉ có PDF
+quét. Khi lấy được bản chữ gốc (hoặc OCR lại bằng mô hình thị giác), nên thay hẳn văn bản OCR.
+
 Chạy cho kho có sẵn (sau đó tự cắt đoạn và sinh embedding lại):
 
 ```bash
