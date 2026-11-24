@@ -129,3 +129,25 @@ def test_roman_and_labels() -> None:
         == "Luật 43/2024/QH15"
     )
     assert document_label("Nghị định", "168/2024/NĐ-CP", "Quy định") == "Nghị định 168/2024/NĐ-CP"
+
+
+def test_clause_number_misread_by_ocr() -> None:
+    # "5." bị OCR đọc thành "%," (NĐ 168/2024, Điều 6): vẫn nhận là Khoản kế tiếp, không gộp vào
+    # Khoản trước
+    doc = parse(
+        "\n".join(
+            [
+                "Điều 6. Xử phạt người điều khiển xe ô tô",
+                "1. Phạt tiền từ 2.000.000 đồng đến 3.000.000 đồng đối với hành vi sau đây:",
+                "a) Không giữ khoảng cách an toàn với xe chạy liền trước.",
+                "%, Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng đối với hành vi sau đây:",
+                "a) Dùng tay cầm và sử dụng điện thoại khi điều khiển phương tiện;",
+                # Khoản trước chưa kết thúc bằng dấu chấm: không phải Khoản
+                "S, bị phạt nếu tái phạm;",
+                "3. Phạt tiền từ 6.000.000 đồng đến 8.000.000 đồng.",
+            ]
+        )
+    )
+    clauses = doc.articles[0].clauses
+    assert [c.label for c in clauses] == ["Khoản 1", "Khoản 2", "Khoản 3"]
+    assert "điện thoại" in clauses[1].paras[1].text and len(clauses[1].paras) == 3

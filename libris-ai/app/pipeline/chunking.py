@@ -40,6 +40,12 @@ _CHAPTER_RE = re.compile(_NO_QUOTE + fz("Chương") + r"(?![a-zà-ỹ])\s*([^\s.
 _SECTION_RE = re.compile(_NO_QUOTE + fz("Mục") + r"\s*(\d{1,2})(?!\d)\s*[^\w\s]*\s*(.*)$")
 _PART_RE = re.compile(_NO_QUOTE + r"(?:PHẦN|Phần)\s+(THỨ\s+[A-ZĐÀ-Ỹ]+|[IVXLC]+)\b\s*[.:]?\s*(.*)$")
 _CLAUSE_RE = re.compile(_NO_QUOTE + r"(\d{1,3})\s*[.,]\s+(\S.*)$")
+# OCR đọc nhầm số đầu Khoản thành ký hiệu: "%, Phạt tiền từ 4.000.000 đồng..." (Khoản 5 Điều 6
+# NĐ 168/2024). Chỉ nhận khi: 1-2 ký hiệu hay bị nhầm với chữ số + "." hoặc "," + chữ hoa,
+# Khoản trước đã kết thúc bằng dấu chấm; số Khoản = số Khoản trước + 1.
+_OCR_CLAUSE_RE = re.compile(
+    r"^[^\w“\"]{0,2}([%§$&?!SsIlLOoBgZz]{1,2})\s*[.,]\s+([A-ZĐÀ-Ỹ]\S*\s+\S.*)$"
+)
 _POINT_RE = re.compile(_NO_QUOTE + r"([a-zđ])\s*\)\s*(.*)$")
 _PREAMBLE_RE = re.compile(r"^\W*" + fz("Căn cứ"))
 _END_OF_BODY_RE = re.compile(
@@ -316,6 +322,13 @@ def _add_to_article(article: Article, p: Para) -> None:
     last_clause = int(article.clauses[-1].label.split()[-1]) if article.clauses else 0
     if m and _accept_number(int(m.group(1)), last_clause, MAX_CLAUSE_GAP):
         article.clauses.append(Clause(label=f"Khoản {int(m.group(1))}", paras=[p]))
+        return
+    if (
+        article.clauses
+        and _OCR_CLAUSE_RE.match(p.text)
+        and article.clauses[-1].paras[-1].text.rstrip().endswith(".")
+    ):
+        article.clauses.append(Clause(label=f"Khoản {last_clause + 1}", paras=[p]))
         return
     if not article.clauses:
         article.paras.append(p)

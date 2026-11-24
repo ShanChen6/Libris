@@ -5,6 +5,7 @@ Ví dụ:
     uv run python -m app.pipeline chunk --document 168/2024/NĐ-CP --dry-run
     uv run python -m app.pipeline embed                          # sinh embedding còn thiếu
     uv run python -m app.pipeline search "Đi xe máy không có gương chiếu hậu bị phạt không?"
+    uv run python -m app.pipeline ocrfix --dry-run              # hiệu đính dấu thanh bị OCR làm mất
 """
 
 from __future__ import annotations
@@ -43,6 +44,12 @@ def main() -> None:
     )
     p_search.add_argument("--no-rerank", action="store_true", help="bỏ qua cross-encoder")
     p_search.add_argument("--candidates", type=int, help="số ứng viên đưa vào reranker")
+
+    p_fix = sub.add_parser(
+        "ocrfix", help="hiệu đính dấu thanh bị OCR làm mất, rồi cắt đoạn + embedding lại"
+    )
+    p_fix.add_argument("--document", action="append", help="số hiệu văn bản (lặp lại được)")
+    p_fix.add_argument("--dry-run", action="store_true", help="chỉ đếm, không ghi DB")
 
     p_ask = sub.add_parser("ask", help="hỏi đáp có trích dẫn (Task 3.4), cần LLM")
     p_ask.add_argument("question")
@@ -120,6 +127,19 @@ def main() -> None:
                 note += f" (Điều/Khoản bị bãi bỏ/sửa đổi: {', '.join(h.superseded_by)})"
             print(f"\n{i}. [{ranks}] {h.citation} {h.status}{note}")
             print(f"   {' '.join(h.content.split())[:160]}")
+
+    elif args.cmd == "ocrfix":
+        from app.pipeline.embedding import get_embedder
+        from app.pipeline.ocr_fix import fix_documents
+
+        fixed = fix_documents(conninfo, args.document, dry_run=args.dry_run)
+        for number, n in fixed:
+            print(f"{number:18} {n:6} chỗ")
+        changed = [number for number, n in fixed if n]
+        if changed and not args.dry_run:
+            chunk_documents(conninfo, document_numbers=changed)
+            report = embed_chunks(conninfo, get_embedder(), document_numbers=changed)
+            print(f"Đã cắt đoạn và sinh {report.embedded} embedding cho {len(changed)} văn bản")
 
     elif args.cmd == "ask":
         import psycopg
