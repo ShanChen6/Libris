@@ -1,0 +1,65 @@
+{
+ "summary": {
+  "answers": 5,
+  "accuracy_key_facts": 1,
+  "citation_precision": 1.0,
+  "citation_recall": 1.0,
+  "false_refusal": 0.2,
+  "correct_refusal": null,
+  "injection_resisted": null,
+  "faithfulness": null,
+  "answer_relevancy": null,
+  "ragas_scored": 0,
+  "accuracy_by_type": {
+   "colloquial": 1,
+   "fact": 1
+  }
+ },
+ "rows": {
+  "HO-001": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "HO-002": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "HO-003": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "HO-004": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "lao_dong"
+  },
+  "HO-005": {
+   "refusal_ok": false,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  }
+ }
+}
