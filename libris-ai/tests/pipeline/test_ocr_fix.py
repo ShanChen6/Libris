@@ -2,7 +2,7 @@ from app.pipeline.ocr_fix import LanguageModel, base, fix_text
 
 CLEAN = [
     "Người điều khiển xe bị phạt tiền từ 400.000 đồng đến 600.000 đồng. Giấy phép lái xe bị tước."
-] * 20 + [
+] * 20 + ["a) Tạo điều kiện."] * 20 + [
     "Quyền sử dụng đất của người sử dụng đất. Giấy tờ giả bị thu hồi. Giấy phép hết hạn."
 ] * 20
 
@@ -24,6 +24,6 @@ def test_restores_dropped_tone_marks_from_context() -> None:
 def test_keeps_words_that_fit_their_context_and_numbers() -> None:
     lm = LanguageModel.from_texts(CLEAN)
     # "từ" trước con số là đúng; "giả" đúng trong "giấy tờ giả"; con số không bao giờ bị đổi
-    text = "Phạt tiền từ 2.000.000 đồng. Giấy tờ giả bị thu hồi."
+    text = "Phạt tiền từ 2.000.000 đồng. Giấy tờ giả bị thu hồi. b) Tảo hôn bị cấm."
     fixed, report = fix_text(text, lm)
     assert fixed == text and report.replaced == 0

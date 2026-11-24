@@ -98,6 +98,13 @@ def fix_text(
             prev = keys[i - 1] if i else None
             nxt = keys[i + 1] if i + 1 < len(keys) else None
 
+            # Dấu câu không phải bằng chứng: "b) Tảo hôn" không được thành "b) Tạo hôn" chỉ vì
+            # trong văn bản sạch hay gặp ") Tạo"
+            if prev == "<p>":
+                prev = None
+            if nxt == "<p>":
+                nxt = None
+
             def sides(c: str, prev=prev, nxt=nxt) -> tuple[int, int]:
                 return (lm.bigrams[(prev, c)] if prev else 0, lm.bigrams[(c, nxt)] if nxt else 0)
 
