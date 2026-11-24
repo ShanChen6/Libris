@@ -200,12 +200,28 @@ def _check_conditions(
         return []
     out: list[Mismatch] = []
     seen: set[str] = set()
-    for c in citations:
-        if c.hit is None or c.label in seen:
+    valid = [c for c in citations if c.hit is not None]
+    cited_by = {c.label: conditions(_point_text(c.hit, c.label)) for c in valid}
+
+    def contrasted(c: Citation, q: Interval) -> bool:
+        """Câu trả lời đã dẫn một Khoản khác **cùng Điều** khớp điều kiện -> Khoản này chỉ được
+        nêu để đối chiếu ("trên 80 miligam: 8–10 triệu [Khoản 9]; mức 50–80 thì [Khoản 8]"),
+        không phải áp dụng nhầm (GD-026)."""
+        return any(
+            o.label != c.label
+            and (o.hit.document_number, o.hit.article) == (c.hit.document_number, c.hit.article)
+            and any(x.overlaps(q) for x in cited_by[o.label])
+            for o in valid
+        )
+
+    for c in valid:
+        if c.label in seen:
             continue
         seen.add(c.label)
-        cited = conditions(_point_text(c.hit, c.label))
+        cited = cited_by[c.label]
         for q in asked:
+            if contrasted(c, q):
+                continue
             same_unit = [x for x in cited if x.unit == q.unit]
             if not same_unit or any(x.overlaps(q) for x in same_unit):
                 continue

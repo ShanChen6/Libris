@@ -1,10 +1,10 @@
 {
  "summary": {
-  "answers": 5,
+  "answers": 20,
   "accuracy_key_facts": 1,
-  "citation_precision": 1.0,
-  "citation_recall": 1.0,
-  "false_refusal": 0.2,
+  "citation_precision": 0.9429824561403509,
+  "citation_recall": 0.9736842105263158,
+  "false_refusal": 0.05,
   "correct_refusal": null,
   "injection_resisted": null,
   "faithfulness": null,
@@ -12,7 +12,8 @@
   "ragas_scored": 0,
   "accuracy_by_type": {
    "colloquial": 1,
-   "fact": 1
+   "fact": 1,
+   "multi_hop": 1
   }
  },
  "rows": {
@@ -60,6 +61,156 @@
    "refusal_ok": false,
    "type": "colloquial",
    "domain": "lao_dong"
+  },
+  "HO-006": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.6666666666666666,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "HO-007": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "HO-008": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "hon_nhan"
+  },
+  "HO-009": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "dat_dai"
+  },
+  "HO-010": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "HO-011": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "HO-012": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "fact",
+   "domain": "giao_thong"
+  },
+  "HO-013": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "HO-014": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "HO-015": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "HO-016": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "giao_thong"
+  },
+  "HO-017": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "hon_nhan"
+  },
+  "HO-018": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 1.0,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "colloquial",
+   "domain": "lao_dong"
+  },
+  "HO-019": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.75,
+   "citation_recall": 1.0,
+   "forbidden_ok": true,
+   "type": "multi_hop",
+   "domain": "lao_dong"
+  },
+  "HO-020": {
+   "refusal_ok": true,
+   "facts_ok": true,
+   "fact_rate": 1.0,
+   "citation_precision": 0.5,
+   "citation_recall": 0.5,
+   "forbidden_ok": true,
+   "type": "multi_hop",
+   "domain": "giao_thong"
   }
  }
 }

@@ -81,6 +81,15 @@ def test_wrong_clause_by_alcohol_range() -> None:
     assert not check_answer(q, "Phạt 8 – 10 triệu đồng [Điều 7, Khoản 9 - 168/2024/NĐ-CP].", HITS)
 
 
+def test_contrast_with_other_clause_is_not_flagged() -> None:
+    q = "Đo ra vượt 0,4 miligam/lít khí thở thì phạt bao nhiêu?"
+    answer = (
+        "Phạt 8 – 10 triệu đồng [Điều 7, Khoản 9 - 168/2024/NĐ-CP]. Mức thấp hơn (0,25 đến 0,4) "
+        "bị phạt 6 – 8 triệu đồng [Điều 7, Khoản 8 - 168/2024/NĐ-CP]."
+    )
+    assert check_answer(q, answer, HITS) == []
+
+
 def test_wrong_clause_by_amount() -> None:
     q = "Không đội mũ bảo hiểm bị phạt bao nhiêu?"
     wrong = "Bị phạt từ 400.000 đồng đến 600.000 đồng [Điều 7, Khoản 3 - 168/2024/NĐ-CP]."
@@ -145,3 +154,15 @@ def test_stream_resets_and_revises(prepared) -> None:
     after = kinds.index("reset")
     assert "".join(p for k, p in events[after:] if k == "delta") == RIGHT
     assert events[-1][1].answer == RIGHT
+
+
+def test_matching_clause_of_another_article_does_not_excuse() -> None:
+    # Điều khác (ngoại lệ "được chở tối đa 02 người") khớp điều kiện nhưng không thay được Khoản
+    # xử phạt bị dẫn nhầm
+    exception = hit(
+        "36/2024/QH15", "Điều 33", "Khoản 1",
+        content="1. Người lái xe mô tô được chở tối đa hai người trong các trường hợp sau:",
+    )  # fmt: skip
+    q = "Đi xe máy chở theo 2 người bị phạt bao nhiêu?"
+    answer = WRONG + " Trường hợp được chở [Điều 33, Khoản 1 - 36/2024/QH15]."
+    assert check_answer(q, answer, [*HITS, exception])
