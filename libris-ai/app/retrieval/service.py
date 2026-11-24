@@ -6,7 +6,8 @@ câu hỏi -> Query Router (3.2) -> mở rộng thuật ngữ -> embedding -> Hy
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, replace
 from datetime import date
 
 import psycopg
@@ -87,10 +88,44 @@ def retrieve(
         seen = {h.chunk_id for h in hits}
         hits = hits + [h for h in newer if h.chunk_id not in seen]
     if reranker is not None:
-        hits = rerank(expanded, hits, reranker, top_n=len(hits))
+        hits = disambiguate(query, rerank(expanded, hits, reranker, top_n=len(hits)))
     if plan.mode == "compare":
         hits = balance_old_and_new(hits, top_n)
     return Retrieval(query, expanded, result.plan, hits[:top_n], reranker is not None)
+
+
+# Lĩnh vực chuyên biệt: đoạn có tiêu đề (context_prefix) thuộc lĩnh vực này bị giảm điểm rerank khi
+# câu hỏi không nhắc tới lĩnh vực đó. "xe máy" trong câu hỏi đời thường là mô tô/xe gắn máy, không
+# phải "xe máy chuyên dùng"; câu hỏi giao thông đường bộ không hỏi về đường sắt (Golden Dataset:
+# GD-003, GD-005, GD-008 bị các đoạn này chen lên trên).
+_SPECIALIZED = [
+    (
+        re.compile(r"xe máy chuyên dùng", re.I),
+        re.compile(r"chuyên dùng|máy kéo|máy thi công", re.I),
+    ),
+    (
+        re.compile(r"đường sắt|đường ngang", re.I),
+        re.compile(r"đường sắt|tàu|đường ngang|\bga\b", re.I),
+    ),
+    (
+        re.compile(r"đường thủy|thủy nội địa", re.I),
+        re.compile(r"đường thủy|tàu|thuyền|ca nô", re.I),
+    ),
+]
+SPECIALIZED_PENALTY = 0.5
+
+
+def disambiguate(query: str, hits: list[FusedHit]) -> list[FusedHit]:
+    """Giảm điểm đoạn thuộc lĩnh vực chuyên biệt mà câu hỏi không nhắc tới, rồi xếp lại."""
+    out = []
+    for h in hits:
+        score = h.rerank_score
+        if score is not None:
+            for heading, asked in _SPECIALIZED:
+                if heading.search(h.context_prefix) and not asked.search(query):
+                    score *= SPECIALIZED_PENALTY
+        out.append(replace(h, rerank_score=score) if score != h.rerank_score else h)
+    return sorted(out, key=lambda h: -(h.rerank_score or 0))
 
 
 def is_in_force(hit: FusedHit) -> bool:
@@ -140,7 +175,7 @@ def _retrieve_parts(
         hits = hybrid_search(
             conn, expanded, vector, top_k=candidates, plan=plan, weights=weights
         ).hits
-        ranked.append(rerank(expanded, hits, reranker, top_n=len(hits)))
+        ranked.append(disambiguate(sub, rerank(expanded, hits, reranker, top_n=len(hits))))
     quota = max(1, top_n // len(subs))
     chosen: dict[str, FusedHit] = {}
     for hits in ranked:

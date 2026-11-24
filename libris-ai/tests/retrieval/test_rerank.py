@@ -95,3 +95,21 @@ def test_reranker_can_be_disabled(monkeypatch) -> None:
         assert module.get_reranker() is None  # không tải mô hình
     finally:
         module.get_reranker.cache_clear()
+
+
+def test_specialized_domains_are_demoted_unless_asked() -> None:
+    from dataclasses import replace
+
+    from app.retrieval.service import disambiguate
+
+    moto = replace(_hit(7, "x"), context_prefix="[Điều 7: Xử phạt người điều khiển xe mô tô]")
+    special = replace(
+        _hit(8, "x"), context_prefix="[Điều 8: Xử phạt người điều khiển xe máy chuyên dùng]"
+    )
+    moto, special = replace(moto, rerank_score=0.6), replace(special, rerank_score=0.8)
+    assert [h.article for h in disambiguate("xe máy chạy quá tốc độ", [moto, special])] == [
+        "Điều 7",
+        "Điều 8",
+    ]
+    asked = disambiguate("xe máy chuyên dùng chạy quá tốc độ", [moto, special])
+    assert [h.article for h in asked] == ["Điều 8", "Điều 7"]

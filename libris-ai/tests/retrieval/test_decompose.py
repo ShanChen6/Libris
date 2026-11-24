@@ -22,11 +22,20 @@ def test_several_questions_keep_their_context() -> None:
     ]
 
 
+def test_later_questions_without_context_keep_the_first_one() -> None:
+    assert sub_questions("Chở 3 người bị phạt bao nhiêu? Có trường hợp nào được chở không?") == [
+        "Chở 3 người bị phạt bao nhiêu?",
+        "Chở 3 người bị phạt bao nhiêu? Có trường hợp nào được chở không?",
+    ]
+
+
 def test_single_question_is_unchanged() -> None:
     for q in [
         "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu tiền?",
         "Thời gian thử việc tối đa, theo Bộ luật Lao động 2019, là bao lâu?",
         "Vợ tôi đang nuôi con 10 tháng tuổi. Tôi muốn ly hôn được không?",
+        # Một hành vi: lái xe là hoạt động nền (GD-004 bị tách nhầm ở phiên bản đầu)
+        "Vừa lái xe máy vừa cầm điện thoại nghe gọi thì bị phạt thế nào?",
     ]:
         assert sub_questions(q) == [q]
 

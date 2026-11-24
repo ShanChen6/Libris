@@ -22,6 +22,13 @@ _BOTH_RE = re.compile(
     r"(?P<post>\s+(?:" + fz("thì") + "|" + fz("sẽ") + r")\s+.*)?$",
     re.IGNORECASE,
 )
+# "vừa lái xe máy vừa cầm điện thoại" là MỘT hành vi (lái xe là hoạt động nền), không tách
+_BACKGROUND_RE = re.compile(
+    r"^(?:"
+    + "|".join(fz(w) for w in ["lái", "đi", "chạy", "điều khiển", "làm việc", "đang"])
+    + r")\b",
+    re.IGNORECASE,
+)
 _ASK_RE = re.compile(
     r"\b(?:"
     + "|".join(
@@ -40,7 +47,12 @@ _SPLIT_RE = re.compile(r"(?<=[.?!;])\s+|,\s+")
 def sub_questions(question: str) -> list[str]:
     q = " ".join(question.split())
     m = _BOTH_RE.match(q)
-    if m and len(m.group("a")) > 3 and len(m.group("b")) > 3:
+    if (
+        m
+        and len(m.group("a")) > 3
+        and len(m.group("b")) > 3
+        and not _BACKGROUND_RE.match(m.group("a"))
+    ):
         pre, post = m.group("pre").strip(), (m.group("post") or "").strip()
         return [" ".join(p for p in (pre, part, post) if p) for part in (m["a"], m["b"])]
 
@@ -49,4 +61,7 @@ def sub_questions(question: str) -> list[str]:
     if len(asks) < 2:
         return [question]
     context = " ".join(p for p in parts if p not in asks)
+    if not context:
+        # "Chở 3 người bị phạt bao nhiêu? Có trường hợp nào được chở không?": vế sau cần vế đầu
+        return [asks[0]] + [f"{asks[0]} {a}" for a in asks[1:]]
     return [f"{context} {a}".strip() for a in asks]
