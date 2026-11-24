@@ -29,11 +29,30 @@ def test_later_questions_without_context_keep_the_first_one() -> None:
     ]
 
 
+def test_two_wanted_actions_are_split() -> None:
+    assert sub_questions(
+        "Vợ tôi đang nuôi con 10 tháng tuổi. Tôi muốn ly hôn và giành quyền nuôi con được không?"
+    ) == [
+        "Vợ tôi đang nuôi con 10 tháng tuổi. Tôi muốn ly hôn được không?",
+        "Vợ tôi đang nuôi con 10 tháng tuổi. Tôi muốn giành quyền nuôi con được không?",
+    ]
+
+
+def test_leading_conjunction_is_dropped() -> None:
+    # Không có câu bối cảnh riêng: vế đầu được ghép vào vế sau
+    assert sub_questions("Nghỉ việc báo trước bao lâu, và trợ cấp thôi việc tính thế nào?") == [
+        "Nghỉ việc báo trước bao lâu",
+        "Nghỉ việc báo trước bao lâu trợ cấp thôi việc tính thế nào?",
+    ]
+
+
 def test_single_question_is_unchanged() -> None:
     for q in [
         "Không đội mũ bảo hiểm khi đi xe máy bị phạt bao nhiêu tiền?",
         "Thời gian thử việc tối đa, theo Bộ luật Lao động 2019, là bao lâu?",
         "Vợ tôi đang nuôi con 10 tháng tuổi. Tôi muốn ly hôn được không?",
+        "Tuổi kết hôn của nam và nữ là bao nhiêu?",
+        "Nam và nữ có quyền bình đẳng trong hôn nhân không?",
         # Một hành vi: lái xe là hoạt động nền (GD-004 bị tách nhầm ở phiên bản đầu)
         "Vừa lái xe máy vừa cầm điện thoại nghe gọi thì bị phạt thế nào?",
     ]:

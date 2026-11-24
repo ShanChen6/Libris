@@ -41,6 +41,21 @@ _ASK_RE = re.compile(
     + r")\s*[?.!]*\s*$",
     re.IGNORECASE,
 )  # fmt: skip
+# "Tôi muốn ly hôn và giành quyền nuôi con được không?": hai việc muốn làm, mỗi việc một căn cứ
+# (GD-100). Chỉ tách khi có động từ tình thái đứng trước và phần hỏi đứng sau, để không tách nhầm
+# "tuổi kết hôn của nam và nữ".
+_MODAL_AND_RE = re.compile(
+    r"^(?P<pre>.*?\b(?:"
+    + "|".join(fz(w) for w in ["muốn", "định", "có thể", "được phép", "có quyền"])
+    + r"))\s+(?P<a>\S.+?)\s+"
+    + fz("và")
+    + r"\s+(?P<b>\S.+?)"
+    r"(?P<post>\s*(?:"
+    + "|".join(fz(w) for w in ["được không", "không", "thế nào", "ra sao", "được chứ"])
+    + r")\s*[?.!]*)$",
+    re.IGNORECASE,
+)
+_LEAD_RE = re.compile(r"^(?:" + fz("và") + "|" + fz("còn") + "|" + fz("rồi") + r")\s+", re.I)
 _SPLIT_RE = re.compile(r"(?<=[.?!;])\s+|,\s+")
 
 
@@ -56,8 +71,13 @@ def sub_questions(question: str) -> list[str]:
         pre, post = m.group("pre").strip(), (m.group("post") or "").strip()
         return [" ".join(p for p in (pre, part, post) if p) for part in (m["a"], m["b"])]
 
-    parts = [p.strip() for p in _SPLIT_RE.split(q) if p.strip()]
+    # Bỏ từ nối ở đầu vế: "..., và trợ cấp thôi việc tính thế nào?" -> "trợ cấp thôi việc..."
+    parts = [_LEAD_RE.sub("", p).strip() for p in _SPLIT_RE.split(q) if p.strip()]
     asks = [p for p in parts if _ASK_RE.search(p)]
+    if len(asks) == 1 and (m := _MODAL_AND_RE.match(asks[0])):
+        context = " ".join(p for p in parts if p not in asks)
+        pre, post = m.group("pre").strip(), m.group("post").strip()
+        return [" ".join(x for x in (context, pre, part, post) if x) for part in (m["a"], m["b"])]
     if len(asks) < 2:
         return [question]
     context = " ".join(p for p in parts if p not in asks)
