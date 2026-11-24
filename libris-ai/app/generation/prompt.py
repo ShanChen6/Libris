@@ -21,6 +21,10 @@ _RULES = [
     "Điều/Khoản/văn bản không có trong tài liệu. Mỗi thẻ chỉ ghi một văn bản; nhiều căn cứ thì "
     "ghi nhiều thẻ liền nhau.",
     "Giữ nguyên văn các con số: số tiền, thời hạn, độ tuổi, tỷ lệ, số điểm bị trừ.",
+    "Khi nhiều Khoản/Điểm có điều kiện gần giống nhau và chỉ khác ở con số (số người được chở, "
+    "mức nồng độ cồn, số km/h vượt tốc độ, thời hạn...), đối chiếu chính xác con số và điều kiện "
+    "trong câu hỏi với từng Khoản rồi mới chọn; VD chở theo 02 người khác chở theo từ 03 người trở "
+    "lên.",
     'Đoạn luật có ghi chú "KHÔNG CÒN HIỆU LỰC" hoặc "ĐÃ BỊ BÃI BỎ/SỬA ĐỔI" chỉ được dùng '
     "khi người dùng hỏi về quy định cũ, hỏi theo một mốc thời gian trong quá khứ, hoặc muốn so "
     "sánh. Khi dùng, phải nói rõ quy định đó không còn được áp dụng và nêu văn bản thay thế nếu "
