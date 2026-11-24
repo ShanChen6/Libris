@@ -128,6 +128,8 @@ def main() -> None:
     parser.add_argument("--count", type=int, default=200)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--sleep", type=float, default=4.0)
+    parser.add_argument("--out", type=Path, default=OUT)
+    parser.add_argument("--resume", action="store_true", help="giữ các câu đã có trong --out")
     args = parser.parse_args()
 
     excluded = {
@@ -140,6 +142,10 @@ def main() -> None:
         chunks = sample(candidates(conn, excluded), args.count, args.seed)
     llm = get_llm()
     items = []
+    if args.resume and args.out.exists():
+        items = [json.loads(line) for line in args.out.read_text().splitlines() if line.strip()]
+        done = {tuple(x["references"][0].values()) for x in items}
+        chunks = [c for c in chunks if (c["document"], c["article"], c["clause"]) not in done]
     overlap: list[float] = []
     for start in range(0, len(chunks), BATCH):
         if len(items) >= args.count:
@@ -168,10 +174,10 @@ def main() -> None:
                 }
             )
         # Ghi sau mỗi lượt: bị ngắt giữa chừng (hết quota) vẫn giữ được phần đã sinh
-        OUT.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in items))
+        args.out.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in items))
         print(f"{len(items)}/{args.count}", flush=True)
         time.sleep(args.sleep)
-    print(f"Đã ghi {len(items)} câu vào {OUT}")
+    print(f"Đã ghi {len(items)} câu vào {args.out}")
     if overlap:
         print(f"lexical_overlap trung bình: {sum(overlap) / len(overlap):.2f}")
 
