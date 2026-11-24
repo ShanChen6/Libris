@@ -59,6 +59,7 @@ export default function ChatPage() {
         question,
         {
           onDelta: (text) => updateLast((m) => ({ ...m, content: m.content + text })),
+          onReset: () => updateLast((m) => ({ ...m, content: "" })),
           // Bản chính thức: có thể thêm cảnh báo hiệu lực hoặc thay bằng lời từ chối
           onDone: (done) =>
             updateLast((m) => ({

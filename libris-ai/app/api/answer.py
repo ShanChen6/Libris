@@ -248,6 +248,8 @@ def answer_stream(
                         yield sse("meta", _meta(payload))
                     elif kind == "delta":
                         yield sse("delta", {"text": payload})
+                    elif kind == "reset":  # bản nháp bị viết lại sau kiểm tra trích dẫn
+                        yield sse("reset", payload)
                     elif kind == "done":
                         out = to_response(payload)
                         cached.store(out)

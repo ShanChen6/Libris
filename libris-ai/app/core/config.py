@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     llm_model: str = "gemini-3.6-flash"
     # Thử lần lượt khi mô hình chính quá tải (429/5xx) hoặc không còn phục vụ (404)
     llm_fallback_models: list[str] = ["gemini-3.5-flash", "gemini-flash-lite-latest"]
-    llm_temperature: float = 0.1  # thấp: bám sát văn bản, ít "sáng tạo"
+    llm_temperature: float = 0.0  # 0: bám sát văn bản, kết quả ổn định giữa các lần hỏi
     llm_max_tokens: int = 2048
     llm_reasoning_effort: str | None = "low"  # giảm độ trễ của mô hình có suy luận
     llm_timeout: float = 60.0

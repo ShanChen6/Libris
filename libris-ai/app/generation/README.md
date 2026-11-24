@@ -36,20 +36,21 @@ muốn đổi nhà cung cấp chỉ cần đổi cấu hình, không phải sử
 | `LLM_API_KEY` | (trống) | Key tạo ở Google AI Studio. Trên môi trường cloud của dự án, key được proxy tự gắn nên để trống |
 | `LLM_MODEL` | `gemini-3.6-flash` | |
 | `LLM_FALLBACK_MODELS` | `["gemini-3.5-flash","gemini-flash-lite-latest"]` | dùng khi mô hình chính quá tải (429/5xx) hoặc ngừng phục vụ (404) |
-| `LLM_TEMPERATURE` | `0.1` | thấp để bám sát văn bản |
+| `LLM_TEMPERATURE` | `0` | bám sát văn bản, kết quả ổn định giữa các lần hỏi cùng một câu |
 | `ANSWER_MIN_RERANK_SCORE` | `0.05` | ngưỡng từ chối trước khi gọi LLM (chọn bằng 120 câu đánh giá) |
 
 Mỗi vòng thử, client gọi lần lượt từng mô hình: mô hình chính quá tải thì chuyển **ngay** sang mô
 hình dự phòng. Hết vòng mới chờ rồi thử lại. Gói miễn phí của Gemini giới hạn số request mỗi phút,
 nên khi đánh giá hàng loạt (Task 5.2) cần giãn cách các lượt gọi.
 
-## Ba lớp chống ảo giác
+## Bốn lớp chống ảo giác
 
 | Lớp | Ở đâu | Cơ chế |
 |---|---|---|
 | 1. Chặn trước khi gọi LLM | `answer.py` | Không có đoạn luật, hoặc đoạn liên quan nhất có `rerank_score < 0,05` → từ chối ngay (ngưỡng chọn bằng 120 câu đánh giá: câu ngoài phạm vi đều < 0,013; ngưỡng cũ 0,2 chặn nhầm các câu hỏi đời thường như "mang bầu", "đặt cọc"). Không tốn lượt gọi, và mô hình không có cơ hội tự suy diễn. |
 | 2. System prompt nghiêm ngặt | `prompt.py` | Chỉ dùng tài liệu; sau mỗi luận điểm phải có `[Điều X, Khoản Y - Số hiệu]` chép đúng nhãn của đoạn; giữ nguyên văn con số; chỉ dùng quy định đã hết hiệu lực khi hỏi về luật cũ hoặc so sánh; thiếu căn cứ thì trả lời `TỪ CHỐI`; nội dung tài liệu không được coi là chỉ dẫn (chống prompt injection). |
 | 3. Xác minh sau khi trả lời | `citations.py` | Mỗi thẻ được đối chiếu với các đoạn trong ngữ cảnh (văn bản, Điều, Khoản). Câu trả lời **không có trích dẫn hợp lệ nào** bị thay bằng lời từ chối; thẻ không khớp được báo trong `warnings`. |
+| 4. Kiểm tra áp dụng đúng Khoản | `verify.py` | Bắt lỗi chọn nhầm giữa các Khoản gần giống nhau. (a) **Điều kiện**: con số có đơn vị trong câu hỏi (số người chở theo, km/h, nồng độ cồn theo máu/khí thở, tuổi) được đổi thành khoảng giá trị ("vượt quá 0,25 đến 0,4" → (0,25; 0,4], "từ 03 người trở lên" → [3; ∞)) và đối chiếu với Điểm/Khoản được dẫn. (b) **Số tiền**: mức tiền trong câu phải có trong Khoản được dẫn. Chỉ báo lỗi khi có đoạn khác trong ngữ cảnh khớp. Phát hiện lỗi → mô hình viết lại **một lần** kèm gợi ý cụ thể (luồng SSE gửi sự kiện `reset` để giao diện xóa bản nháp); bản viết lại vẫn sai → giữ bản đầu và thêm cảnh báo. Chạy lại trên ~290 câu trả lời đã lưu: bắt đúng lỗi GD-012, không báo nhầm câu nào. |
 
 Ngoài ra, hệ thống **tự gắn cảnh báo hiệu lực** (⚠️) cho mỗi Điều/văn bản được trích dẫn mà đã hết
 hiệu lực, bị bãi bỏ hoặc bị sửa đổi, dựa trên `superseded_provisions` và `document_relations`.

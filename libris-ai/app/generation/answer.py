@@ -20,8 +20,9 @@ from typing import Any, Literal
 import psycopg
 
 from app.generation.citations import Citation, extract_citations
-from app.generation.llm import Completion, LLMClient, LLMError
+from app.generation.llm import Completion, LLMClient, LLMError, Message
 from app.generation.prompt import REFUSAL_MARKER, build_messages
+from app.generation.verify import Mismatch, check_answer, correction_prompt
 from app.pipeline.embedding import Embedder
 from app.retrieval.hybrid import FusedHit
 from app.retrieval.rerank import Reranker
@@ -217,11 +218,24 @@ def answer_question(
     if prep.refusal:
         return prep.refusal
     started = time.monotonic()
-    completion: Completion = llm.complete(messages_for(prep))
+    messages = messages_for(prep)
+    completion: Completion = llm.complete(messages)
     prep.timings["llm"] = time.monotonic() - started
-    return finalize(
+    result = finalize(
         prep, completion.text, completion.model, completion.usage, _finish_reason_of(llm)
     )
+    mismatches = _mismatches(prep, result, completion.text)
+    if not mismatches:
+        return result
+    # Lớp 4: dẫn nhầm Khoản -> cho mô hình viết lại một lần với gợi ý cụ thể
+    started = time.monotonic()
+    try:
+        retry = llm.complete(_revision(messages, completion.text, mismatches))
+    except LLMError:
+        return _flag(result, mismatches)
+    prep.timings["llm_revision"] = time.monotonic() - started
+    revised = finalize(prep, retry.text, retry.model, retry.usage, _finish_reason_of(llm))
+    return _pick(prep, result, revised, retry.text, mismatches)
 
 
 StreamEvent = tuple[str, Any]
@@ -256,32 +270,99 @@ def stream_answer(
         return
 
     started = time.monotonic()
+    messages = messages_for(prep)
     parts: list[str] = []
-    pending = ""  # giữ lại đầu câu trả lời cho tới khi biết đó có phải lời "TỪ CHỐI"
-    decided = streaming = False
     try:
-        for chunk in llm.stream(messages_for(prep)):
-            if "first_token" not in prep.timings:
-                prep.timings["first_token"] = time.monotonic() - started
-            parts.append(chunk)
-            if streaming:
-                yield "delta", chunk
-            elif not decided:
-                pending += chunk
-                head = pending.lstrip().upper()
-                if len(head) >= len(REFUSAL_MARKER) or not REFUSAL_MARKER.startswith(head):
-                    decided = True
-                    # Lời từ chối: không phát ra giao diện, vẫn đọc hết để lấy lý do
-                    streaming = not is_refusal(pending)
-                    if streaming:
-                        yield "delta", pending
+        yield from _stream_text(llm, messages, parts, prep.timings, started)
     except LLMError as exc:
         yield "error", {"message": f"Dịch vụ LLM tạm thời không khả dụng: {exc}"}
         return
+    prep.timings["llm"] = time.monotonic() - started
+    raw = "".join(parts)
+    result = finalize(prep, raw, _model_of(llm), {}, _finish_reason_of(llm))
+    mismatches = _mismatches(prep, result, raw)
+    if not mismatches:
+        yield "done", result
+        return
+    # Lớp 4: dẫn nhầm Khoản -> giao diện xóa bản nháp, mô hình viết lại một lần
+    yield "reset", {"reason": "Đang đối chiếu lại điều kiện với các Khoản luật..."}
+    started = time.monotonic()
+    parts = []
+    try:
+        yield from _stream_text(llm, _revision(messages, raw, mismatches), parts, {}, started)
+    except LLMError:
+        yield "reset", {}
+        yield "delta", result.answer
+        yield "done", _flag(result, mismatches)
+        return
+    prep.timings["llm_revision"] = time.monotonic() - started
+    revised_raw = "".join(parts)
+    revised = finalize(prep, revised_raw, _model_of(llm), {}, _finish_reason_of(llm))
+    yield "done", _pick(prep, result, revised, revised_raw, mismatches)
+
+
+def _stream_text(
+    llm: LLMClient,
+    messages: list[Message],
+    parts: list[str],
+    timings: dict[str, float],
+    started: float,
+) -> Iterator[StreamEvent]:
+    pending = ""  # giữ lại đầu câu trả lời cho tới khi biết đó có phải lời "TỪ CHỐI"
+    decided = streaming = False
+    for chunk in llm.stream(messages):
+        if "first_token" not in timings:
+            timings["first_token"] = time.monotonic() - started
+        parts.append(chunk)
+        if streaming:
+            yield "delta", chunk
+        elif not decided:
+            pending += chunk
+            head = pending.lstrip().upper()
+            if len(head) >= len(REFUSAL_MARKER) or not REFUSAL_MARKER.startswith(head):
+                decided = True
+                # Lời từ chối: không phát ra giao diện, vẫn đọc hết để lấy lý do
+                streaming = not is_refusal(pending)
+                if streaming:
+                    yield "delta", pending
     if not decided and pending and not is_refusal(pending):
         yield "delta", pending  # câu trả lời ngắn hơn độ dài chữ "TỪ CHỐI"
-    prep.timings["llm"] = time.monotonic() - started
-    yield "done", finalize(prep, "".join(parts), _model_of(llm), {}, _finish_reason_of(llm))
+
+
+def _mismatches(prep: Prepared, result: AnswerResult, raw: str) -> list[Mismatch]:
+    if result.refused:
+        return []
+    return check_answer(prep.question, raw, prep.hits)
+
+
+def _revision(messages: list[Message], raw: str, mismatches: list[Mismatch]) -> list[Message]:
+    return [
+        *messages,
+        Message("assistant", raw),
+        Message("user", correction_prompt(mismatches)),
+    ]
+
+
+def _flag(result: AnswerResult, mismatches: list[Mismatch]) -> AnswerResult:
+    result.warnings += [
+        f"Có thể dẫn nhầm căn cứ: {m.reason}. Xem thêm {m.suggestion.split(':')[0]}."
+        for m in mismatches
+    ]
+    return result
+
+
+def _pick(
+    prep: Prepared,
+    first: AnswerResult,
+    revised: AnswerResult,
+    revised_raw: str,
+    mismatches: list[Mismatch],
+) -> AnswerResult:
+    """Dùng bản viết lại nếu nó hợp lệ và qua được kiểm tra; nếu không giữ bản đầu kèm cảnh báo."""
+    remaining = _mismatches(prep, revised, revised_raw)
+    if revised.refused or remaining:
+        return _flag(first, mismatches)
+    return revised
 
 
 def _finish_reason_of(llm: LLMClient) -> str | None:

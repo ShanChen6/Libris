@@ -152,6 +152,8 @@ export interface StreamHandlers {
   onStart?: (data: { sessionId: string; userMessageId: string }) => void;
   onMeta?: (data: { sources: Source[] }) => void;
   onDelta: (text: string) => void;
+  /** Bản nháp bị loại (kiểm tra trích dẫn phát hiện dẫn nhầm Khoản): xóa chữ đã hiện, chờ bản mới. */
+  onReset?: () => void;
   onDone: (data: AnswerDone) => void;
   onError: (message: string) => void;
 }
@@ -178,6 +180,7 @@ export async function streamAnswer(sessionId: string, content: string, handlers:
     if (event.event === "start") handlers.onStart?.(data);
     else if (event.event === "meta") handlers.onMeta?.(data);
     else if (event.event === "delta") handlers.onDelta(data.text);
+    else if (event.event === "reset") handlers.onReset?.();
     else if (event.event === "done") handlers.onDone(data);
     else if (event.event === "error") handlers.onError(data.message);
   }
