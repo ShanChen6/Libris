@@ -7,6 +7,7 @@ câu hỏi -> Query Router (3.2) -> mở rộng thuật ngữ -> embedding -> Hy
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from datetime import date
 
@@ -56,7 +57,10 @@ def retrieve(
     top_n: int = 5,
     plan: RetrievalPlan | None = None,
     weights: SearchWeights | None = None,
+    rewriter: Callable[[str], str | None] | None = None,
 ) -> Retrieval:
+    """``rewriter``: viết lại câu hỏi bằng thuật ngữ pháp lý (``rewrite.QueryRewriter``); ứng viên
+    của câu viết lại được gộp với ứng viên của câu gốc trước khi rerank (chỉ khi có reranker)."""
     plan = plan or route(query)
     if weights is None and reranker is None:
         # Không có reranker lọc lại thì luồng từ khóa làm nhiễu thứ hạng (xem NO_RERANK_WEIGHTS)
@@ -90,6 +94,15 @@ def retrieve(
         ).hits
         seen = {h.chunk_id for h in hits}
         hits = hits + [h for h in newer if h.chunk_id not in seen]
+    elif rewriter is not None and reranker is not None:
+        legal = rewriter(query)
+        if legal and legal.strip().lower() != query.strip().lower():
+            extra = hybrid_search(
+                conn, legal, embedder.encode([legal])[0], top_k=candidates, plan=plan,
+                weights=weights,
+            ).hits  # fmt: skip
+            seen = {h.chunk_id for h in hits}
+            hits = hits + [h for h in extra if h.chunk_id not in seen]
     if reranker is not None:
         hits = disambiguate(query, rerank(expanded, hits, reranker, top_n=len(hits)))
     if plan.mode == "compare":

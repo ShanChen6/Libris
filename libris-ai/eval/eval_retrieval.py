@@ -44,6 +44,7 @@ from app.retrieval.hybrid import SearchWeights  # noqa: E402
 from app.retrieval.service import make_plan, retrieve  # noqa: E402
 
 CACHE = Path(os.environ.get("EVAL_RERANK_CACHE", ROOT / ".cache" / "rerank.json"))
+REWRITE_CACHE = Path(os.environ.get("EVAL_REWRITE_CACHE", ROOT / ".cache" / "rewrite.json"))
 
 
 @dataclass
@@ -51,6 +52,7 @@ class Config:
     weights: SearchWeights
     rerank: bool = False
     candidates: int = 20
+    rewrite: bool = False  # viết lại câu hỏi bằng thuật ngữ pháp lý (LLM, có cache)
 
 
 CONFIGS = {
@@ -71,6 +73,9 @@ CONFIGS = {
         SearchWeights(vector=1, keyword=0.5), rerank=True, candidates=20
     ),
     "hybrid_kw1_rerank20": Config(SearchWeights(vector=1, keyword=1), rerank=True, candidates=20),
+    "hybrid_kw1_rerank20_rewrite": Config(
+        SearchWeights(vector=1, keyword=1), rerank=True, candidates=20, rewrite=True
+    ),
     "hybrid_rerank10": Config(SearchWeights(), rerank=True, candidates=10),
     "hybrid_rerank20": Config(SearchWeights(), rerank=True, candidates=20),
 }
@@ -126,13 +131,20 @@ def score_item(item: GoldenItem, hits) -> dict:
 
 
 def run(config: Config, items, conn, embedder, reranker, k: int, min_score: float) -> dict:
+    rewriter = None
+    if config.rewrite:
+        from app.generation.llm import get_llm
+        from app.retrieval.rewrite import QueryRewriter
+
+        REWRITE_CACHE.parent.mkdir(exist_ok=True)
+        rewriter = QueryRewriter(get_llm(), REWRITE_CACHE)
     rows = []
     for item in items:
         started = time.perf_counter()
         res = retrieve(
             conn, item.question, embedder, reranker if config.rerank else None,
             candidates=config.candidates, top_n=k, plan=make_plan(item.question),
-            weights=config.weights,
+            weights=config.weights, rewriter=rewriter,
         )  # fmt: skip
         top = res.hits[0].rerank_score if res.hits and config.rerank else None
         row = {"id": item.id, "type": item.type, "domain": item.domain,
