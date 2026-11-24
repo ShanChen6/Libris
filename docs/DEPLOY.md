@@ -76,11 +76,11 @@ Chạy image production với giới hạn RAM bằng `docker update --memory`, 
 
 Khuyến nghị gói **≥ 2 GB** (Render `standard`) để còn dư cho tải văn bản/phân tích hợp đồng
 (OCR). Máy nhỏ hơn: đặt `RERANKER_ENABLED=false` (bỏ mô hình reranker) – chất lượng truy xuất giảm
-rõ (Context Precision@5 0,775 -> 0,588, xem `libris-ai/eval/README.md`).
+rõ (Context Precision@5 0,809 -> 0,661, xem `libris-ai/eval/README.md`).
 
 Thời gian trả lời: 8–20 giây (rerank trên CPU + LLM); câu hỏi đã có trong Semantic Cache ~0,25 giây
 tính cả đường đi qua libris-api. `RERANK_CANDIDATES=10` (mặc định trong `render.yaml`) nhanh gấp đôi
-20 trên CPU, đổi lại Context Precision@5 0,744 thay vì 0,775.
+20 trên CPU, đổi lại Context Precision@5 0,757 thay vì 0,809.
 
 ## 3. Giao diện trên Vercel
 
@@ -119,8 +119,10 @@ libris-api ở cổng 4000, libris-ai ở cổng 8000; giao diện chạy `npm r
 - Mọi khóa (Gemini, JWT, token nội bộ, mật khẩu DB) chỉ đặt trong biến môi trường của nền tảng,
   không commit vào repo.
 - Container chạy bằng user không phải root.
-- Access token trên web đang lưu trong `localStorage`; trước khi mở cho nhiều người dùng nên chuyển
-  sang cookie `HttpOnly`.
+- Access token trên web đang lưu trong `localStorage` (quyết định: giữ nguyên cho tới khi có tên
+  miền riêng). Web (Vercel) và API (Render) khác tên miền nên cookie `HttpOnly` sẽ là cookie bên thứ
+  ba, bị nhiều trình duyệt chặn. Khi có tên miền riêng (VD `libris.vn` + `api.libris.vn`), chuyển
+  sang session cookie của `@nestjs/authentication` kèm kho lưu phiên.
 
 ## Giới hạn đã biết
 

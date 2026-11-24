@@ -70,14 +70,20 @@ flowchart TD
   R -->|nêu số hiệu / tên + năm| N[Ưu tiên văn bản được nêu]
   C & P & S & N --> X[Mở rộng thuật ngữ: 'xe máy' -> 'xe mô tô, xe gắn máy']
   X --> V[Vector: cosine bge-m3, HNSW] & K[Từ khóa: ts_rank_cd, GIN] & F[Văn bản được nêu]
-  V & K & F --> RRF["RRF trong một câu SQL<br/>1·1/(60+r_vec) + 0,25·1/(60+r_kw) + 1/(60+r_ref)"]
+  V & K & F --> RRF["RRF trong một câu SQL<br/>1/(60+r_vec) + 1/(60+r_kw) + 1/(60+r_ref)"]
   RRF --> RR[Cross-encoder rerank 10–20 ứng viên]
   RR --> T[Top 5 đoạn cho LLM]
 ```
 
 - **RRF** chỉ dùng thứ hạng nên không phải chuẩn hóa thang điểm cosine và `ts_rank`.
-- Trọng số luồng từ khóa **0,25** được chọn bằng đánh giá (mục 6): văn bản OCR nhiễu và truy vấn
-  theo từng âm tiết khiến luồng này kéo nhiều đoạn không liên quan.
+- Luồng từ khóa tìm theo **cụm hai âm tiết** (`'đèn' <-> 'tín'`): tiếng Việt viết theo âm tiết nên
+  tìm từng âm tiết riêng lẻ ("xe", "máy", "đèn") khớp hàng nghìn đoạn. Trọng số các luồng được chọn
+  bằng đánh giá (mục 6): 1 khi có reranker, từ khóa 0,25 khi chạy không reranker.
+- Câu hỏi nhiều ý ("vừa không đội mũ bảo hiểm vừa vượt đèn đỏ") được tách thành câu hỏi con, mỗi ý
+  có căn cứ riêng trong Top 5; câu hỏi nối tiếp ("còn ô tô thì sao?") được ghép với câu hỏi trước
+  trong hội thoại.
+- Văn bản OCR được **hiệu đính dấu thanh** theo ngữ cảnh (~29.000 chỗ "đât" -> "đất", "câm" -> "cầm")
+  trước khi cắt đoạn.
 - Câu so sánh chạy thêm một lượt chỉ trong quy định hiện hành, rồi giữ tối thiểu một nửa Top 5 cho
   mỗi nhóm cũ/mới để LLM có đủ cả hai phía.
 
@@ -126,20 +132,22 @@ tiết và cách chạy lại: [libris-ai/eval/README.md](../libris-ai/eval/READ
 | Hybrid ban đầu (không rerank) | 0,458 | 0,644 | 0,330 |
 | Chỉ vector | 0,695 | 0,846 | 0,585 |
 | Hybrid ban đầu + rerank 10 (cấu hình cũ) | 0,681 | 0,771 | 0,628 |
-| **Hybrid từ khóa ×0,25 + rerank 20 (hiện tại)** | **0,775** | **0,894** | **0,691** |
+| Hybrid từ khóa ×0,25 + rerank 20 (sau Giai đoạn 5) | 0,775 | 0,894 | 0,691 |
+| **Hiện tại**: hiệu đính OCR, cụm hai âm tiết, tách câu nhiều ý, rerank 20 | **0,809** | **0,931** | **0,723** |
 
 **Câu trả lời** (100 câu):
 
-| Chỉ số | Trước tinh chỉnh | Sau tinh chỉnh |
-|---|---|---|
-| RAGAS Faithfulness | 0,923 (60/77 câu) | – |
-| RAGAS Answer Relevancy | 0,878 (60/77 câu) | – |
-| Đúng dữ kiện (đủ mọi con số chuẩn) | 93,5% | 94,0% |
-| Trích dẫn đủ căn cứ (recall) | 90,3% | 96,4% |
-| Từ chối nhầm câu trả lời được | 18,1% | 11,7% |
-| Câu bẫy luật hết hiệu lực – trả lời đúng | 67% | 100% |
-| Từ chối đúng câu ngoài phạm vi | 6/6 | 6/6 |
-| Chống chèn lệnh | 2/2 | 2/2 |
+| Chỉ số | Ban đầu | Sau Giai đoạn 5 | Hiện tại |
+|---|---|---|---|
+| RAGAS Faithfulness | 0,923 (60/77 câu) | – | – |
+| RAGAS Answer Relevancy | 0,878 (60/77 câu) | – | – |
+| Đúng dữ kiện (đủ mọi con số chuẩn) | 93,5% | 94,0% | **95,5%** |
+| Trích dẫn đủ căn cứ (recall) | 90,3% | 96,4% | **97,7%** |
+| Từ chối nhầm câu trả lời được | 17,0% | 9,6% | **5,3%** |
+| Câu cần nhiều căn cứ – trả lời đúng | 50% | 50% | **67%** |
+| Câu bẫy luật hết hiệu lực – trả lời đúng | 67% | 100% | 100% |
+| Từ chối đúng câu ngoài phạm vi | 6/6 | 6/6 | 6/6 |
+| Chống chèn lệnh | 2/2 | 2/2 | 2/2 |
 
 RAGAS chấm bằng giám khảo Gemini (gói miễn phí hết quota sau 60/77 câu). Hai lượt sinh dùng mô hình
 khác nhau nên cột "sau tinh chỉnh" phản ánh cả cấu hình truy xuất lẫn mô hình; phần do truy xuất
@@ -168,10 +176,11 @@ bất cứ lúc nào.
 | Hạn chế | Hướng xử lý |
 |---|---|
 | Kho mới có 18 văn bản, 4 lĩnh vực | Crawler và trang quản trị đã sẵn sàng để nạp thêm |
-| 12/18 văn bản là bản scan, OCR còn lỗi dấu và số | Rà soát các đoạn hay được trích dẫn; ưu tiên nguồn văn bản gốc dạng chữ |
-| Câu hỏi cần nhiều căn cứ (luật + nghị định xử phạt) mới đúng 50% | Truy xuất nhiều lượt theo từng ý của câu hỏi |
-| Một số câu vẫn truy xuất trượt (VD "ô tô vượt đèn đỏ" không lấy được Khoản 9 Điều 6 NĐ 168/2024 – đoạn này có lỗi OCR như "18.000.000 đàÌ;", "điều khiên", có thể là nguyên nhân) | Rà soát chính tả các đoạn OCR hay được hỏi; theo dõi bằng câu GD-011 trong Golden Dataset |
-| Câu hỏi nối tiếp chưa dùng lịch sử hội thoại | Viết lại câu hỏi dựa trên lịch sử trước khi truy xuất |
+| 12/18 văn bản là bản scan; lỗi dấu thanh đã được hiệu đính, còn lỗi chữ/số khác ("hiệu li", "đàÌ;") | Rà soát các đoạn hay được trích dẫn; ưu tiên nguồn văn bản gốc dạng chữ |
+| Câu hỏi cần nhiều căn cứ mới đúng 67% (VD "muốn ly hôn **và** giành quyền nuôi con" chưa tách được) | Viết lại / tách câu hỏi bằng LLM |
+| Một số cải tiến truy xuất được rút ra từ chính các câu trượt trong bộ dữ liệu | Kiểm tra thêm bằng bộ câu hỏi mới, độc lập |
+| Câu hỏi nối tiếp được nhận diện bằng quy tắc | Viết lại câu hỏi bằng LLM khi có quota |
+| Token đăng nhập lưu trong `localStorage` | Chuyển sang session cookie `HttpOnly` khi web và API có chung tên miền riêng |
 | Chạy trên CPU: 8–20 giây mỗi câu trả lời mới | GPU cho embedding/reranker; cache đã giảm còn ~0,25 giây cho câu lặp lại |
 | Phụ thuộc quota Gemini gói miễn phí | Gói trả phí hoặc mô hình khác qua API tương thích OpenAI (chỉ đổi cấu hình) |
 | Chưa dò kích thước đoạn | Cần GPU để sinh lại embedding cho mỗi cấu hình |

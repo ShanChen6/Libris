@@ -60,7 +60,7 @@ def retrieve(
     plan = plan or route(query)
     if weights is None and reranker is None:
         # Không có reranker lọc lại thì luồng từ khóa nhiễu hơn: trọng số 0,25 tốt hơn 1
-        # (Golden Dataset, không rerank: CP@5 0,653 so với 0,540)
+        # (Golden Dataset, không rerank: CP@5 0,661 so với 0,540)
         weights = NO_RERANK_WEIGHTS
     subs = sub_questions(query) if plan.mode != "compare" else [query]
     if len(subs) > 1 and reranker is not None:

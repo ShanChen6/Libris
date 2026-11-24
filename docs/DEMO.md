@@ -77,8 +77,8 @@ bao nhiêu?"): trả lời trong khoảng **0,3 giây**, có dòng "Trả lời 
 
 Giải thích (slide, không cần hỏi trực tiếp): "xe máy vượt đèn đỏ" và "ô tô vượt đèn đỏ" giống nhau
 0,957 về nghĩa nhưng mức phạt khác hẳn, nên cache đòi hỏi thêm **chữ ký** (loại xe, con số, nam/nữ...)
-và không dùng lại câu trả lời. Lưu ý: câu hỏi về ô tô vượt đèn đỏ hiện còn bị truy xuất trượt (xem
-REPORT.md, mục 8) nên không dùng để demo nội dung.
+và không dùng lại câu trả lời – hỏi tiếp "Còn ô tô thì sao?" để thấy Libris hiểu câu hỏi nối tiếp
+và trả lời mức phạt ô tô (18–20 triệu, `[Điều 6, Khoản 9 - 168/2024/NĐ-CP]`).
 
 ## Bước 6 – Phân tích hợp đồng
 
@@ -92,8 +92,9 @@ thẻ luật -> mở nguyên văn điều luật.
 
 ## Bước 7 – Số liệu đánh giá (slide)
 
-Bảng ở [REPORT.md, mục 6](REPORT.md#6-đánh-giá-giai-đoạn-5): Context Precision@5 0,681 -> 0,775 sau
-tinh chỉnh; Faithfulness 0,923; từ chối đúng 6/6 câu ngoài phạm vi; 100% câu bẫy luật hết hiệu lực.
+Bảng ở [REPORT.md, mục 6](REPORT.md#6-đánh-giá-giai-đoạn-5): Context Precision@5 0,681 -> 0,809;
+từ chối nhầm 17% -> 5,3%; Faithfulness 0,923; từ chối đúng 6/6 câu ngoài phạm vi; 100% câu bẫy luật
+hết hiệu lực.
 
 ## Phương án dự phòng
 

@@ -1,19 +1,19 @@
 {
  "hybrid_kw0.25": {
   "summary": {
-   "context_precision": 0.5804964539007093,
-   "context_recall": 0.7606382978723404,
-   "hit1": 0.44680851063829785,
-   "mrr": 0.5813829787234043,
-   "seconds": 0.3377717805600514,
+   "context_precision": 0.6611702127659574,
+   "context_recall": 0.8617021276595744,
+   "hit1": 0.5319148936170213,
+   "mrr": 0.6679078014184398,
+   "seconds": 0.37050698409009786,
    "precision_by_type": {
-    "colloquial": 0.56,
-    "compare": 0.6944444444444444,
-    "fact": 0.6006410256410256,
-    "injection": 0.25,
-    "multi_hop": 0.5625,
-    "point_in_time": 0.625,
-    "trap_expired": 0.5
+    "colloquial": 0.5573333333333333,
+    "compare": 0.8444444444444444,
+    "fact": 0.7137820512820513,
+    "injection": 0.6666666666666666,
+    "multi_hop": 0.55,
+    "point_in_time": 0.8333333333333333,
+    "trap_expired": 0.425
    }
   },
   "rows": [
@@ -21,49 +21,49 @@
     "id": "GD-001",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.43852121500003705,
+    "seconds": 7.933269675000702,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 19 - 168/2024/NĐ-CP]"
+     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 0.25,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "mrr": 0.25
    },
    {
     "id": "GD-002",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.4130350590003218,
+    "seconds": 0.2764295079996373,
     "top_rerank": null,
     "hits": [
+     "[Điều 33, Khoản 2 - 36/2024/QH15]",
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 19 - 168/2024/NĐ-CP]"
+     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 0.2,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "mrr": 0.2
    },
    {
     "id": "GD-003",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3804324460006683,
+    "seconds": 0.30833959200026584,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 3, Điểm a–h - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 1, Điểm a–n - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 4 - 168/2024/NĐ-CP]",
+     "[Điều 47, Khoản 5 - 100/2019/NĐ-CP]",
+     "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 1 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.0,
@@ -75,14 +75,14 @@
     "id": "GD-004",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3790324769997824,
+    "seconds": 0.5764442499985307,
     "top_rerank": null,
     "hits": [
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]"
+     "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -93,32 +93,32 @@
     "id": "GD-005",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.4313552459998391,
+    "seconds": 0.6223376559992175,
     "top_rerank": null,
     "hits": [
-     "[Điều 8, Khoản 6, Điểm a–e - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 6, Điểm a–e - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 8 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 4 - 168/2024/NĐ-CP]",
      "[Điều 8, Khoản 3 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.25,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.25
    },
    {
     "id": "GD-006",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3941190519999509,
+    "seconds": 0.7513619550009025,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 6, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 4 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 3, Điểm a–h - 168/2024/NĐ-CP]"
+     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 3 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -129,32 +129,50 @@
     "id": "GD-007",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.44699349400070787,
+    "seconds": 0.42423462700025993,
     "top_rerank": null,
     "hits": [
+     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 6 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]",
-     "[Điều 63 - 100/2019/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
+     "[Điều 8, Khoản 9 - 168/2024/NĐ-CP]",
+     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.3333333333333333,
     "context_recall": 1.0,
-    "hit1": 1.0,
-    "mrr": 1.0
+    "hit1": 0.0,
+    "mrr": 0.3333333333333333
    },
    {
     "id": "GD-008",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.39997625399973913,
+    "seconds": 0.30459597399931226,
     "top_rerank": null,
     "hits": [
-     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 3, Điểm a–h - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 9 - 168/2024/NĐ-CP]",
      "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 3 - 168/2024/NĐ-CP]"
+     "[Điều 6, Khoản 11 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]"
+    ],
+    "context_precision": 0.2,
+    "context_recall": 1.0,
+    "hit1": 0.0,
+    "mrr": 0.2
+   },
+   {
+    "id": "GD-009",
+    "type": "colloquial",
+    "domain": "giao_thong",
+    "seconds": 0.26009352000073704,
+    "top_rerank": null,
+    "hits": [
+     "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 1, Điểm h–k - 168/2024/NĐ-CP]",
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -162,35 +180,17 @@
     "mrr": 1.0
    },
    {
-    "id": "GD-009",
-    "type": "colloquial",
-    "domain": "giao_thong",
-    "seconds": 0.29576454400012153,
-    "top_rerank": null,
-    "hits": [
-     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 3, Điểm a–h - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
-    ],
-    "context_precision": 0.5,
-    "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
-   },
-   {
     "id": "GD-010",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.34238237000045046,
+    "seconds": 0.18898970000009285,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 11 - 168/2024/NĐ-CP]",
      "[Điều 6, Khoản 9 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
+     "[Điều 66, Khoản 7 - 100/2019/NĐ-CP]",
      "[Điều 66, Khoản 6 - 100/2019/NĐ-CP]",
-     "[Điều 63 - 100/2019/NĐ-CP]"
+     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -201,50 +201,50 @@
     "id": "GD-011",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.28801277999991726,
+    "seconds": 0.2211612459996104,
     "top_rerank": null,
     "hits": [
      "[Điều 44 - 100/2019/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 6, Khoản 9 - 168/2024/NĐ-CP]",
      "[Điều 23, Khoản 3 - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 12, Khoản 3 - 168/2024/NĐ-CP]"
+     "[Điều 8, Khoản 1 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.3333333333333333,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.3333333333333333
    },
    {
     "id": "GD-012",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.38863464600035513,
+    "seconds": 0.38948978199914563,
     "top_rerank": null,
     "hits": [
+     "[Điều 33, Khoản 1 - 36/2024/QH15]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 3, Điểm a–h - 168/2024/NĐ-CP]",
-     "[Điều 6, Khoản 3, Điểm e–o - 168/2024/NĐ-CP]",
-     "[Điều 33, Khoản 1 - 36/2024/QH15]"
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 0.2,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.5
+    "mrr": 0.2
    },
    {
     "id": "GD-013",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3481765890001043,
+    "seconds": 0.21589377199961746,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 6, Khoản 3, Điểm e–o - 168/2024/NĐ-CP]",
+     "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]"
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.3333333333333333,
     "context_recall": 1.0,
@@ -255,14 +255,14 @@
     "id": "GD-014",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2735464970000976,
+    "seconds": 0.23247084799913864,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
+     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.5,
     "context_recall": 1.0,
@@ -273,32 +273,32 @@
     "id": "GD-015",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3143502830007492,
+    "seconds": 0.2644603990011092,
     "top_rerank": null,
     "hits": [
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 1 - 168/2024/NĐ-CP]",
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 27, Khoản 1 - 168/2024/NĐ-CP]"
+     "[Điều 18, Khoản 1 - 168/2024/NĐ-CP]",
+     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 0.3333333333333333,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.5
+    "mrr": 0.3333333333333333
    },
    {
     "id": "GD-016",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.26278286700016906,
+    "seconds": 0.1754743640012748,
     "top_rerank": null,
     "hits": [
      "[Điều 59 - 36/2024/QH15]",
      "[Điều 18, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 31 - 36/2024/QH15]",
      "[Điều 16, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 56, Khoản 2 - 36/2024/QH15]"
+     "[Điều 56, Khoản 2 - 36/2024/QH15]",
+     "[Điều 16, Khoản 2, Điểm a–d - 168/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -309,14 +309,14 @@
     "id": "GD-017",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.27583094100009475,
+    "seconds": 0.21245239900054003,
     "top_rerank": null,
     "hits": [
      "[Điều 57, Khoản 1, Điểm a–g - 36/2024/QH15]",
      "[Điều 59 - 36/2024/QH15]",
      "[Điều 57, Khoản 1, Điểm h–p - 36/2024/QH15]",
-     "[Điều 60, Khoản 3 - 36/2024/QH15]",
-     "[Điều 89, Khoản 2, Điểm i–l - 36/2024/QH15]"
+     "[Điều 89, Khoản 2, Điểm i–l - 36/2024/QH15]",
+     "[Điều 89, Khoản 3, Điểm a–i - 36/2024/QH15]"
     ],
     "context_precision": 0.5,
     "context_recall": 1.0,
@@ -327,14 +327,14 @@
     "id": "GD-018",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2305953170007342,
+    "seconds": 0.17221383799915202,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 36/2024/QH15]",
-     "[Điều 6, Khoản 16 - 168/2024/NĐ-CP]",
-     "[Điều 21, Khoản 12 - 168/2024/NĐ-CP]",
      "[Điều 50, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 20, Khoản 10 - 168/2024/NĐ-CP]"
+     "[Điều 21, Khoản 12 - 168/2024/NĐ-CP]",
+     "[Điều 22, Khoản 6 - 168/2024/NĐ-CP]",
+     "[Điều 6, Khoản 16 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -345,7 +345,7 @@
     "id": "GD-019",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3675355440000203,
+    "seconds": 0.2272445240014349,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 2 - 168/2024/NĐ-CP]",
@@ -363,70 +363,70 @@
     "id": "GD-020",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3158020500004568,
+    "seconds": 0.21568954099893745,
     "top_rerank": null,
     "hits": [
-     "[Điều 6, Khoản 3, Điểm e–o - 168/2024/NĐ-CP]",
      "[Điều 10 - 36/2024/QH15]",
      "[Điều 46, Khoản 3 - 36/2024/QH15]",
      "[Điều 46, Khoản 4 - 36/2024/QH15]",
-     "[Điều 27, Khoản 1 - 168/2024/NĐ-CP]"
+     "[Điều 27, Khoản 1 - 168/2024/NĐ-CP]",
+     "[Điều 2, Khoản 13 - 36/2024/QH15]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-021",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.29705679200014856,
+    "seconds": 0.23092821499994898,
     "top_rerank": null,
     "hits": [
+     "[Điều 10 - 36/2024/QH15]",
      "[Điều 45 - 36/2024/QH15]",
-     "[Điều 29 - 36/2024/QH15]",
-     "[Điều 57, Khoản 1, Điểm h–p - 36/2024/QH15]",
      "[Điều 6, Khoản 3, Điểm e–o - 168/2024/NĐ-CP]",
-     "[Điều 4, Khoản 2, Điểm o–y - 100/2019/NĐ-CP]"
+     "[Điều 49 - 36/2024/QH15]",
+     "[Điều 12, Khoản 4 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
-    "hit1": 0.0,
-    "mrr": 0.0
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-022",
     "type": "multi_hop",
     "domain": "giao_thong",
-    "seconds": 0.5199563750002199,
+    "seconds": 0.42659511800047767,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 1, Điểm a–n - 168/2024/NĐ-CP]"
+     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.25,
+    "context_precision": 0.2,
     "context_recall": 0.5,
     "hit1": 0.0,
-    "mrr": 0.25
+    "mrr": 0.2
    },
    {
     "id": "GD-023",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.6106535839999196,
+    "seconds": 0.5137131339997723,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 8 - 100/2019/NĐ-CP]",
+     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
      "[Điều 6, Khoản 7 - 100/2019/NĐ-CP]",
-     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]"
+     "[Điều 6, Khoản 6 - 100/2019/NĐ-CP]",
+     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.8333333333333333,
+    "context_precision": 0.7,
     "context_recall": 1.0,
     "hit1": 1.0,
     "mrr": 1.0
@@ -435,32 +435,32 @@
     "id": "GD-024",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.4447876290005297,
+    "seconds": 0.48004370399939944,
     "top_rerank": null,
     "hits": [
+     "[Điều 6, Khoản 2, Điểm k–m - 100/2019/NĐ-CP]",
+     "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 4 - 168/2024/NĐ-CP]"
+     "[Điều 21, Khoản 2 - 100/2019/NĐ-CP]"
     ],
-    "context_precision": 0.25,
+    "context_precision": 1.0,
     "context_recall": 0.5,
-    "hit1": 0.0,
-    "mrr": 0.25
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-025",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.256979044000218,
+    "seconds": 0.2329918510004063,
     "top_rerank": null,
     "hits": [
      "[Điều 5, Khoản 10 - 100/2019/NĐ-CP]",
-     "[Điều 5, Khoản 8 - 100/2019/NĐ-CP]",
      "[Điều 7, Khoản 9 - 100/2019/NĐ-CP]",
-     "[Điều 66, Khoản 6 - 100/2019/NĐ-CP]",
-     "[Điều 66, Khoản 7 - 100/2019/NĐ-CP]"
+     "[Điều 5, Khoản 8 - 100/2019/NĐ-CP]",
+     "[Điều 66, Khoản 7 - 100/2019/NĐ-CP]",
+     "[Điều 66, Khoản 6 - 100/2019/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -471,25 +471,25 @@
     "id": "GD-026",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.5107868149998467,
+    "seconds": 0.5386857029989187,
     "top_rerank": null,
     "hits": [
-     "[Điều 8, Khoản 6, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
-     "[Điều 66, Khoản 6 - 100/2019/NĐ-CP]",
+     "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 9 - 168/2024/NĐ-CP]"
+     "[Điều 7, Khoản 6 - 168/2024/NĐ-CP]",
+     "[Điều 63 - 100/2019/NĐ-CP]",
+     "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.2,
+    "context_recall": 0.5,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.2
    },
    {
     "id": "GD-027",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.8037354140005846,
+    "seconds": 1.0314360600004875,
     "top_rerank": null,
     "hits": [
      "[Điều 60 - 23/2008/QH12]",
@@ -507,7 +507,7 @@
     "id": "GD-028",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.2879279970002244,
+    "seconds": 0.22198511100032192,
     "top_rerank": null,
     "hits": [
      "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
@@ -525,13 +525,13 @@
     "id": "GD-029",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3014806410001256,
+    "seconds": 0.2425710009993054,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
+     "[Điều 24 - 45/2019/QH14]",
      "[Điều 10 - 12/2022/NĐ-CP]",
      "[Điều 27 - 45/2019/QH14]",
-     "[Điều 8, Khoản 4, Điểm a - 145/2020/NĐ-CP]",
      "[Điều 61 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
@@ -543,32 +543,32 @@
     "id": "GD-030",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.29430321700056084,
+    "seconds": 0.23829157399995893,
     "top_rerank": null,
     "hits": [
-     "[Điều 10 - 12/2022/NĐ-CP]",
      "[Điều 25 - 45/2019/QH14]",
-     "[Điều 61 - 45/2019/QH14]",
-     "[Điều 128 - 45/2019/QH14]",
-     "[Điều 5, Khoản 5 - 145/2020/NĐ-CP]"
+     "[Điều 10 - 12/2022/NĐ-CP]",
+     "[Điều 27 - 45/2019/QH14]",
+     "[Điều 5, Khoản 5 - 145/2020/NĐ-CP]",
+     "[Điều 24 - 45/2019/QH14]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-031",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.466740548999951,
+    "seconds": 0.21789360100046906,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
-     "[Điều 25 - 145/2020/NĐ-CP]",
      "[Điều 10 - 12/2022/NĐ-CP]",
-     "[Điều 61 - 45/2019/QH14]",
-     "[Điều 24 - 45/2019/QH14]"
+     "[Điều 24 - 45/2019/QH14]",
+     "[Điều 27 - 45/2019/QH14]",
+     "[Điều 26 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -579,31 +579,31 @@
     "id": "GD-032",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2882549600008133,
+    "seconds": 0.19524400199952652,
     "top_rerank": null,
     "hits": [
-     "[Điều 91 - 45/2019/QH14]",
+     "[Điều 26 - 45/2019/QH14]",
      "[Điều 10 - 12/2022/NĐ-CP]",
-     "[Điều 50 - 145/2020/NĐ-CP]",
-     "[Điều 89, Khoản 2 - 145/2020/NĐ-CP]",
-     "[Điều 24 - 45/2019/QH14]"
+     "[Điều 91 - 45/2019/QH14]",
+     "[Điều 25 - 45/2019/QH14]",
+     "[Điều 96, Khoản 1 - 145/2020/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
-    "hit1": 0.0,
-    "mrr": 0.0
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-033",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2951943950001805,
+    "seconds": 0.2345469480005704,
     "top_rerank": null,
     "hits": [
-     "[Điều 10 - 12/2022/NĐ-CP]",
      "[Điều 27 - 45/2019/QH14]",
-     "[Điều 29 - 45/2019/QH14]",
+     "[Điều 10 - 12/2022/NĐ-CP]",
      "[Điều 9, Khoản 3 - 12/2022/NĐ-CP]",
+     "[Điều 29 - 45/2019/QH14]",
      "[Điều 20 - 45/2019/QH14]"
     ],
     "context_precision": 0.0,
@@ -615,7 +615,7 @@
     "id": "GD-034",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.3809593730002234,
+    "seconds": 0.25513578800018877,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 12/2022/NĐ-CP]",
@@ -633,14 +633,14 @@
     "id": "GD-035",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.3278521060001367,
+    "seconds": 0.21372897299988836,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 4, Điểm a - 145/2020/NĐ-CP]",
      "[Điều 4, Khoản 4 - 12/2022/NĐ-CP]",
      "[Điều 4, Khoản 20 - 12/2022/NĐ-CP]",
-     "[Điều 24, Khoản 3 - 145/2020/NĐ-CP]",
-     "[Điều 14 - 45/2019/QH14]"
+     "[Điều 14 - 45/2019/QH14]",
+     "[Điều 5, Khoản 7 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -651,14 +651,14 @@
     "id": "GD-036",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.21874777999983053,
+    "seconds": 0.18220806700082903,
     "top_rerank": null,
     "hits": [
      "[Điều 139 - 45/2019/QH14]",
      "[Điều 80, Khoản 3 - 145/2020/NĐ-CP]",
      "[Điều 28, Khoản 2, Điểm a–e - 12/2022/NĐ-CP]",
-     "[Điều 113 - 45/2019/QH14]",
-     "[Điều 138 - 45/2019/QH14]"
+     "[Điều 137, Khoản 4 - 45/2019/QH14]",
+     "[Điều 80, Khoản 4 - 145/2020/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -669,14 +669,14 @@
     "id": "GD-037",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.5065719589993023,
+    "seconds": 0.3562242440002592,
     "top_rerank": null,
     "hits": [
      "[Điều 35 - 45/2019/QH14]",
-     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
-     "[Điều 7 - 145/2020/NĐ-CP]",
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
-     "[Điều 44 - 45/2019/QH14]"
+     "[Điều 7 - 145/2020/NĐ-CP]",
+     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
+     "[Điều 20 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -687,66 +687,66 @@
     "id": "GD-038",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3093036010004653,
-    "top_rerank": null,
-    "hits": [
-     "[Điều 35 - 45/2019/QH14]",
-     "[Điều 7 - 145/2020/NĐ-CP]",
-     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
-     "[Điều 113 - 45/2019/QH14]",
-     "[Điều 44 - 45/2019/QH14]"
-    ],
-    "context_precision": 1.0,
-    "context_recall": 1.0,
-    "hit1": 1.0,
-    "mrr": 1.0
-   },
-   {
-    "id": "GD-039",
-    "type": "colloquial",
-    "domain": "lao_dong",
-    "seconds": 0.3924087609993876,
-    "top_rerank": null,
-    "hits": [
-     "[Điều 35 - 45/2019/QH14]",
-     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
-     "[Điều 7 - 145/2020/NĐ-CP]",
-     "[Điều 44 - 45/2019/QH14]",
-     "[Điều 41 - 45/2019/QH14]"
-    ],
-    "context_precision": 1.0,
-    "context_recall": 1.0,
-    "hit1": 1.0,
-    "mrr": 1.0
-   },
-   {
-    "id": "GD-040",
-    "type": "fact",
-    "domain": "lao_dong",
-    "seconds": 0.3679627600004096,
+    "seconds": 0.21887614099978236,
     "top_rerank": null,
     "hits": [
      "[Điều 7 - 145/2020/NĐ-CP]",
      "[Điều 35 - 45/2019/QH14]",
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
-     "[Điều 20 - 45/2019/QH14]"
+     "[Điều 33 - 45/2019/QH14]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 0.5,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "mrr": 0.5
+   },
+   {
+    "id": "GD-039",
+    "type": "colloquial",
+    "domain": "lao_dong",
+    "seconds": 0.3248664889997599,
+    "top_rerank": null,
+    "hits": [
+     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
+     "[Điều 35 - 45/2019/QH14]",
+     "[Điều 36, Khoản 2 - 45/2019/QH14]",
+     "[Điều 7 - 145/2020/NĐ-CP]",
+     "[Điều 41 - 45/2019/QH14]"
+    ],
+    "context_precision": 0.5,
+    "context_recall": 1.0,
+    "hit1": 0.0,
+    "mrr": 0.5
+   },
+   {
+    "id": "GD-040",
+    "type": "fact",
+    "domain": "lao_dong",
+    "seconds": 0.3226272699994297,
+    "top_rerank": null,
+    "hits": [
+     "[Điều 7 - 145/2020/NĐ-CP]",
+     "[Điều 36, Khoản 2 - 45/2019/QH14]",
+     "[Điều 35 - 45/2019/QH14]",
+     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
+     "[Điều 36, Khoản 3 - 45/2019/QH14]"
+    ],
+    "context_precision": 0.5,
+    "context_recall": 1.0,
+    "hit1": 0.0,
+    "mrr": 0.5
    },
    {
     "id": "GD-041",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3252354500000365,
+    "seconds": 0.2342691730009392,
     "top_rerank": null,
     "hits": [
-     "[Điều 113 - 45/2019/QH14]",
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
      "[Điều 4, Khoản 25 - 12/2022/NĐ-CP]",
+     "[Điều 113 - 45/2019/QH14]",
      "[Điều 41 - 45/2019/QH14]",
      "[Điều 115 - 45/2019/QH14]"
     ],
@@ -759,7 +759,7 @@
     "id": "GD-042",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2558350889994472,
+    "seconds": 0.15728634900006,
     "top_rerank": null,
     "hits": [
      "[Điều 46 - 45/2019/QH14]",
@@ -777,14 +777,14 @@
     "id": "GD-043",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.28062288500041177,
+    "seconds": 0.20985910399940622,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
-     "[Điều 55, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
      "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
+     "[Điều 55, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
      "[Điều 55, Khoản 1, Điểm a - 145/2020/NĐ-CP]",
-     "[Điều 57, Khoản 2 - 145/2020/NĐ-CP]"
+     "[Điều 55, Khoản 2 - 145/2020/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -795,14 +795,14 @@
     "id": "GD-044",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.27192147400000977,
+    "seconds": 0.20004931699986628,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
      "[Điều 55, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
-     "[Điều 55, Khoản 1, Điểm a - 145/2020/NĐ-CP]",
-     "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
-     "[Điều 55, Khoản 2 - 145/2020/NĐ-CP]"
+     "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
+     "[Điều 55, Khoản 2 - 145/2020/NĐ-CP]",
+     "[Điều 55, Khoản 1, Điểm a - 145/2020/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -813,68 +813,68 @@
     "id": "GD-045",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2000160279994816,
+    "seconds": 0.19101941699955205,
     "top_rerank": null,
     "hits": [
-     "[Điều 98 - 45/2019/QH14]",
      "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
+     "[Điều 98 - 45/2019/QH14]",
      "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
      "[Điều 55, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
      "[Điều 55, Khoản 1, Điểm a - 145/2020/NĐ-CP]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.5,
     "context_recall": 1.0,
-    "hit1": 1.0,
-    "mrr": 1.0
+    "hit1": 0.0,
+    "mrr": 0.5
    },
    {
     "id": "GD-046",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.30035113000030833,
+    "seconds": 0.24022272100046393,
     "top_rerank": null,
     "hits": [
-     "[Điều 18 - 12/2022/NĐ-CP]",
      "[Văn bản - 145/2020/NĐ-CP]",
      "[Điều 107, Khoản 3 - 45/2019/QH14]",
+     "[Điều 18 - 12/2022/NĐ-CP]",
      "[Điều 107, Khoản 2 - 45/2019/QH14]",
      "[Điều 61 - 145/2020/NĐ-CP]"
     ],
-    "context_precision": 0.41666666666666663,
+    "context_precision": 0.5,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "mrr": 0.5
    },
    {
     "id": "GD-047",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.4535791739999695,
+    "seconds": 0.36174684099933074,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
-     "[Điều 18 - 12/2022/NĐ-CP]",
      "[Điều 107, Khoản 3 - 45/2019/QH14]",
      "[Điều 107, Khoản 2 - 45/2019/QH14]",
+     "[Điều 18 - 12/2022/NĐ-CP]",
      "[Điều 61 - 145/2020/NĐ-CP]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 0.5,
     "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "mrr": 0.5
    },
    {
     "id": "GD-048",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2677469119998932,
+    "seconds": 0.2491268260000652,
     "top_rerank": null,
     "hits": [
      "[Điều 105 - 45/2019/QH14]",
-     "[Điều 60 - 145/2020/NĐ-CP]",
      "[Điều 107, Khoản 2 - 45/2019/QH14]",
+     "[Điều 60 - 145/2020/NĐ-CP]",
      "[Điều 111 - 45/2019/QH14]",
-     "[Điều 89, Khoản 3 - 145/2020/NĐ-CP]"
+     "[Điều 107, Khoản 3 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -885,32 +885,32 @@
     "id": "GD-049",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23333182799979113,
+    "seconds": 0.15538384899991797,
     "top_rerank": null,
     "hits": [
-     "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
-     "[Điều 57, Khoản 1, Điểm a - 145/2020/NĐ-CP]",
      "[Điều 106 - 45/2019/QH14]",
+     "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]",
      "[Điều 98 - 45/2019/QH14]",
+     "[Điều 57, Khoản 1, Điểm a - 145/2020/NĐ-CP]",
      "[Điều 56 - 145/2020/NĐ-CP]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-050",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1907773229995655,
+    "seconds": 0.18363484700057597,
     "top_rerank": null,
     "hits": [
      "[Điều 64 - 145/2020/NĐ-CP]",
      "[Điều 109 - 45/2019/QH14]",
      "[Điều 63 - 145/2020/NĐ-CP]",
-     "[Điều 110 - 45/2019/QH14]",
-     "[Điều 57, Khoản 1, Điểm b - 145/2020/NĐ-CP]"
+     "[Điều 58 - 145/2020/NĐ-CP]",
+     "[Điều 110 - 45/2019/QH14]"
     ],
     "context_precision": 0.5,
     "context_recall": 1.0,
@@ -921,14 +921,14 @@
     "id": "GD-051",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2991755840002952,
+    "seconds": 0.22866838299887604,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
      "[Điều 112 - 45/2019/QH14]",
-     "[Điều 139 - 45/2019/QH14]",
      "[Điều 111 - 45/2019/QH14]",
-     "[Điều 115 - 45/2019/QH14]"
+     "[Điều 115 - 45/2019/QH14]",
+     "[Điều 66 - 145/2020/NĐ-CP]"
     ],
     "context_precision": 0.5,
     "context_recall": 1.0,
@@ -939,14 +939,14 @@
     "id": "GD-052",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.26597722199949203,
+    "seconds": 0.24266327599980286,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
+     "[Điều 111 - 45/2019/QH14]",
      "[Điều 66 - 145/2020/NĐ-CP]",
-     "[Điều 169 - 45/2019/QH14]",
-     "[Điều 18 - 12/2022/NĐ-CP]",
-     "[Điều 111 - 45/2019/QH14]"
+     "[Điều 112 - 45/2019/QH14]",
+     "[Điều 18 - 12/2022/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -957,14 +957,14 @@
     "id": "GD-053",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3461284640006852,
+    "seconds": 0.2641805109997222,
     "top_rerank": null,
     "hits": [
+     "[Điều 18 - 12/2022/NĐ-CP]",
      "[Điều 17, Khoản 2, Điểm a–b - 12/2022/NĐ-CP]",
-     "[Điều 217 - 45/2019/QH14]",
      "[Điều 17, Khoản 4 - 12/2022/NĐ-CP]",
-     "[Điều 38 - 12/2022/NĐ-CP]",
-     "[Điều 11, Khoản 1 - 12/2022/NĐ-CP]"
+     "[Điều 11, Khoản 1 - 12/2022/NĐ-CP]",
+     "[Điều 3 - 12/2022/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -975,14 +975,14 @@
     "id": "GD-054",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.26436889999968116,
+    "seconds": 0.36391691000062565,
     "top_rerank": null,
     "hits": [
      "[Điều 122 - 45/2019/QH14]",
      "[Điều 89, Khoản 6 - 145/2020/NĐ-CP]",
+     "[Điều 127 - 45/2019/QH14]",
      "[Điều 125 - 45/2019/QH14]",
-     "[Điều 69, Khoản 2, Điểm e–h - 145/2020/NĐ-CP]",
-     "[Điều 118 - 45/2019/QH14]"
+     "[Điều 70, Khoản 1 - 145/2020/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -993,14 +993,14 @@
     "id": "GD-055",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.31330273099956685,
+    "seconds": 0.36244682600045053,
     "top_rerank": null,
     "hits": [
      "[Điều 169 - 45/2019/QH14]",
-     "[Điều 219, Khoản 4, Điểm b–c - 45/2019/QH14]",
      "[Điều 219, Khoản 4, Điểm c–đ - 45/2019/QH14]",
-     "[Điều 113 - 45/2019/QH14]",
-     "[Điều 149 - 45/2019/QH14]"
+     "[Điều 149 - 45/2019/QH14]",
+     "[Điều 219, Khoản 2 - 45/2019/QH14]",
+     "[Điều 219, Khoản 4, Điểm b–c - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1011,32 +1011,32 @@
     "id": "GD-056",
     "type": "trap_expired",
     "domain": "lao_dong",
-    "seconds": 0.3596976769995308,
+    "seconds": 0.32426670099994226,
     "top_rerank": null,
     "hits": [
+     "[Điều 155 - 10/2012/QH13]",
      "[Điều 187 - 10/2012/QH13]",
      "[Điều 240 - 10/2012/QH13]",
-     "[Điều 155 - 10/2012/QH13]",
-     "[Điều 111 - 10/2012/QH13]",
-     "[Điều 166 - 10/2012/QH13]"
+     "[Điều 153 - 10/2012/QH13]",
+     "[Điều 111 - 10/2012/QH13]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.5,
     "context_recall": 0.5,
-    "hit1": 1.0,
-    "mrr": 1.0
+    "hit1": 0.0,
+    "mrr": 0.5
    },
    {
     "id": "GD-057",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.31102500099950703,
+    "seconds": 0.22577140300018073,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 45/2019/QH14]",
-     "[Điều 21 - 45/2019/QH14]",
+     "[Điều 162 - 45/2019/QH14]",
      "[Điều 35 - 45/2019/QH14]",
-     "[Điều 145 - 45/2019/QH14]",
-     "[Điều 143 - 45/2019/QH14]"
+     "[Điều 21 - 45/2019/QH14]",
+     "[Điều 16 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1047,32 +1047,32 @@
     "id": "GD-058",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.28881913099939993,
+    "seconds": 0.2955590729998221,
     "top_rerank": null,
     "hits": [
-     "[Điều 145 - 45/2019/QH14]",
      "[Điều 146 - 45/2019/QH14]",
-     "[Điều 29, Khoản 2 - 12/2022/NĐ-CP]",
+     "[Điều 145 - 45/2019/QH14]",
      "[Điều 147 - 45/2019/QH14]",
+     "[Điều 29, Khoản 2 - 12/2022/NĐ-CP]",
      "[Điều 143 - 45/2019/QH14]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-059",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.30329493099998217,
+    "seconds": 0.2785197520006477,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
-     "[Điều 21 - 45/2019/QH14]",
-     "[Điều 35 - 45/2019/QH14]",
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
-     "[Điều 7 - 145/2020/NĐ-CP]"
+     "[Điều 35 - 45/2019/QH14]",
+     "[Điều 21 - 45/2019/QH14]",
+     "[Điều 162 - 45/2019/QH14]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1083,16 +1083,16 @@
     "id": "GD-060",
     "type": "compare",
     "domain": "lao_dong",
-    "seconds": 0.6821849260004456,
+    "seconds": 0.6333127449997846,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 10/2012/QH13]",
+     "[Điều 27 - 45/2019/QH14]",
      "[Điều 25 - 45/2019/QH14]",
      "[Điều 24 - 45/2019/QH14]",
-     "[Điều 29 - 10/2012/QH13]",
-     "[Điều 26 - 10/2012/QH13]"
+     "[Điều 29 - 10/2012/QH13]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.8333333333333333,
     "context_recall": 1.0,
     "hit1": 1.0,
     "mrr": 1.0
@@ -1101,32 +1101,32 @@
     "id": "GD-061",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.4191721930001222,
+    "seconds": 0.35094357900015893,
     "top_rerank": null,
     "hits": [
-     "[Điều 35 - 45/2019/QH14]",
      "[Điều 36, Khoản 1, Điểm b–đ - 45/2019/QH14]",
-     "[Điều 41 - 45/2019/QH14]",
      "[Điều 36, Khoản 1, Điểm e - 45/2019/QH14]",
-     "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]"
+     "[Điều 35 - 45/2019/QH14]",
+     "[Điều 41 - 45/2019/QH14]",
+     "[Điều 37 - 45/2019/QH14]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.2,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.2
    },
    {
     "id": "GD-062",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.1764405590001843,
+    "seconds": 0.15541002999998454,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
      "[Điều 8 - 52/2014/QH13]",
-     "[Điều 23, Khoản 1 - 126/2014/NĐ-CP]",
      "[Điều 23, Khoản 3 - 126/2014/NĐ-CP]",
-     "[Điều 169 - 45/2019/QH14]"
+     "[Điều 23, Khoản 1 - 126/2014/NĐ-CP]",
+     "[Điều 3, Khoản 5 - 52/2014/QH13]"
     ],
     "context_precision": 0.5,
     "context_recall": 1.0,
@@ -1137,14 +1137,14 @@
     "id": "GD-063",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.3111869980002666,
+    "seconds": 0.1924546840000403,
     "top_rerank": null,
     "hits": [
      "[Điều 19 - 126/2014/NĐ-CP]",
      "[Điều 24 - 126/2014/NĐ-CP]",
-     "[Điều 49, Khoản 1 - 126/2014/NĐ-CP]",
      "[Điều 9 - 52/2014/QH13]",
-     "[Điều 26 - 126/2014/NĐ-CP]"
+     "[Điều 26 - 126/2014/NĐ-CP]",
+     "[Điều 13 - 52/2014/QH13]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -1155,14 +1155,14 @@
     "id": "GD-064",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.25397895599962794,
+    "seconds": 0.19409472500046832,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
-     "[Điều 19 - 126/2014/NĐ-CP]",
      "[Điều 126 - 52/2014/QH13]",
+     "[Điều 19 - 126/2014/NĐ-CP]",
      "[Điều 8 - 52/2014/QH13]",
-     "[Điều 26 - 126/2014/NĐ-CP]"
+     "[Điều 14 - 52/2014/QH13]"
     ],
     "context_precision": 0.25,
     "context_recall": 1.0,
@@ -1173,32 +1173,32 @@
     "id": "GD-065",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.15338498199980677,
+    "seconds": 0.1376684770002612,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
+     "[Điều 3, Khoản 11 - 52/2014/QH13]",
      "[Điều 10 - 52/2014/QH13]",
      "[Điều 26 - 126/2014/NĐ-CP]",
-     "[Điều 11 - 52/2014/QH13]",
      "[Điều 19 - 126/2014/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.5,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.5
    },
    {
     "id": "GD-066",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.33103103499979625,
+    "seconds": 0.3434493870008737,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
      "[Điều 5 - 126/2014/NĐ-CP]",
-     "[Điều 4 - 52/2014/QH13]",
      "[Điều 2 - 52/2014/QH13]",
-     "[Điều 10 - 52/2014/QH13]"
+     "[Điều 4 - 52/2014/QH13]",
+     "[Điều 3, Khoản 3 - 52/2014/QH13]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1209,12 +1209,12 @@
     "id": "GD-067",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.32575578700016194,
+    "seconds": 0.21947504700074205,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
-     "[Điều 43 - 52/2014/QH13]",
      "[Điều 14 - 126/2014/NĐ-CP]",
+     "[Điều 43 - 52/2014/QH13]",
      "[Điều 40 - 52/2014/QH13]",
      "[Điều 59, Khoản 4 - 52/2014/QH13]"
     ],
@@ -1227,7 +1227,7 @@
     "id": "GD-068",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.3719951550001497,
+    "seconds": 0.26459265000084997,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -1245,50 +1245,50 @@
     "id": "GD-069",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.24755490099960298,
+    "seconds": 0.21555198500027473,
     "top_rerank": null,
     "hits": [
      "[Điều 61 - 52/2014/QH13]",
+     "[Điều 59, Khoản 4 - 52/2014/QH13]",
      "[Điều 33 - 52/2014/QH13]",
-     "[Điều 40 - 52/2014/QH13]",
-     "[Điều 62 - 52/2014/QH13]",
-     "[Điều 59, Khoản 4 - 52/2014/QH13]"
+     "[Điều 59, Khoản 2 - 52/2014/QH13]",
+     "[Điều 40 - 52/2014/QH13]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.25,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.25
    },
    {
     "id": "GD-070",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.26542280499961635,
+    "seconds": 0.19032799699925818,
     "top_rerank": null,
     "hits": [
+     "[Điều 138 - 45/2019/QH14]",
      "[Điều 51 - 52/2014/QH13]",
+     "[Điều 55 - 52/2014/QH13]",
      "[Điều 56 - 52/2014/QH13]",
-     "[Điều 95 - 52/2014/QH13]",
-     "[Điều 97 - 52/2014/QH13]",
-     "[Điều 55 - 52/2014/QH13]"
+     "[Điều 95 - 52/2014/QH13]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.5,
     "context_recall": 1.0,
-    "hit1": 1.0,
-    "mrr": 1.0
+    "hit1": 0.0,
+    "mrr": 0.5
    },
    {
     "id": "GD-071",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.32291574499959097,
+    "seconds": 0.20275274100094975,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
-     "[Điều 84 - 52/2014/QH13]",
      "[Điều 83 - 52/2014/QH13]",
-     "[Điều 71 - 52/2014/QH13]",
-     "[Điều 118 - 52/2014/QH13]"
+     "[Điều 84 - 52/2014/QH13]",
+     "[Điều 58 - 52/2014/QH13]",
+     "[Điều 71 - 52/2014/QH13]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1299,14 +1299,14 @@
     "id": "GD-072",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.23033403999943403,
+    "seconds": 0.18190173400034837,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
-     "[Điều 84 - 52/2014/QH13]",
      "[Điều 58 - 52/2014/QH13]",
-     "[Điều 83 - 52/2014/QH13]",
-     "[Điều 87 - 52/2014/QH13]"
+     "[Điều 84 - 52/2014/QH13]",
+     "[Điều 63 - 52/2014/QH13]",
+     "[Điều 83 - 52/2014/QH13]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1317,25 +1317,25 @@
     "id": "GD-073",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.32015868300004513,
+    "seconds": 0.22588666000046942,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
      "[Điều 83 - 52/2014/QH13]",
+     "[Điều 110 - 52/2014/QH13]",
      "[Điều 118 - 52/2014/QH13]",
-     "[Điều 84 - 52/2014/QH13]",
-     "[Điều 71 - 52/2014/QH13]"
+     "[Điều 107 - 52/2014/QH13]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.3333333333333333,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.3333333333333333
    },
    {
     "id": "GD-074",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.33276192999983323,
+    "seconds": 0.23899124300078256,
     "top_rerank": null,
     "hits": [
      "[Điều 95 - 52/2014/QH13]",
@@ -1353,14 +1353,14 @@
     "id": "GD-075",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.22739701099999365,
+    "seconds": 0.17199290899952757,
     "top_rerank": null,
     "hits": [
      "[Điều 55 - 52/2014/QH13]",
      "[Điều 56 - 52/2014/QH13]",
+     "[Điều 53 - 52/2014/QH13]",
      "[Điều 57 - 52/2014/QH13]",
-     "[Điều 125 - 52/2014/QH13]",
-     "[Điều 45 - 126/2014/NĐ-CP]"
+     "[Điều 125 - 52/2014/QH13]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1371,25 +1371,25 @@
     "id": "GD-076",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.32101693999993586,
+    "seconds": 0.23773241500020958,
     "top_rerank": null,
     "hits": [
-     "[Điều 81 - 52/2014/QH13]",
-     "[Điều 118 - 52/2014/QH13]",
-     "[Điều 71 - 52/2014/QH13]",
      "[Điều 116 - 52/2014/QH13]",
-     "[Điều 87 - 52/2014/QH13]"
+     "[Điều 118 - 52/2014/QH13]",
+     "[Điều 107 - 52/2014/QH13]",
+     "[Điều 81 - 52/2014/QH13]",
+     "[Điều 71 - 52/2014/QH13]"
     ],
-    "context_precision": 0.25,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.25
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-077",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2801854849994925,
+    "seconds": 0.30108246300005703,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -1407,50 +1407,50 @@
     "id": "GD-078",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.21953260800000862,
+    "seconds": 0.20901806700021552,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
      "[Điều 173 - 31/2024/QH15]",
+     "[Điều 258 - 31/2024/QH15]",
      "[Điều 174 - 31/2024/QH15]",
-     "[Điều 172, Khoản 1, Điểm d - 31/2024/QH15]",
-     "[Điều 171 - 31/2024/QH15]"
+     "[Điều 172, Khoản 3 - 31/2024/QH15]"
     ],
-    "context_precision": 0.2,
-    "context_recall": 1.0,
+    "context_precision": 0.0,
+    "context_recall": 0.0,
     "hit1": 0.0,
-    "mrr": 0.2
+    "mrr": 0.0
    },
    {
     "id": "GD-079",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3834612489999927,
+    "seconds": 0.2728392389999499,
     "top_rerank": null,
     "hits": [
+     "[Điều 176, Khoản 1 - 31/2024/QH15]",
+     "[Điều 176, Khoản 4 - 31/2024/QH15]",
      "[Điều 24 - 123/2024/NĐ-CP]",
-     "[Điều 4, Khoản 1 - 102/2024/NĐ-CP]",
-     "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
      "[Điều 176, Khoản 2 - 31/2024/QH15]",
-     "[Điều 176, Khoản 1 - 31/2024/QH15]"
+     "[Điều 4, Khoản 1 - 102/2024/NĐ-CP]"
     ],
-    "context_precision": 0.2,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.2
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-080",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3440373510002246,
+    "seconds": 0.28868940900065354,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 1 - 31/2024/QH15]",
-     "[Điều 121 - 31/2024/QH15]",
      "[Điều 47 - 31/2024/QH15]",
      "[Điều 45, Khoản 3 - 31/2024/QH15]",
-     "[Điều 122, Khoản 1 - 31/2024/QH15]"
+     "[Điều 122, Khoản 1 - 31/2024/QH15]",
+     "[Điều 112, Khoản 1, Điểm a–c - 102/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1461,13 +1461,13 @@
     "id": "GD-081",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.41992584299987357,
+    "seconds": 0.42500164800003404,
     "top_rerank": null,
     "hits": [
      "[Điều 85 - 31/2024/QH15]",
-     "[Điều 87, Khoản 5 - 31/2024/QH15]",
-     "[Điều 28 - 102/2024/NĐ-CP]",
      "[Điều 87, Khoản 1 - 31/2024/QH15]",
+     "[Điều 28 - 102/2024/NĐ-CP]",
+     "[Điều 87, Khoản 5 - 31/2024/QH15]",
      "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]"
     ],
     "context_precision": 1.0,
@@ -1479,14 +1479,14 @@
     "id": "GD-082",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.3164500240000052,
+    "seconds": 0.2683019260002766,
     "top_rerank": null,
     "hits": [
      "[Điều 235, Khoản 2 - 31/2024/QH15]",
      "[Điều 105, Khoản 1 - 102/2024/NĐ-CP]",
-     "[Điều 106, Khoản 3 - 102/2024/NĐ-CP]",
      "[Điều 105, Khoản 2 - 102/2024/NĐ-CP]",
-     "[Điều 235, Khoản 3 - 31/2024/QH15]"
+     "[Điều 235, Khoản 3 - 31/2024/QH15]",
+     "[Điều 235, Khoản 1 - 31/2024/QH15]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1497,34 +1497,34 @@
     "id": "GD-083",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.26847654300036083,
+    "seconds": 0.354955771999812,
     "top_rerank": null,
     "hits": [
-     "[Điều 240 - 31/2024/QH15]",
      "[Điều 11 - 31/2024/QH15]",
-     "[Điều 109, Khoản 5 - 102/2024/NĐ-CP]",
+     "[Điều 109, Khoản 11 - 102/2024/NĐ-CP]",
+     "[Điều 240 - 31/2024/QH15]",
      "[Điều 109, Khoản 10 - 102/2024/NĐ-CP]",
-     "[Điều 109, Khoản 11 - 102/2024/NĐ-CP]"
+     "[Điều 109, Khoản 1 - 102/2024/NĐ-CP]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-084",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.29958030300076643,
+    "seconds": 0.3219949410013214,
     "top_rerank": null,
     "hits": [
      "[Điều 252 - 31/2024/QH15]",
+     "[Điều 111, Khoản 2 - 102/2024/NĐ-CP]",
      "[Điều 1, Khoản 2 - 43/2024/QH15]",
-     "[Điều 260, Khoản 16 - 31/2024/QH15]",
-     "[Văn bản - 43/2024/QH15]",
-     "[Điều 111, Khoản 2 - 102/2024/NĐ-CP]"
+     "[Điều 257, Khoản 1 - 31/2024/QH15]",
+     "[Điều 260, Khoản 16 - 31/2024/QH15]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.8333333333333333,
     "context_recall": 1.0,
     "hit1": 1.0,
     "mrr": 1.0
@@ -1533,14 +1533,14 @@
     "id": "GD-085",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.39317434999975376,
+    "seconds": 0.3494111800009705,
     "top_rerank": null,
     "hits": [
      "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]",
-     "[Điều 109, Khoản 1 - 31/2024/QH15]",
      "[Điều 28 - 102/2024/NĐ-CP]",
-     "[Điều 87, Khoản 5 - 31/2024/QH15]",
-     "[Điều 8, Khoản 3 - 88/2024/NĐ-CP]"
+     "[Điều 108 - 31/2024/QH15]",
+     "[Điều 109, Khoản 1 - 31/2024/QH15]",
+     "[Điều 87, Khoản 5 - 31/2024/QH15]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1551,14 +1551,14 @@
     "id": "GD-086",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.31187335300000996,
+    "seconds": 0.2358396220006398,
     "top_rerank": null,
     "hits": [
-     "[Điều 10 - 123/2024/NĐ-CP]",
      "[Điều 13, Khoản 3 - 123/2024/NĐ-CP]",
+     "[Điều 10 - 123/2024/NĐ-CP]",
      "[Điều 13, Khoản 2 - 123/2024/NĐ-CP]",
-     "[Điều 10, Khoản 2 - 123/2024/NĐ-CP]",
-     "[Điều 139, Khoản 2 - 31/2024/QH15]"
+     "[Điều 10, Khoản 3 - 123/2024/NĐ-CP]",
+     "[Điều 8, Khoản 1 - 123/2024/NĐ-CP]"
     ],
     "context_precision": 0.3333333333333333,
     "context_recall": 1.0,
@@ -1569,14 +1569,14 @@
     "id": "GD-087",
     "type": "trap_expired",
     "domain": "dat_dai",
-    "seconds": 0.8588620640002773,
+    "seconds": 1.3208428630005074,
     "top_rerank": null,
     "hits": [
+     "[Điều 130 - 45/2013/QH13]",
      "[Điều 128, Khoản 2 - 45/2013/QH13]",
      "[Điều 128, Khoản 4 - 45/2013/QH13]",
      "[Điều 128, Khoản 3 - 45/2013/QH13]",
-     "[Điều 130 - 45/2013/QH13]",
-     "[Điều 128, Khoản 6 - 45/2013/QH13]"
+     "[Điều 128, Khoản 5 - 45/2013/QH13]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -1587,50 +1587,50 @@
     "id": "GD-088",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.2249225280002065,
+    "seconds": 0.19113447800009453,
     "top_rerank": null,
     "hits": [
+     "[Điều 126, Khoản 1 - 45/2013/QH13]",
      "[Điều 130 - 45/2013/QH13]",
-     "[Điều 128, Khoản 2 - 45/2013/QH13]",
-     "[Điều 131 - 45/2013/QH13]",
-     "[Điều 128, Khoản 7 - 45/2013/QH13]",
-     "[Điều 192, Khoản 3 - 45/2013/QH13]"
+     "[Điều 210, Khoản 3 - 45/2013/QH13]",
+     "[Điều 192, Khoản 3 - 45/2013/QH13]",
+     "[Điều 126, Khoản 2 - 45/2013/QH13]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
-    "hit1": 0.0,
-    "mrr": 0.0
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-089",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.28861648100064485,
+    "seconds": 0.23136525100017025,
     "top_rerank": null,
     "hits": [
-     "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
      "[Điều 174 - 31/2024/QH15]",
+     "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
      "[Điều 172, Khoản 1, Điểm d - 31/2024/QH15]",
      "[Điều 112, Khoản 4 - 102/2024/NĐ-CP]",
      "[Điều 173 - 31/2024/QH15]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-090",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.28527777300041635,
+    "seconds": 0.26821469300011813,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
      "[Điều 96 - 31/2024/QH15]",
+     "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]",
      "[Điều 100 - 31/2024/QH15]",
-     "[Điều 85 - 31/2024/QH15]",
-     "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]"
+     "[Điều 85 - 31/2024/QH15]"
     ],
     "context_precision": 1.0,
     "context_recall": 1.0,
@@ -1641,53 +1641,53 @@
     "id": "GD-091",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2531570940000165,
+    "seconds": 0.21810180899956322,
     "top_rerank": null,
     "hits": [
+     "[Điều 45, Khoản 4 - 31/2024/QH15]",
      "[Điều 45, Khoản 1 - 31/2024/QH15]",
      "[Điều 48 - 31/2024/QH15]",
-     "[Điều 45, Khoản 4 - 31/2024/QH15]",
-     "[Điều 112, Khoản 1, Điểm a–c - 102/2024/NĐ-CP]",
-     "[Điều 255, Khoản 1 - 31/2024/QH15]"
+     "[Điều 260, Khoản 16 - 31/2024/QH15]",
+     "[Điều 27, Khoản 1 - 31/2024/QH15]"
     ],
-    "context_precision": 0.3333333333333333,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.3333333333333333
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-092",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2690694489992893,
+    "seconds": 0.21890200999951048,
     "top_rerank": null,
     "hits": [
-     "[Điều 174 - 45/2019/QH14]",
-     "[Điều 196 - 45/2019/QH14]",
-     "[Điều 104, Khoản 1 - 102/2024/NĐ-CP]",
      "[Điều 172 - 45/2019/QH14]",
-     "[Điều 32, Khoản 1 - 101/2024/NĐ-CP]"
+     "[Điều 174 - 45/2019/QH14]",
+     "[Điều 104, Khoản 1 - 102/2024/NĐ-CP]",
+     "[Điều 32, Khoản 1 - 101/2024/NĐ-CP]",
+     "[Điều 80 - 45/2019/QH14]"
     ]
    },
    {
     "id": "GD-093",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.3107516259997283,
+    "seconds": 0.22563540900046064,
     "top_rerank": null,
     "hits": [
+     "[Điều 51, Khoản 1 - 145/2020/NĐ-CP]",
+     "[Điều 247 - 31/2024/QH15]",
+     "[Điều 102 - 45/2019/QH14]",
      "[Điều 54, Khoản 1, Điểm a–b - 145/2020/NĐ-CP]",
-     "[Điều 54, Khoản 2 - 145/2020/NĐ-CP]",
-     "[Điều 41, Khoản 6 - 12/2022/NĐ-CP]",
-     "[Điều 103 - 45/2019/QH14]",
-     "[Điều 14, Khoản 1 - 12/2022/NĐ-CP]"
+     "[Điều 54, Khoản 2 - 145/2020/NĐ-CP]"
     ]
    },
    {
     "id": "GD-094",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.23974895700030174,
+    "seconds": 0.19700423900030728,
     "top_rerank": null,
     "hits": [
      "[Điều 24, Khoản 3 - 12/2022/NĐ-CP]",
@@ -1701,11 +1701,11 @@
     "id": "GD-095",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.26005751399952715,
+    "seconds": 0.1953960279988678,
     "top_rerank": null,
     "hits": [
-     "[Điều 28, Khoản 1, Điểm a–đ - 101/2024/NĐ-CP]",
      "[Điều 49, Khoản 3 - 126/2014/NĐ-CP]",
+     "[Điều 28, Khoản 1, Điểm a–đ - 101/2024/NĐ-CP]",
      "[Điều 20, Khoản 1 - 126/2014/NĐ-CP]",
      "[Điều 32 - 126/2014/NĐ-CP]",
      "[Điều 20, Khoản 2 - 126/2014/NĐ-CP]"
@@ -1715,7 +1715,7 @@
     "id": "GD-096",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.194175720000203,
+    "seconds": 0.23544699600097374,
     "top_rerank": null,
     "hits": [
      "[Điều 115 - 145/2020/NĐ-CP]",
@@ -1729,7 +1729,7 @@
     "id": "GD-097",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.31128712499958056,
+    "seconds": 0.2405238149985962,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 54 - 12/2022/NĐ-CP]",
@@ -1743,50 +1743,50 @@
     "id": "GD-098",
     "type": "injection",
     "domain": "giao_thong",
-    "seconds": 0.548565222000434,
+    "seconds": 0.44329932000073313,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 1, Điểm a–n - 168/2024/NĐ-CP]",
-     "[Điều 8, Khoản 4 - 168/2024/NĐ-CP]",
+     "[Điều 47, Khoản 5 - 100/2019/NĐ-CP]",
+     "[Điều 7, Khoản 7 - 168/2024/NĐ-CP]",
      "[Điều 8, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 47, Khoản 5 - 100/2019/NĐ-CP]"
+     "[Điều 8, Khoản 3 - 168/2024/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
+    "context_precision": 0.3333333333333333,
+    "context_recall": 1.0,
     "hit1": 0.0,
-    "mrr": 0.0
+    "mrr": 0.3333333333333333
    },
    {
     "id": "GD-099",
     "type": "injection",
     "domain": "hon_nhan",
-    "seconds": 0.39158023900017724,
+    "seconds": 0.21881576099985978,
     "top_rerank": null,
     "hits": [
-     "[Điều 24 - 126/2014/NĐ-CP]",
      "[Điều 8 - 52/2014/QH13]",
+     "[Điều 24 - 126/2014/NĐ-CP]",
      "[Điều 14 - 52/2014/QH13]",
-     "[Điều 23, Khoản 1 - 126/2014/NĐ-CP]",
-     "[Điều 11 - 52/2014/QH13]"
+     "[Điều 3, Khoản 5 - 52/2014/QH13]",
+     "[Điều 9 - 52/2014/QH13]"
     ],
-    "context_precision": 0.5,
+    "context_precision": 1.0,
     "context_recall": 1.0,
-    "hit1": 0.0,
-    "mrr": 0.5
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-100",
     "type": "multi_hop",
     "domain": "hon_nhan",
-    "seconds": 0.4119661520007867,
+    "seconds": 0.24251101900154026,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
      "[Điều 55 - 52/2014/QH13]",
      "[Điều 71 - 52/2014/QH13]",
-     "[Điều 83 - 52/2014/QH13]",
-     "[Điều 84 - 52/2014/QH13]"
+     "[Điều 115 - 52/2014/QH13]",
+     "[Điều 118 - 52/2014/QH13]"
     ],
     "context_precision": 1.0,
     "context_recall": 0.5,
@@ -1797,14 +1797,14 @@
  },
  "keyword_only": {
   "summary": {
-   "context_precision": 0.2631205673758865,
+   "context_precision": 0.2578014184397163,
    "context_recall": 0.42021276595744683,
-   "hit1": 0.18085106382978725,
-   "mrr": 0.2631205673758865,
-   "seconds": 0.3713641551400269,
+   "hit1": 0.1702127659574468,
+   "mrr": 0.2578014184397163,
+   "seconds": 0.29454128352987025,
    "precision_by_type": {
     "colloquial": 0.18133333333333335,
-    "compare": 0.6666666666666666,
+    "compare": 0.5,
     "fact": 0.2605769230769231,
     "injection": 0.0,
     "multi_hop": 0.5625,
@@ -1817,7 +1817,7 @@
     "id": "GD-001",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 7.901972595999723,
+    "seconds": 0.22982435699850612,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -1835,7 +1835,7 @@
     "id": "GD-002",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.33666377699955774,
+    "seconds": 0.24272466200091003,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -1853,7 +1853,7 @@
     "id": "GD-003",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3398857600004703,
+    "seconds": 0.4145271289999073,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -1871,14 +1871,14 @@
     "id": "GD-004",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3003436109993345,
+    "seconds": 0.5882726700001513,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 50, Khoản 1 - 168/2024/NĐ-CP]",
-     "[Điều 57, Khoản 1, Điểm a–g - 36/2024/QH15]",
-     "[Điều 89, Khoản 3, Điểm a–i - 36/2024/QH15]",
-     "[Điều 89, Khoản 2, Điểm a–h - 36/2024/QH15]"
+     "[Điều 5, Khoản 6 - 168/2024/NĐ-CP]",
+     "[Điều 22, Khoản 3, Điểm h–m - 102/2024/NĐ-CP]",
+     "[Điều 57, Khoản 1, Điểm a–g - 36/2024/QH15]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -1889,7 +1889,7 @@
     "id": "GD-005",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.647308356999929,
+    "seconds": 0.6357584750003298,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
@@ -1907,7 +1907,7 @@
     "id": "GD-006",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6190324139997756,
+    "seconds": 0.6386152539998875,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
@@ -1925,14 +1925,14 @@
     "id": "GD-007",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3204872880005496,
+    "seconds": 0.27747954500046035,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 47 - 36/2024/QH15]",
-     "[Điều 63 - 100/2019/NĐ-CP]",
      "[Điều 33, Khoản 3 - 36/2024/QH15]",
-     "[Điều 42, Khoản 5 - 36/2024/QH15]"
+     "[Điều 42, Khoản 5 - 36/2024/QH15]",
+     "[Điều 63 - 100/2019/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -1943,7 +1943,7 @@
     "id": "GD-008",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.31902782900033344,
+    "seconds": 0.25839701699987927,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -1961,7 +1961,7 @@
     "id": "GD-009",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.23627284500071255,
+    "seconds": 0.3090510860001814,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -1979,7 +1979,7 @@
     "id": "GD-010",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.20236863099944458,
+    "seconds": 0.22566246099995624,
     "top_rerank": null,
     "hits": [
      "[Điều 63 - 100/2019/NĐ-CP]",
@@ -1997,7 +1997,7 @@
     "id": "GD-011",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.22449654800038843,
+    "seconds": 0.23567633099992236,
     "top_rerank": null,
     "hits": [
      "[Điều 69 - 36/2024/QH15]",
@@ -2015,7 +2015,7 @@
     "id": "GD-012",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3717183919998206,
+    "seconds": 0.4152212139997573,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -2033,7 +2033,7 @@
     "id": "GD-013",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.23575592499946652,
+    "seconds": 0.26399563499944634,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -2051,7 +2051,7 @@
     "id": "GD-014",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.27277996900011203,
+    "seconds": 0.2392623249997996,
     "top_rerank": null,
     "hits": [
      "[Điều 50, Khoản 1 - 168/2024/NĐ-CP]",
@@ -2069,7 +2069,7 @@
     "id": "GD-015",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.28144815799987555,
+    "seconds": 0.33814925299884635,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -2087,7 +2087,7 @@
     "id": "GD-016",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.1715219679999791,
+    "seconds": 0.1747061100013525,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
@@ -2105,7 +2105,7 @@
     "id": "GD-017",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2192816570004652,
+    "seconds": 0.22983130299871846,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 3, Điểm a–i - 36/2024/QH15]",
@@ -2123,7 +2123,7 @@
     "id": "GD-018",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.18536223400042218,
+    "seconds": 0.1815359920001356,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 3, Điểm a–i - 36/2024/QH15]",
@@ -2141,7 +2141,7 @@
     "id": "GD-019",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.24289141500048572,
+    "seconds": 0.21837596300065343,
     "top_rerank": null,
     "hits": [
      "[Điều 50, Khoản 1 - 168/2024/NĐ-CP]",
@@ -2159,7 +2159,7 @@
     "id": "GD-020",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.23518819799937773,
+    "seconds": 0.30774825399930705,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 1 - 12/2022/NĐ-CP]",
@@ -2177,7 +2177,7 @@
     "id": "GD-021",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.25137712200012174,
+    "seconds": 0.22905103099947155,
     "top_rerank": null,
     "hits": [
      "[Điều 25, Khoản 3, Điểm d - 12/2022/NĐ-CP]",
@@ -2195,7 +2195,7 @@
     "id": "GD-022",
     "type": "multi_hop",
     "domain": "giao_thong",
-    "seconds": 0.4391153710002982,
+    "seconds": 0.3965329340007884,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -2213,7 +2213,7 @@
     "id": "GD-023",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.42150397899968084,
+    "seconds": 0.480509365999751,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 8 - 100/2019/NĐ-CP]",
@@ -2231,25 +2231,25 @@
     "id": "GD-024",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.3142565559992363,
+    "seconds": 0.37553326099987316,
     "top_rerank": null,
     "hits": [
+     "[Điều 30 - 23/2008/QH12]",
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 33, Khoản 3 - 36/2024/QH15]",
-     "[Điều 168 - 45/2019/QH14]"
+     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
+     "[Điều 8, Khoản 3 - 100/2019/NĐ-CP]"
     ],
-    "context_precision": 1.0,
+    "context_precision": 0.5,
     "context_recall": 0.5,
-    "hit1": 1.0,
-    "mrr": 1.0
+    "hit1": 0.0,
+    "mrr": 0.5
    },
    {
     "id": "GD-025",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.1842982859998301,
+    "seconds": 0.236802223000268,
     "top_rerank": null,
     "hits": [
      "[Điều 63 - 100/2019/NĐ-CP]",
@@ -2267,7 +2267,7 @@
     "id": "GD-026",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.5242361990003701,
+    "seconds": 0.5331757019994257,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -2285,7 +2285,7 @@
     "id": "GD-027",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 1.146690714000215,
+    "seconds": 1.155249850000473,
     "top_rerank": null,
     "hits": [
      "[Điều 60 - 23/2008/QH12]",
@@ -2303,7 +2303,7 @@
     "id": "GD-028",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.278695432000859,
+    "seconds": 0.29219047900005535,
     "top_rerank": null,
     "hits": [
      "[Điều 30 - 23/2008/QH12]",
@@ -2321,7 +2321,7 @@
     "id": "GD-029",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2171740450003199,
+    "seconds": 0.2176091049987008,
     "top_rerank": null,
     "hits": [
      "[Điều 65 - 145/2020/NĐ-CP]",
@@ -2339,7 +2339,7 @@
     "id": "GD-030",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2611670470005265,
+    "seconds": 0.24428831099976378,
     "top_rerank": null,
     "hits": [
      "[Điều 70, Khoản 1 - 100/2019/NĐ-CP]",
@@ -2357,7 +2357,7 @@
     "id": "GD-031",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2714044410004135,
+    "seconds": 0.1989914570003748,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 45/2019/QH14]",
@@ -2375,7 +2375,7 @@
     "id": "GD-032",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.20902602699970885,
+    "seconds": 0.19096255299882614,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 45/2019/QH14]",
@@ -2393,7 +2393,7 @@
     "id": "GD-033",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22466294500009099,
+    "seconds": 0.23753528899942467,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2411,7 +2411,7 @@
     "id": "GD-034",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.2546477629994115,
+    "seconds": 0.35167130900117627,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -2429,7 +2429,7 @@
     "id": "GD-035",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.2804424129999461,
+    "seconds": 0.24835549399904266,
     "top_rerank": null,
     "hits": [
      "[Điều 65 - 145/2020/NĐ-CP]",
@@ -2447,7 +2447,7 @@
     "id": "GD-036",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18201233800027694,
+    "seconds": 0.22944120300053328,
     "top_rerank": null,
     "hits": [
      "[Điều 139 - 45/2019/QH14]",
@@ -2465,7 +2465,7 @@
     "id": "GD-037",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.40627010299976973,
+    "seconds": 0.37416228899928683,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2483,7 +2483,7 @@
     "id": "GD-038",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.22612692300026538,
+    "seconds": 0.24664487399968493,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2501,7 +2501,7 @@
     "id": "GD-039",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.34698201199989853,
+    "seconds": 0.3359323109998513,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -2519,7 +2519,7 @@
     "id": "GD-040",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2921033490001719,
+    "seconds": 0.2817291200008185,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2537,7 +2537,7 @@
     "id": "GD-041",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.22574136599996564,
+    "seconds": 0.2776163250000536,
     "top_rerank": null,
     "hits": [
      "[Điều 44 - 45/2019/QH14]",
@@ -2555,7 +2555,7 @@
     "id": "GD-042",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16901156499989156,
+    "seconds": 0.16365394199965522,
     "top_rerank": null,
     "hits": [
      "[Điều 46 - 45/2019/QH14]",
@@ -2573,7 +2573,7 @@
     "id": "GD-043",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.17994568100039032,
+    "seconds": 0.21114873999977135,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -2591,7 +2591,7 @@
     "id": "GD-044",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2091899809993265,
+    "seconds": 0.21896796699911647,
     "top_rerank": null,
     "hits": [
      "[Điều 66 - 145/2020/NĐ-CP]",
@@ -2609,7 +2609,7 @@
     "id": "GD-045",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1915590759999759,
+    "seconds": 0.22720836799999233,
     "top_rerank": null,
     "hits": [
      "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
@@ -2627,7 +2627,7 @@
     "id": "GD-046",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22615380699971865,
+    "seconds": 0.25523987999986275,
     "top_rerank": null,
     "hits": [
      "[Điều 38, Khoản 2 - 145/2020/NĐ-CP]",
@@ -2645,7 +2645,7 @@
     "id": "GD-047",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.35099862000060966,
+    "seconds": 0.4230260160002217,
     "top_rerank": null,
     "hits": [
      "[Điều 44 - 45/2019/QH14]",
@@ -2663,7 +2663,7 @@
     "id": "GD-048",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22046456299995043,
+    "seconds": 0.21301737000067078,
     "top_rerank": null,
     "hits": [
      "[Điều 105 - 45/2019/QH14]",
@@ -2681,7 +2681,7 @@
     "id": "GD-049",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16493838999940635,
+    "seconds": 0.17234887199992954,
     "top_rerank": null,
     "hits": [
      "[Điều 56 - 145/2020/NĐ-CP]",
@@ -2699,7 +2699,7 @@
     "id": "GD-050",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16580677799993282,
+    "seconds": 0.15664394099985657,
     "top_rerank": null,
     "hits": [
      "[Điều 64 - 145/2020/NĐ-CP]",
@@ -2717,7 +2717,7 @@
     "id": "GD-051",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.32195102099922224,
+    "seconds": 0.2634916039987729,
     "top_rerank": null,
     "hits": [
      "[Điều 38, Khoản 2 - 145/2020/NĐ-CP]",
@@ -2735,7 +2735,7 @@
     "id": "GD-052",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2430039199998646,
+    "seconds": 0.22619276299883495,
     "top_rerank": null,
     "hits": [
      "[Điều 29 - 45/2019/QH14]",
@@ -2753,7 +2753,7 @@
     "id": "GD-053",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.21359530500012625,
+    "seconds": 0.2163775760000135,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -2771,7 +2771,7 @@
     "id": "GD-054",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.24216822500056878,
+    "seconds": 0.24845886000002793,
     "top_rerank": null,
     "hits": [
      "[Điều 122 - 45/2019/QH14]",
@@ -2789,7 +2789,7 @@
     "id": "GD-055",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3708768910000799,
+    "seconds": 0.35145548099899315,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 6 - 145/2020/NĐ-CP]",
@@ -2807,7 +2807,7 @@
     "id": "GD-056",
     "type": "trap_expired",
     "domain": "lao_dong",
-    "seconds": 0.33862959900034184,
+    "seconds": 0.3046217840001191,
     "top_rerank": null,
     "hits": [
      "[Điều 240 - 10/2012/QH13]",
@@ -2825,7 +2825,7 @@
     "id": "GD-057",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.25633483000001434,
+    "seconds": 0.25562720299967623,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2843,7 +2843,7 @@
     "id": "GD-058",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18647824700019555,
+    "seconds": 0.19820423499913886,
     "top_rerank": null,
     "hits": [
      "[Điều 145 - 45/2019/QH14]",
@@ -2861,7 +2861,7 @@
     "id": "GD-059",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2802192350000041,
+    "seconds": 0.2923025180007244,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -2879,7 +2879,7 @@
     "id": "GD-060",
     "type": "compare",
     "domain": "lao_dong",
-    "seconds": 0.5875591809999605,
+    "seconds": 0.5830844310003158,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 45/2019/QH14]",
@@ -2897,7 +2897,7 @@
     "id": "GD-061",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.44070203399951424,
+    "seconds": 0.3336067419986648,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -2915,7 +2915,7 @@
     "id": "GD-062",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.18214099400029227,
+    "seconds": 0.142014349999954,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -2933,7 +2933,7 @@
     "id": "GD-063",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.225050356999418,
+    "seconds": 0.18349624799884623,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -2951,7 +2951,7 @@
     "id": "GD-064",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2643989159996636,
+    "seconds": 0.24537345600037952,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -2969,7 +2969,7 @@
     "id": "GD-065",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.16243897899948934,
+    "seconds": 0.14090163899891195,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -2987,7 +2987,7 @@
     "id": "GD-066",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2651361680000264,
+    "seconds": 0.2084661690005305,
     "top_rerank": null,
     "hits": [
      "[Điều 4 - 52/2014/QH13]",
@@ -3005,7 +3005,7 @@
     "id": "GD-067",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.290769618000013,
+    "seconds": 0.21628238199991756,
     "top_rerank": null,
     "hits": [
      "[Điều 12 - 126/2014/NĐ-CP]",
@@ -3023,7 +3023,7 @@
     "id": "GD-068",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.38066521900054795,
+    "seconds": 0.2386923400008527,
     "top_rerank": null,
     "hits": [
      "[Điều 12 - 126/2014/NĐ-CP]",
@@ -3041,7 +3041,7 @@
     "id": "GD-069",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2748891840001306,
+    "seconds": 0.198846584000421,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -3059,7 +3059,7 @@
     "id": "GD-070",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.21158565599944268,
+    "seconds": 0.22574523699950078,
     "top_rerank": null,
     "hits": [
      "[Điều 96 - 52/2014/QH13]",
@@ -3077,7 +3077,7 @@
     "id": "GD-071",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.24123364699971717,
+    "seconds": 0.2469528410001658,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -3095,7 +3095,7 @@
     "id": "GD-072",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.21140775700041559,
+    "seconds": 0.2386928430005355,
     "top_rerank": null,
     "hits": [
      "[Điều 42 - 126/2014/NĐ-CP]",
@@ -3113,7 +3113,7 @@
     "id": "GD-073",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.24223544400047103,
+    "seconds": 0.2355444080003508,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -3131,7 +3131,7 @@
     "id": "GD-074",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.3102292200001102,
+    "seconds": 0.25937881499885407,
     "top_rerank": null,
     "hits": [
      "[Điều 96 - 52/2014/QH13]",
@@ -3149,7 +3149,7 @@
     "id": "GD-075",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.18549327299933793,
+    "seconds": 0.176669206999577,
     "top_rerank": null,
     "hits": [
      "[Điều 55 - 52/2014/QH13]",
@@ -3167,7 +3167,7 @@
     "id": "GD-076",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.25799038399964047,
+    "seconds": 0.2321175190008944,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -3185,7 +3185,7 @@
     "id": "GD-077",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3255504700000529,
+    "seconds": 0.31987337999999,
     "top_rerank": null,
     "hits": [
      "[Điều 173 - 31/2024/QH15]",
@@ -3203,7 +3203,7 @@
     "id": "GD-078",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.22482930499973008,
+    "seconds": 0.20559227199919405,
     "top_rerank": null,
     "hits": [
      "[Điều 173 - 31/2024/QH15]",
@@ -3221,7 +3221,7 @@
     "id": "GD-079",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2799228440007937,
+    "seconds": 0.2807337489994097,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 1 - 102/2024/NĐ-CP]",
@@ -3239,7 +3239,7 @@
     "id": "GD-080",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3044645929994658,
+    "seconds": 0.29092494099859323,
     "top_rerank": null,
     "hits": [
      "[Điều 135, Khoản 6 - 31/2024/QH15]",
@@ -3257,7 +3257,7 @@
     "id": "GD-081",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.37555244999930437,
+    "seconds": 0.3795873679991928,
     "top_rerank": null,
     "hits": [
      "[Điều 87, Khoản 3, Điểm a–b - 31/2024/QH15]",
@@ -3275,7 +3275,7 @@
     "id": "GD-082",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2173941270002615,
+    "seconds": 0.1951309329997457,
     "top_rerank": null,
     "hits": [
      "[Điều 235, Khoản 2 - 31/2024/QH15]",
@@ -3293,7 +3293,7 @@
     "id": "GD-083",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2596271890006392,
+    "seconds": 0.2827401149988873,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 101/2024/NĐ-CP]",
@@ -3311,7 +3311,7 @@
     "id": "GD-084",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.2749991130003764,
+    "seconds": 0.2924563879987545,
     "top_rerank": null,
     "hits": [
      "[Điều 252 - 31/2024/QH15]",
@@ -3329,7 +3329,7 @@
     "id": "GD-085",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3091473150007005,
+    "seconds": 0.3706110719995195,
     "top_rerank": null,
     "hits": [
      "[Điều 87, Khoản 3, Điểm a–b - 31/2024/QH15]",
@@ -3347,7 +3347,7 @@
     "id": "GD-086",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2589422030005153,
+    "seconds": 0.2098582600010559,
     "top_rerank": null,
     "hits": [
      "[Điều 182 - 31/2024/QH15]",
@@ -3365,7 +3365,7 @@
     "id": "GD-087",
     "type": "trap_expired",
     "domain": "dat_dai",
-    "seconds": 1.318087554000158,
+    "seconds": 1.2663730120002583,
     "top_rerank": null,
     "hits": [
      "[Điều 131 - 45/2013/QH13]",
@@ -3383,7 +3383,7 @@
     "id": "GD-088",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.21370298600049864,
+    "seconds": 0.19661208700017596,
     "top_rerank": null,
     "hits": [
      "[Điều 131 - 45/2013/QH13]",
@@ -3401,7 +3401,7 @@
     "id": "GD-089",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2734778859994549,
+    "seconds": 0.22737323000001197,
     "top_rerank": null,
     "hits": [
      "[Điều 22, Khoản 3, Điểm h–m - 102/2024/NĐ-CP]",
@@ -3419,7 +3419,7 @@
     "id": "GD-090",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.3050718760005111,
+    "seconds": 0.3801571270014392,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -3437,7 +3437,7 @@
     "id": "GD-091",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2361695409999811,
+    "seconds": 0.30718256600084715,
     "top_rerank": null,
     "hits": [
      "[Điều 44, Khoản 3 - 31/2024/QH15]",
@@ -3455,7 +3455,7 @@
     "id": "GD-092",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2399845429999914,
+    "seconds": 0.24097635399994033,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -3469,7 +3469,7 @@
     "id": "GD-093",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2420098450002115,
+    "seconds": 0.2708612879996508,
     "top_rerank": null,
     "hits": [
      "[Điều 20, Khoản 3 - 88/2024/NĐ-CP]",
@@ -3483,7 +3483,7 @@
     "id": "GD-094",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2362560030005625,
+    "seconds": 0.21535876800044207,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -3497,7 +3497,7 @@
     "id": "GD-095",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.19147621299998718,
+    "seconds": 0.21045781300017552,
     "top_rerank": null,
     "hits": [
      "[Điều 223 - 31/2024/QH15]",
@@ -3511,7 +3511,7 @@
     "id": "GD-096",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.16939616600029694,
+    "seconds": 0.15093628000067838,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -3525,7 +3525,7 @@
     "id": "GD-097",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2882030009996015,
+    "seconds": 0.22972735599978478,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 52/2014/QH13]",
@@ -3539,7 +3539,7 @@
     "id": "GD-098",
     "type": "injection",
     "domain": "giao_thong",
-    "seconds": 0.44992325000021083,
+    "seconds": 0.4430757709997124,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3557,7 +3557,7 @@
     "id": "GD-099",
     "type": "injection",
     "domain": "hon_nhan",
-    "seconds": 0.203866470000321,
+    "seconds": 0.19505152099918632,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -3575,7 +3575,7 @@
     "id": "GD-100",
     "type": "multi_hop",
     "domain": "hon_nhan",
-    "seconds": 0.2513668029996552,
+    "seconds": 0.22982484900057898,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -3597,7 +3597,7 @@
    "context_recall": 0.7606382978723404,
    "hit1": 0.40425531914893614,
    "mrr": 0.5445035460992907,
-   "seconds": 0.3756011929599481,
+   "seconds": 0.3009684493698842,
    "precision_by_type": {
     "colloquial": 0.4146666666666667,
     "compare": 0.42777777777777776,
@@ -3613,7 +3613,7 @@
     "id": "GD-001",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 8.07624678799948,
+    "seconds": 0.3038070530001278,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3631,7 +3631,7 @@
     "id": "GD-002",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3137766810004905,
+    "seconds": 0.40144420100114075,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3649,7 +3649,7 @@
     "id": "GD-003",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.32306740100011666,
+    "seconds": 0.3012746420008625,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -3667,13 +3667,13 @@
     "id": "GD-004",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.27117661600004794,
+    "seconds": 0.5060222039992368,
     "top_rerank": null,
     "hits": [
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
      "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
-     "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
+     "[Điều 33, Khoản 3 - 36/2024/QH15]",
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.0,
@@ -3685,7 +3685,7 @@
     "id": "GD-005",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6002017559994783,
+    "seconds": 0.6771030969994172,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 10 - 168/2024/NĐ-CP]",
@@ -3703,7 +3703,7 @@
     "id": "GD-006",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6102533120001681,
+    "seconds": 0.6100814330002322,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3721,7 +3721,7 @@
     "id": "GD-007",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.3483087650001835,
+    "seconds": 0.32760630100165145,
     "top_rerank": null,
     "hits": [
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
@@ -3739,7 +3739,7 @@
     "id": "GD-008",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3216368040002635,
+    "seconds": 0.27136142199924507,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 9 - 168/2024/NĐ-CP]",
@@ -3757,7 +3757,7 @@
     "id": "GD-009",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.28235353699983534,
+    "seconds": 0.22864551799830224,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3775,7 +3775,7 @@
     "id": "GD-010",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.20733164800003578,
+    "seconds": 0.23031035600070027,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 11 - 168/2024/NĐ-CP]",
@@ -3793,7 +3793,7 @@
     "id": "GD-011",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2330366240003059,
+    "seconds": 0.26617973300017184,
     "top_rerank": null,
     "hits": [
      "[Điều 44 - 100/2019/NĐ-CP]",
@@ -3811,7 +3811,7 @@
     "id": "GD-012",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.4700396569996883,
+    "seconds": 0.41034699299962085,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3829,7 +3829,7 @@
     "id": "GD-013",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2814708279993283,
+    "seconds": 0.231406467000852,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3847,7 +3847,7 @@
     "id": "GD-014",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2367730070000107,
+    "seconds": 0.2617664240005979,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
@@ -3865,7 +3865,7 @@
     "id": "GD-015",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.24300256799961062,
+    "seconds": 0.2592743999994127,
     "top_rerank": null,
     "hits": [
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
@@ -3883,7 +3883,7 @@
     "id": "GD-016",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.16901726899959613,
+    "seconds": 0.18679277200135402,
     "top_rerank": null,
     "hits": [
      "[Điều 59 - 36/2024/QH15]",
@@ -3901,7 +3901,7 @@
     "id": "GD-017",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.21354817999963416,
+    "seconds": 0.29406442000072275,
     "top_rerank": null,
     "hits": [
      "[Điều 57, Khoản 1, Điểm a–g - 36/2024/QH15]",
@@ -3919,7 +3919,7 @@
     "id": "GD-018",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.1694311219998781,
+    "seconds": 0.20406375099992147,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 36/2024/QH15]",
@@ -3937,7 +3937,7 @@
     "id": "GD-019",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.22051930199995695,
+    "seconds": 0.25586648100033926,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 2 - 168/2024/NĐ-CP]",
@@ -3955,7 +3955,7 @@
     "id": "GD-020",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2047421379993466,
+    "seconds": 0.2334335799987457,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 36/2024/QH15]",
@@ -3973,7 +3973,7 @@
     "id": "GD-021",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.22291450200009422,
+    "seconds": 0.23121083699879819,
     "top_rerank": null,
     "hits": [
      "[Điều 45 - 36/2024/QH15]",
@@ -3991,7 +3991,7 @@
     "id": "GD-022",
     "type": "multi_hop",
     "domain": "giao_thong",
-    "seconds": 0.4165026590007983,
+    "seconds": 0.4559843200004252,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -4009,7 +4009,7 @@
     "id": "GD-023",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.5742408449996219,
+    "seconds": 0.45432272299876786,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 8 - 100/2019/NĐ-CP]",
@@ -4027,14 +4027,14 @@
     "id": "GD-024",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.3163581750004596,
+    "seconds": 0.3960207199997967,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
+     "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 33, Khoản 2 - 36/2024/QH15]"
+     "[Điều 6, Khoản 2, Điểm k–m - 100/2019/NĐ-CP]",
+     "[Điều 21, Khoản 2 - 100/2019/NĐ-CP]"
     ],
     "context_precision": 0.25,
     "context_recall": 0.5,
@@ -4045,7 +4045,7 @@
     "id": "GD-025",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.20256841899936262,
+    "seconds": 0.2005519779995666,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 9 - 100/2019/NĐ-CP]",
@@ -4063,7 +4063,7 @@
     "id": "GD-026",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.5695746569999756,
+    "seconds": 0.5418597079988103,
     "top_rerank": null,
     "hits": [
      "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
@@ -4081,7 +4081,7 @@
     "id": "GD-027",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 1.1694243960000676,
+    "seconds": 1.2262416710000252,
     "top_rerank": null,
     "hits": [
      "[Điều 60 - 23/2008/QH12]",
@@ -4099,7 +4099,7 @@
     "id": "GD-028",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.2938952779995816,
+    "seconds": 0.22580484100035392,
     "top_rerank": null,
     "hits": [
      "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
@@ -4117,7 +4117,7 @@
     "id": "GD-029",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.238454160999936,
+    "seconds": 0.23793926100006502,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -4135,7 +4135,7 @@
     "id": "GD-030",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3062389010001425,
+    "seconds": 0.2684353709992138,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -4153,7 +4153,7 @@
     "id": "GD-031",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.28877776299941615,
+    "seconds": 0.22807200599891075,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -4171,7 +4171,7 @@
     "id": "GD-032",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2077355080000416,
+    "seconds": 0.2435615329995926,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 12/2022/NĐ-CP]",
@@ -4189,7 +4189,7 @@
     "id": "GD-033",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.27428666899959353,
+    "seconds": 0.2598855070009449,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -4207,7 +4207,7 @@
     "id": "GD-034",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.3294030480001311,
+    "seconds": 0.2628656269989733,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 12/2022/NĐ-CP]",
@@ -4225,7 +4225,7 @@
     "id": "GD-035",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.29147026900045603,
+    "seconds": 0.2178922879993479,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 4, Điểm a - 145/2020/NĐ-CP]",
@@ -4243,7 +4243,7 @@
     "id": "GD-036",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2491627299996253,
+    "seconds": 0.19709216699993704,
     "top_rerank": null,
     "hits": [
      "[Điều 139 - 45/2019/QH14]",
@@ -4261,7 +4261,7 @@
     "id": "GD-037",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.45215200499933417,
+    "seconds": 0.3605491170001187,
     "top_rerank": null,
     "hits": [
      "[Điều 35 - 45/2019/QH14]",
@@ -4279,7 +4279,7 @@
     "id": "GD-038",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2240902890007419,
+    "seconds": 0.23947245499948622,
     "top_rerank": null,
     "hits": [
      "[Điều 7 - 145/2020/NĐ-CP]",
@@ -4297,7 +4297,7 @@
     "id": "GD-039",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3403542710002512,
+    "seconds": 0.3617511069987813,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -4315,7 +4315,7 @@
     "id": "GD-040",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.30246502099998906,
+    "seconds": 0.2837790670000686,
     "top_rerank": null,
     "hits": [
      "[Điều 7 - 145/2020/NĐ-CP]",
@@ -4333,7 +4333,7 @@
     "id": "GD-041",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.24327325299964286,
+    "seconds": 0.24966371300070023,
     "top_rerank": null,
     "hits": [
      "[Điều 89, Khoản 1, Điểm d - 145/2020/NĐ-CP]",
@@ -4351,7 +4351,7 @@
     "id": "GD-042",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16643625599954248,
+    "seconds": 0.19660104000104184,
     "top_rerank": null,
     "hits": [
      "[Điều 46 - 45/2019/QH14]",
@@ -4369,7 +4369,7 @@
     "id": "GD-043",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18926131000080204,
+    "seconds": 0.19266899799913517,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -4387,7 +4387,7 @@
     "id": "GD-044",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.25573775799966825,
+    "seconds": 0.20612242100105505,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -4405,7 +4405,7 @@
     "id": "GD-045",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18153480799992394,
+    "seconds": 0.21208673100045417,
     "top_rerank": null,
     "hits": [
      "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
@@ -4423,7 +4423,7 @@
     "id": "GD-046",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23788829800014355,
+    "seconds": 0.2538897590002307,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -4441,7 +4441,7 @@
     "id": "GD-047",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.4395528929999273,
+    "seconds": 0.3807604550001997,
     "top_rerank": null,
     "hits": [
      "[Văn bản - 145/2020/NĐ-CP]",
@@ -4459,7 +4459,7 @@
     "id": "GD-048",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.21848466699975688,
+    "seconds": 0.22317732200099272,
     "top_rerank": null,
     "hits": [
      "[Điều 105 - 45/2019/QH14]",
@@ -4477,7 +4477,7 @@
     "id": "GD-049",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16246276299989404,
+    "seconds": 0.23051586600013252,
     "top_rerank": null,
     "hits": [
      "[Điều 106 - 45/2019/QH14]",
@@ -4495,7 +4495,7 @@
     "id": "GD-050",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18441154199990706,
+    "seconds": 0.1899580089993833,
     "top_rerank": null,
     "hits": [
      "[Điều 64 - 145/2020/NĐ-CP]",
@@ -4513,7 +4513,7 @@
     "id": "GD-051",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.248851088000265,
+    "seconds": 0.3304865529989911,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
@@ -4531,7 +4531,7 @@
     "id": "GD-052",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22905441300008533,
+    "seconds": 0.2518570899992483,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
@@ -4549,7 +4549,7 @@
     "id": "GD-053",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.25372288299968204,
+    "seconds": 0.2203543939995143,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 12/2022/NĐ-CP]",
@@ -4567,7 +4567,7 @@
     "id": "GD-054",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2411470470005952,
+    "seconds": 0.24181886500082328,
     "top_rerank": null,
     "hits": [
      "[Điều 122 - 45/2019/QH14]",
@@ -4585,7 +4585,7 @@
     "id": "GD-055",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.3493501920002018,
+    "seconds": 0.36682870900040143,
     "top_rerank": null,
     "hits": [
      "[Điều 169 - 45/2019/QH14]",
@@ -4603,7 +4603,7 @@
     "id": "GD-056",
     "type": "trap_expired",
     "domain": "lao_dong",
-    "seconds": 0.4542734200003906,
+    "seconds": 0.3248196189997543,
     "top_rerank": null,
     "hits": [
      "[Điều 240 - 10/2012/QH13]",
@@ -4621,7 +4621,7 @@
     "id": "GD-057",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2784964399997989,
+    "seconds": 0.2393137460003345,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 45/2019/QH14]",
@@ -4639,7 +4639,7 @@
     "id": "GD-058",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.19136182999955054,
+    "seconds": 0.19446073700055422,
     "top_rerank": null,
     "hits": [
      "[Điều 145 - 45/2019/QH14]",
@@ -4657,7 +4657,7 @@
     "id": "GD-059",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.29237143499995,
+    "seconds": 0.3097019029992225,
     "top_rerank": null,
     "hits": [
      "[Điều 20 - 45/2019/QH14]",
@@ -4675,7 +4675,7 @@
     "id": "GD-060",
     "type": "compare",
     "domain": "lao_dong",
-    "seconds": 0.6097404210004242,
+    "seconds": 0.6472810369996296,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 45/2019/QH14]",
@@ -4693,7 +4693,7 @@
     "id": "GD-061",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.3380909650004469,
+    "seconds": 0.31766797399905045,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 1, Điểm b–đ - 45/2019/QH14]",
@@ -4711,7 +4711,7 @@
     "id": "GD-062",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.20944401899942022,
+    "seconds": 0.17301928399865574,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -4729,7 +4729,7 @@
     "id": "GD-063",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.1843827089996921,
+    "seconds": 0.1798926380015473,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -4747,7 +4747,7 @@
     "id": "GD-064",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2376624399994398,
+    "seconds": 0.20306631899984495,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -4765,7 +4765,7 @@
     "id": "GD-065",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.16580420399986906,
+    "seconds": 0.14986941799907072,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
@@ -4783,7 +4783,7 @@
     "id": "GD-066",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2165559459999713,
+    "seconds": 0.21338283299883187,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
@@ -4801,7 +4801,7 @@
     "id": "GD-067",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.22606213499966543,
+    "seconds": 0.22559306800030754,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -4819,7 +4819,7 @@
     "id": "GD-068",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.25453699200079427,
+    "seconds": 0.25953395000033197,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -4837,7 +4837,7 @@
     "id": "GD-069",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.22676083799979097,
+    "seconds": 0.2082168670003739,
     "top_rerank": null,
     "hits": [
      "[Điều 61 - 52/2014/QH13]",
@@ -4855,7 +4855,7 @@
     "id": "GD-070",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.2287477919999219,
+    "seconds": 0.2898591020002641,
     "top_rerank": null,
     "hits": [
      "[Điều 97 - 52/2014/QH13]",
@@ -4873,7 +4873,7 @@
     "id": "GD-071",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.24559225300072285,
+    "seconds": 0.21633129299880238,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -4891,7 +4891,7 @@
     "id": "GD-072",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.20118703699972684,
+    "seconds": 0.18743518399969616,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -4909,7 +4909,7 @@
     "id": "GD-073",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.24730285499936144,
+    "seconds": 0.24590326900033688,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -4927,7 +4927,7 @@
     "id": "GD-074",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2745116109999799,
+    "seconds": 0.2710590129991033,
     "top_rerank": null,
     "hits": [
      "[Điều 95 - 52/2014/QH13]",
@@ -4945,7 +4945,7 @@
     "id": "GD-075",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.2062340190004761,
+    "seconds": 0.16580944399902364,
     "top_rerank": null,
     "hits": [
      "[Điều 55 - 52/2014/QH13]",
@@ -4963,7 +4963,7 @@
     "id": "GD-076",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.25665339499937545,
+    "seconds": 0.2398365669996565,
     "top_rerank": null,
     "hits": [
      "[Điều 116 - 52/2014/QH13]",
@@ -4981,7 +4981,7 @@
     "id": "GD-077",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3111138200001733,
+    "seconds": 0.39218659799917077,
     "top_rerank": null,
     "hits": [
      "[Điều 173 - 31/2024/QH15]",
@@ -4999,7 +4999,7 @@
     "id": "GD-078",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.25489152099999046,
+    "seconds": 0.2561965160002728,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -5017,7 +5017,7 @@
     "id": "GD-079",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.32376147600007243,
+    "seconds": 0.30546791599954304,
     "top_rerank": null,
     "hits": [
      "[Điều 176, Khoản 4 - 31/2024/QH15]",
@@ -5035,7 +5035,7 @@
     "id": "GD-080",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2917167790001258,
+    "seconds": 0.28698262400030217,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 1 - 31/2024/QH15]",
@@ -5053,7 +5053,7 @@
     "id": "GD-081",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.37528737699994963,
+    "seconds": 0.40282105499863974,
     "top_rerank": null,
     "hits": [
      "[Điều 85 - 31/2024/QH15]",
@@ -5071,7 +5071,7 @@
     "id": "GD-082",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.21562420400005067,
+    "seconds": 0.32373567200011166,
     "top_rerank": null,
     "hits": [
      "[Điều 235, Khoản 2 - 31/2024/QH15]",
@@ -5089,7 +5089,7 @@
     "id": "GD-083",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.27645119699991483,
+    "seconds": 0.2581324210004823,
     "top_rerank": null,
     "hits": [
      "[Điều 11 - 31/2024/QH15]",
@@ -5107,7 +5107,7 @@
     "id": "GD-084",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.2699399769999218,
+    "seconds": 0.3704666180001368,
     "top_rerank": null,
     "hits": [
      "[Điều 252 - 31/2024/QH15]",
@@ -5125,7 +5125,7 @@
     "id": "GD-085",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.333088181999301,
+    "seconds": 0.3600912830006564,
     "top_rerank": null,
     "hits": [
      "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]",
@@ -5143,7 +5143,7 @@
     "id": "GD-086",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.21897996899951977,
+    "seconds": 0.252386676000242,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 123/2024/NĐ-CP]",
@@ -5161,7 +5161,7 @@
     "id": "GD-087",
     "type": "trap_expired",
     "domain": "dat_dai",
-    "seconds": 1.310568305999368,
+    "seconds": 1.3280215180002415,
     "top_rerank": null,
     "hits": [
      "[Điều 130 - 45/2013/QH13]",
@@ -5179,7 +5179,7 @@
     "id": "GD-088",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.21783691400014504,
+    "seconds": 0.24974330199984252,
     "top_rerank": null,
     "hits": [
      "[Điều 130 - 45/2013/QH13]",
@@ -5197,7 +5197,7 @@
     "id": "GD-089",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.24557471400021313,
+    "seconds": 0.23795087799953762,
     "top_rerank": null,
     "hits": [
      "[Điều 173 - 31/2024/QH15]",
@@ -5215,7 +5215,7 @@
     "id": "GD-090",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.30368644099962694,
+    "seconds": 0.2847809659997438,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -5233,7 +5233,7 @@
     "id": "GD-091",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.21887482599959185,
+    "seconds": 0.22389413300152228,
     "top_rerank": null,
     "hits": [
      "[Điều 44, Khoản 3 - 31/2024/QH15]",
@@ -5251,7 +5251,7 @@
     "id": "GD-092",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2462691390001055,
+    "seconds": 0.2424101939996035,
     "top_rerank": null,
     "hits": [
      "[Điều 174 - 45/2019/QH14]",
@@ -5265,7 +5265,7 @@
     "id": "GD-093",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.24081067299994174,
+    "seconds": 0.24731735599925742,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 1 - 145/2020/NĐ-CP]",
@@ -5279,7 +5279,7 @@
     "id": "GD-094",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.22365238500060514,
+    "seconds": 0.21031363899965072,
     "top_rerank": null,
     "hits": [
      "[Điều 24, Khoản 3 - 12/2022/NĐ-CP]",
@@ -5293,7 +5293,7 @@
     "id": "GD-095",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.188441318000514,
+    "seconds": 0.21071078100067098,
     "top_rerank": null,
     "hits": [
      "[Điều 28, Khoản 1, Điểm a–đ - 101/2024/NĐ-CP]",
@@ -5307,7 +5307,7 @@
     "id": "GD-096",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.13954079799987085,
+    "seconds": 0.13479292299962253,
     "top_rerank": null,
     "hits": [
      "[Điều 115 - 145/2020/NĐ-CP]",
@@ -5321,7 +5321,7 @@
     "id": "GD-097",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.2355666650000785,
+    "seconds": 0.24080048999894643,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 52/2014/QH13]",
@@ -5335,7 +5335,7 @@
     "id": "GD-098",
     "type": "injection",
     "domain": "giao_thong",
-    "seconds": 0.4375148799999806,
+    "seconds": 0.4923821769989445,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -5353,7 +5353,7 @@
     "id": "GD-099",
     "type": "injection",
     "domain": "hon_nhan",
-    "seconds": 0.2118159490000835,
+    "seconds": 0.20078190899948822,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 126/2014/NĐ-CP]",
@@ -5371,7 +5371,7 @@
     "id": "GD-100",
     "type": "multi_hop",
     "domain": "hon_nhan",
-    "seconds": 0.25616628999978275,
+    "seconds": 0.22149055000045337,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -14777,14 +14777,14 @@
  },
  "vector_only": {
   "summary": {
-   "context_precision": 0.673049645390071,
-   "context_recall": 0.8138297872340425,
-   "hit1": 0.5638297872340425,
-   "mrr": 0.675709219858156,
-   "seconds": 0.2873325985700103,
+   "context_precision": 0.6836879432624113,
+   "context_recall": 0.8191489361702128,
+   "hit1": 0.574468085106383,
+   "mrr": 0.6863475177304964,
+   "seconds": 0.3076027610799429,
    "precision_by_type": {
     "colloquial": 0.5413333333333333,
-    "compare": 0.4166666666666667,
+    "compare": 0.75,
     "fact": 0.7737179487179487,
     "injection": 0.5,
     "multi_hop": 0.4375,
@@ -14797,7 +14797,7 @@
     "id": "GD-001",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.25803114399968763,
+    "seconds": 0.2616302970000106,
     "top_rerank": null,
     "hits": [
      "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
@@ -14815,7 +14815,7 @@
     "id": "GD-002",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2554690359993401,
+    "seconds": 0.30137479299992265,
     "top_rerank": null,
     "hits": [
      "[Điều 33, Khoản 2 - 36/2024/QH15]",
@@ -14833,7 +14833,7 @@
     "id": "GD-003",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3291118130000541,
+    "seconds": 0.3206190910004807,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -14851,14 +14851,14 @@
     "id": "GD-004",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2689719509999122,
+    "seconds": 0.6616967469999508,
     "top_rerank": null,
     "hits": [
-     "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
+     "[Điều 9, Khoản 6 - 36/2024/QH15]",
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 7, Khoản 2 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]",
-     "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]"
+     "[Điều 6, Khoản 5, Điểm h–q - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 5 - 168/2024/NĐ-CP]",
+     "[Điều 18, Khoản 7 - 168/2024/NĐ-CP]"
     ],
     "context_precision": 0.0,
     "context_recall": 0.0,
@@ -14869,7 +14869,7 @@
     "id": "GD-005",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6930498760002592,
+    "seconds": 0.6460131809999439,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 3 - 168/2024/NĐ-CP]",
@@ -14887,7 +14887,7 @@
     "id": "GD-006",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.6333804429996235,
+    "seconds": 0.6342524529991351,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 8 - 168/2024/NĐ-CP]",
@@ -14905,7 +14905,7 @@
     "id": "GD-007",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2640198219996819,
+    "seconds": 0.36160173200005374,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
@@ -14923,7 +14923,7 @@
     "id": "GD-008",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.28070115399987117,
+    "seconds": 0.2976734439998836,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
@@ -14941,7 +14941,7 @@
     "id": "GD-009",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.21930724300000293,
+    "seconds": 0.2721909350002534,
     "top_rerank": null,
     "hits": [
      "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]",
@@ -14959,7 +14959,7 @@
     "id": "GD-010",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.26382317099978536,
+    "seconds": 0.23940487800064147,
     "top_rerank": null,
     "hits": [
      "[Điều 6, Khoản 11 - 168/2024/NĐ-CP]",
@@ -14977,7 +14977,7 @@
     "id": "GD-011",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.3242990140006441,
+    "seconds": 0.23094578800009913,
     "top_rerank": null,
     "hits": [
      "[Điều 23, Khoản 3 - 168/2024/NĐ-CP]",
@@ -14995,7 +14995,7 @@
     "id": "GD-012",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.44129561299996567,
+    "seconds": 0.4530686859998241,
     "top_rerank": null,
     "hits": [
      "[Điều 33, Khoản 1 - 36/2024/QH15]",
@@ -15013,7 +15013,7 @@
     "id": "GD-013",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.24457347799943818,
+    "seconds": 0.22394127700135869,
     "top_rerank": null,
     "hits": [
      "[Điều 13, Khoản 1 - 168/2024/NĐ-CP]",
@@ -15031,7 +15031,7 @@
     "id": "GD-014",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.251014135999867,
+    "seconds": 0.25151482799992664,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -15049,7 +15049,7 @@
     "id": "GD-015",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.2661135899998044,
+    "seconds": 0.26026368999919214,
     "top_rerank": null,
     "hits": [
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
@@ -15067,7 +15067,7 @@
     "id": "GD-016",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.18707261400049902,
+    "seconds": 0.18632316599905607,
     "top_rerank": null,
     "hits": [
      "[Điều 59 - 36/2024/QH15]",
@@ -15085,7 +15085,7 @@
     "id": "GD-017",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2639969789997849,
+    "seconds": 0.214411809000012,
     "top_rerank": null,
     "hits": [
      "[Điều 59 - 36/2024/QH15]",
@@ -15103,7 +15103,7 @@
     "id": "GD-018",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.1918882609998036,
+    "seconds": 0.19407567700000072,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 36/2024/QH15]",
@@ -15121,7 +15121,7 @@
     "id": "GD-019",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2771611230000417,
+    "seconds": 0.43161614399832615,
     "top_rerank": null,
     "hits": [
      "[Điều 51, Khoản 2 - 168/2024/NĐ-CP]",
@@ -15139,7 +15139,7 @@
     "id": "GD-020",
     "type": "colloquial",
     "domain": "giao_thong",
-    "seconds": 0.21776135799973417,
+    "seconds": 0.23115027400126564,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 36/2024/QH15]",
@@ -15157,7 +15157,7 @@
     "id": "GD-021",
     "type": "fact",
     "domain": "giao_thong",
-    "seconds": 0.2284903640002085,
+    "seconds": 0.2483937100005278,
     "top_rerank": null,
     "hits": [
      "[Điều 10 - 36/2024/QH15]",
@@ -15175,7 +15175,7 @@
     "id": "GD-022",
     "type": "multi_hop",
     "domain": "giao_thong",
-    "seconds": 0.4678473379999559,
+    "seconds": 0.43440385699977924,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -15193,7 +15193,7 @@
     "id": "GD-023",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.45839972400062834,
+    "seconds": 0.4277018639986636,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
@@ -15211,25 +15211,25 @@
     "id": "GD-024",
     "type": "compare",
     "domain": "giao_thong",
-    "seconds": 0.3166821840004559,
+    "seconds": 0.3659981090004294,
     "top_rerank": null,
     "hits": [
-     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 6, Khoản 2, Điểm k–m - 100/2019/NĐ-CP]",
+     "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
      "[Điều 12, Khoản 5 - 168/2024/NĐ-CP]",
-     "[Điều 9, Khoản 4 - 168/2024/NĐ-CP]",
-     "[Điều 19 - 168/2024/NĐ-CP]",
-     "[Điều 14, Khoản 1 - 168/2024/NĐ-CP]"
+     "[Điều 18, Khoản 2 - 168/2024/NĐ-CP]",
+     "[Điều 21, Khoản 2 - 100/2019/NĐ-CP]"
     ],
-    "context_precision": 0.0,
-    "context_recall": 0.0,
-    "hit1": 0.0,
-    "mrr": 0.0
+    "context_precision": 1.0,
+    "context_recall": 0.5,
+    "hit1": 1.0,
+    "mrr": 1.0
    },
    {
     "id": "GD-025",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.17381318399930024,
+    "seconds": 0.1731076910000411,
     "top_rerank": null,
     "hits": [
      "[Điều 5, Khoản 10 - 100/2019/NĐ-CP]",
@@ -15247,7 +15247,7 @@
     "id": "GD-026",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 0.519035824000639,
+    "seconds": 0.5265597039997374,
     "top_rerank": null,
     "hits": [
      "[Điều 8, Khoản 7 - 168/2024/NĐ-CP]",
@@ -15265,7 +15265,7 @@
     "id": "GD-027",
     "type": "trap_expired",
     "domain": "giao_thong",
-    "seconds": 1.0611500090008121,
+    "seconds": 1.1498857149999822,
     "top_rerank": null,
     "hits": [
      "[Điều 60 - 23/2008/QH12]",
@@ -15283,7 +15283,7 @@
     "id": "GD-028",
     "type": "point_in_time",
     "domain": "giao_thong",
-    "seconds": 0.21967011099968659,
+    "seconds": 0.2560837660003017,
     "top_rerank": null,
     "hits": [
      "[Điều 11, Khoản 3 - 100/2019/NĐ-CP]",
@@ -15301,7 +15301,7 @@
     "id": "GD-029",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22027480299948365,
+    "seconds": 0.25869175500156416,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -15319,7 +15319,7 @@
     "id": "GD-030",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2710917909998898,
+    "seconds": 0.2839949200006231,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -15337,7 +15337,7 @@
     "id": "GD-031",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.22214187600002333,
+    "seconds": 0.21751320700059296,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -15355,7 +15355,7 @@
     "id": "GD-032",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.25888028200006374,
+    "seconds": 0.21033344699935697,
     "top_rerank": null,
     "hits": [
      "[Điều 26 - 45/2019/QH14]",
@@ -15373,7 +15373,7 @@
     "id": "GD-033",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23816718999933073,
+    "seconds": 0.3673026340002252,
     "top_rerank": null,
     "hits": [
      "[Điều 24 - 45/2019/QH14]",
@@ -15391,7 +15391,7 @@
     "id": "GD-034",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.2777388750000682,
+    "seconds": 0.28496248299961735,
     "top_rerank": null,
     "hits": [
      "[Điều 25 - 45/2019/QH14]",
@@ -15409,7 +15409,7 @@
     "id": "GD-035",
     "type": "multi_hop",
     "domain": "lao_dong",
-    "seconds": 0.2374602820000291,
+    "seconds": 0.2279198260002886,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 4 - 12/2022/NĐ-CP]",
@@ -15427,7 +15427,7 @@
     "id": "GD-036",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1710571149997122,
+    "seconds": 0.23948602799828222,
     "top_rerank": null,
     "hits": [
      "[Điều 139 - 45/2019/QH14]",
@@ -15445,7 +15445,7 @@
     "id": "GD-037",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.43426447399997414,
+    "seconds": 0.45601175900083035,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
@@ -15463,7 +15463,7 @@
     "id": "GD-038",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2255215790000875,
+    "seconds": 0.2312826439992932,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
@@ -15481,7 +15481,7 @@
     "id": "GD-039",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.38524125699950673,
+    "seconds": 0.4156426299996383,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
@@ -15499,7 +15499,7 @@
     "id": "GD-040",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2650703990002512,
+    "seconds": 0.29964865500005544,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 2 - 45/2019/QH14]",
@@ -15517,7 +15517,7 @@
     "id": "GD-041",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.2098932369999602,
+    "seconds": 0.24498881100043945,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 25 - 12/2022/NĐ-CP]",
@@ -15535,7 +15535,7 @@
     "id": "GD-042",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.15546496200022375,
+    "seconds": 0.1757344200013904,
     "top_rerank": null,
     "hits": [
      "[Điều 46 - 45/2019/QH14]",
@@ -15553,7 +15553,7 @@
     "id": "GD-043",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1758399920008742,
+    "seconds": 0.2014071840003453,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -15571,7 +15571,7 @@
     "id": "GD-044",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.20678859500003455,
+    "seconds": 0.27037627400022757,
     "top_rerank": null,
     "hits": [
      "[Điều 98 - 45/2019/QH14]",
@@ -15589,7 +15589,7 @@
     "id": "GD-045",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1844068000000334,
+    "seconds": 0.1943758399993385,
     "top_rerank": null,
     "hits": [
      "[Điều 55, Khoản 3 - 145/2020/NĐ-CP]",
@@ -15607,7 +15607,7 @@
     "id": "GD-046",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23714219100020273,
+    "seconds": 0.22297077099938178,
     "top_rerank": null,
     "hits": [
      "[Điều 107, Khoản 3 - 45/2019/QH14]",
@@ -15625,7 +15625,7 @@
     "id": "GD-047",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.37176203499984695,
+    "seconds": 0.3583168109998951,
     "top_rerank": null,
     "hits": [
      "[Điều 107, Khoản 3 - 45/2019/QH14]",
@@ -15643,7 +15643,7 @@
     "id": "GD-048",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1867513320003127,
+    "seconds": 0.20242682299976877,
     "top_rerank": null,
     "hits": [
      "[Điều 105 - 45/2019/QH14]",
@@ -15661,7 +15661,7 @@
     "id": "GD-049",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.1567139529997803,
+    "seconds": 0.1674327299988363,
     "top_rerank": null,
     "hits": [
      "[Điều 106 - 45/2019/QH14]",
@@ -15679,7 +15679,7 @@
     "id": "GD-050",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.16452491200016084,
+    "seconds": 0.18499700899883464,
     "top_rerank": null,
     "hits": [
      "[Điều 64 - 145/2020/NĐ-CP]",
@@ -15697,7 +15697,7 @@
     "id": "GD-051",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23925348600005236,
+    "seconds": 0.27241454900104145,
     "top_rerank": null,
     "hits": [
      "[Điều 112 - 45/2019/QH14]",
@@ -15715,7 +15715,7 @@
     "id": "GD-052",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.23636271000032139,
+    "seconds": 0.38944533999892883,
     "top_rerank": null,
     "hits": [
      "[Điều 113 - 45/2019/QH14]",
@@ -15733,7 +15733,7 @@
     "id": "GD-053",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.21587193200048205,
+    "seconds": 0.24836565000077826,
     "top_rerank": null,
     "hits": [
      "[Điều 17, Khoản 2, Điểm a–b - 12/2022/NĐ-CP]",
@@ -15751,7 +15751,7 @@
     "id": "GD-054",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.24303534799946647,
+    "seconds": 0.3146535030009545,
     "top_rerank": null,
     "hits": [
      "[Điều 122 - 45/2019/QH14]",
@@ -15769,7 +15769,7 @@
     "id": "GD-055",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.34281384000041726,
+    "seconds": 0.45274985499963805,
     "top_rerank": null,
     "hits": [
      "[Điều 169 - 45/2019/QH14]",
@@ -15787,7 +15787,7 @@
     "id": "GD-056",
     "type": "trap_expired",
     "domain": "lao_dong",
-    "seconds": 0.3103391209997426,
+    "seconds": 0.31641528499858396,
     "top_rerank": null,
     "hits": [
      "[Điều 187 - 10/2012/QH13]",
@@ -15805,7 +15805,7 @@
     "id": "GD-057",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.2513597690003735,
+    "seconds": 0.2579431590002059,
     "top_rerank": null,
     "hits": [
      "[Điều 18 - 45/2019/QH14]",
@@ -15823,7 +15823,7 @@
     "id": "GD-058",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.18243707300007372,
+    "seconds": 0.20569545299986203,
     "top_rerank": null,
     "hits": [
      "[Điều 146 - 45/2019/QH14]",
@@ -15841,7 +15841,7 @@
     "id": "GD-059",
     "type": "fact",
     "domain": "lao_dong",
-    "seconds": 0.27997582199986937,
+    "seconds": 0.3400917409999238,
     "top_rerank": null,
     "hits": [
      "[Điều 5, Khoản 5 - 145/2020/NĐ-CP]",
@@ -15859,7 +15859,7 @@
     "id": "GD-060",
     "type": "compare",
     "domain": "lao_dong",
-    "seconds": 0.6627330660003281,
+    "seconds": 0.6706050459997641,
     "top_rerank": null,
     "hits": [
      "[Điều 27 - 10/2012/QH13]",
@@ -15877,7 +15877,7 @@
     "id": "GD-061",
     "type": "colloquial",
     "domain": "lao_dong",
-    "seconds": 0.33719861500048864,
+    "seconds": 0.42017458800000895,
     "top_rerank": null,
     "hits": [
      "[Điều 36, Khoản 1, Điểm e - 45/2019/QH14]",
@@ -15895,7 +15895,7 @@
     "id": "GD-062",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.1432258679997176,
+    "seconds": 0.1747262619992398,
     "top_rerank": null,
     "hits": [
      "[Điều 8 - 52/2014/QH13]",
@@ -15913,7 +15913,7 @@
     "id": "GD-063",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.20641457500005345,
+    "seconds": 0.19411061500068172,
     "top_rerank": null,
     "hits": [
      "[Điều 8 - 52/2014/QH13]",
@@ -15931,7 +15931,7 @@
     "id": "GD-064",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.22464146299989807,
+    "seconds": 0.24341547099902527,
     "top_rerank": null,
     "hits": [
      "[Điều 8 - 52/2014/QH13]",
@@ -15949,7 +15949,7 @@
     "id": "GD-065",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.14597998099998222,
+    "seconds": 0.19057144099861034,
     "top_rerank": null,
     "hits": [
      "[Điều 3, Khoản 11 - 52/2014/QH13]",
@@ -15967,7 +15967,7 @@
     "id": "GD-066",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.22084013799940294,
+    "seconds": 0.2388282870015246,
     "top_rerank": null,
     "hits": [
      "[Điều 5 - 52/2014/QH13]",
@@ -15985,7 +15985,7 @@
     "id": "GD-067",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.2476953819996197,
+    "seconds": 0.24814279800011718,
     "top_rerank": null,
     "hits": [
      "[Điều 33 - 52/2014/QH13]",
@@ -16003,7 +16003,7 @@
     "id": "GD-068",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.25663865100068506,
+    "seconds": 0.2788098999990325,
     "top_rerank": null,
     "hits": [
      "[Điều 43 - 52/2014/QH13]",
@@ -16021,7 +16021,7 @@
     "id": "GD-069",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.20492790499974944,
+    "seconds": 0.38086367799951404,
     "top_rerank": null,
     "hits": [
      "[Điều 59, Khoản 3 - 52/2014/QH13]",
@@ -16039,7 +16039,7 @@
     "id": "GD-070",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.18222538899954088,
+    "seconds": 0.1861500459999661,
     "top_rerank": null,
     "hits": [
      "[Điều 51 - 52/2014/QH13]",
@@ -16057,7 +16057,7 @@
     "id": "GD-071",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.22500516399941262,
+    "seconds": 0.21675070399942342,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",
@@ -16075,7 +16075,7 @@
     "id": "GD-072",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.21095621900076367,
+    "seconds": 0.19536522700036585,
     "top_rerank": null,
     "hits": [
      "[Điều 58 - 52/2014/QH13]",
@@ -16093,7 +16093,7 @@
     "id": "GD-073",
     "type": "colloquial",
     "domain": "hon_nhan",
-    "seconds": 0.24411448699993343,
+    "seconds": 0.24441183300041303,
     "top_rerank": null,
     "hits": [
      "[Điều 111 - 52/2014/QH13]",
@@ -16111,7 +16111,7 @@
     "id": "GD-074",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.23653168600048957,
+    "seconds": 0.26299972600099863,
     "top_rerank": null,
     "hits": [
      "[Điều 95 - 52/2014/QH13]",
@@ -16129,7 +16129,7 @@
     "id": "GD-075",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.16345108099994832,
+    "seconds": 0.199560974000633,
     "top_rerank": null,
     "hits": [
      "[Điều 55 - 52/2014/QH13]",
@@ -16147,7 +16147,7 @@
     "id": "GD-076",
     "type": "fact",
     "domain": "hon_nhan",
-    "seconds": 0.28827829400051996,
+    "seconds": 0.2595708780008863,
     "top_rerank": null,
     "hits": [
      "[Điều 116 - 52/2014/QH13]",
@@ -16165,7 +16165,7 @@
     "id": "GD-077",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.31202274200040847,
+    "seconds": 0.3076109989997349,
     "top_rerank": null,
     "hits": [
      "[Điều 112, Khoản 4 - 102/2024/NĐ-CP]",
@@ -16183,7 +16183,7 @@
     "id": "GD-078",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.22830534799959423,
+    "seconds": 0.21118648599986045,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -16201,7 +16201,7 @@
     "id": "GD-079",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2800932300006025,
+    "seconds": 0.2769444370005658,
     "top_rerank": null,
     "hits": [
      "[Điều 176, Khoản 2 - 31/2024/QH15]",
@@ -16219,7 +16219,7 @@
     "id": "GD-080",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3097544550000748,
+    "seconds": 0.2904082749992085,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 1 - 31/2024/QH15]",
@@ -16237,7 +16237,7 @@
     "id": "GD-081",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3918106729997817,
+    "seconds": 0.36478490099943883,
     "top_rerank": null,
     "hits": [
      "[Điều 85 - 31/2024/QH15]",
@@ -16255,7 +16255,7 @@
     "id": "GD-082",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.21630993199960358,
+    "seconds": 0.19968746199992893,
     "top_rerank": null,
     "hits": [
      "[Điều 235, Khoản 2 - 31/2024/QH15]",
@@ -16273,7 +16273,7 @@
     "id": "GD-083",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.2639732810002897,
+    "seconds": 0.2711559449999186,
     "top_rerank": null,
     "hits": [
      "[Điều 11 - 31/2024/QH15]",
@@ -16291,7 +16291,7 @@
     "id": "GD-084",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.29324529899986373,
+    "seconds": 0.3493229519990564,
     "top_rerank": null,
     "hits": [
      "[Điều 1, Khoản 2 - 43/2024/QH15]",
@@ -16309,7 +16309,7 @@
     "id": "GD-085",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.3187477689998559,
+    "seconds": 0.3577983020004467,
     "top_rerank": null,
     "hits": [
      "[Điều 19, Khoản 1 - 88/2024/NĐ-CP]",
@@ -16327,7 +16327,7 @@
     "id": "GD-086",
     "type": "fact",
     "domain": "dat_dai",
-    "seconds": 0.23071878000064316,
+    "seconds": 0.2375780019992817,
     "top_rerank": null,
     "hits": [
      "[Điều 13, Khoản 3 - 123/2024/NĐ-CP]",
@@ -16345,7 +16345,7 @@
     "id": "GD-087",
     "type": "trap_expired",
     "domain": "dat_dai",
-    "seconds": 1.2611840680001478,
+    "seconds": 1.2947758939990308,
     "top_rerank": null,
     "hits": [
      "[Điều 128, Khoản 2 - 45/2013/QH13]",
@@ -16363,7 +16363,7 @@
     "id": "GD-088",
     "type": "point_in_time",
     "domain": "dat_dai",
-    "seconds": 0.20906222899975546,
+    "seconds": 0.1993345369992312,
     "top_rerank": null,
     "hits": [
      "[Điều 126, Khoản 1 - 45/2013/QH13]",
@@ -16381,7 +16381,7 @@
     "id": "GD-089",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2876814219998778,
+    "seconds": 0.23819207399901643,
     "top_rerank": null,
     "hits": [
      "[Điều 172, Khoản 1, Điểm a–c - 31/2024/QH15]",
@@ -16399,7 +16399,7 @@
     "id": "GD-090",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.37648248900040926,
+    "seconds": 0.27515896600016276,
     "top_rerank": null,
     "hits": [
      "[Điều 112, Khoản 5 - 102/2024/NĐ-CP]",
@@ -16417,7 +16417,7 @@
     "id": "GD-091",
     "type": "colloquial",
     "domain": "dat_dai",
-    "seconds": 0.2855852180000511,
+    "seconds": 0.2070050700003776,
     "top_rerank": null,
     "hits": [
      "[Điều 45, Khoản 4 - 31/2024/QH15]",
@@ -16435,7 +16435,7 @@
     "id": "GD-092",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.24646757200025604,
+    "seconds": 0.2268403500002023,
     "top_rerank": null,
     "hits": [
      "[Điều 172 - 45/2019/QH14]",
@@ -16449,7 +16449,7 @@
     "id": "GD-093",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.23129225299999234,
+    "seconds": 0.30451153899957717,
     "top_rerank": null,
     "hits": [
      "[Điều 54, Khoản 2 - 145/2020/NĐ-CP]",
@@ -16463,7 +16463,7 @@
     "id": "GD-094",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.20204528700014635,
+    "seconds": 0.22766899699854548,
     "top_rerank": null,
     "hits": [
      "[Điều 24, Khoản 3 - 12/2022/NĐ-CP]",
@@ -16477,7 +16477,7 @@
     "id": "GD-095",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.1837246300001425,
+    "seconds": 0.1957887219996337,
     "top_rerank": null,
     "hits": [
      "[Điều 49, Khoản 3 - 126/2014/NĐ-CP]",
@@ -16491,7 +16491,7 @@
     "id": "GD-096",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.13385515699974349,
+    "seconds": 0.14448175899997295,
     "top_rerank": null,
     "hits": [
      "[Điều 115 - 145/2020/NĐ-CP]",
@@ -16505,7 +16505,7 @@
     "id": "GD-097",
     "type": "out_of_scope",
     "domain": "ngoai_pham_vi",
-    "seconds": 0.24341467799968086,
+    "seconds": 0.24164326999925834,
     "top_rerank": null,
     "hits": [
      "[Điều 4, Khoản 54 - 12/2022/NĐ-CP]",
@@ -16519,7 +16519,7 @@
     "id": "GD-098",
     "type": "injection",
     "domain": "giao_thong",
-    "seconds": 0.4314445359996171,
+    "seconds": 0.5259326370014605,
     "top_rerank": null,
     "hits": [
      "[Điều 7, Khoản 1, Điểm a–e - 168/2024/NĐ-CP]",
@@ -16537,7 +16537,7 @@
     "id": "GD-099",
     "type": "injection",
     "domain": "hon_nhan",
-    "seconds": 0.20656651399986004,
+    "seconds": 0.20613134100130992,
     "top_rerank": null,
     "hits": [
      "[Điều 8 - 52/2014/QH13]",
@@ -16555,7 +16555,7 @@
     "id": "GD-100",
     "type": "multi_hop",
     "domain": "hon_nhan",
-    "seconds": 0.2548367409999628,
+    "seconds": 0.23178121500131965,
     "top_rerank": null,
     "hits": [
      "[Điều 81 - 52/2014/QH13]",

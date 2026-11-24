@@ -84,7 +84,7 @@ precision/recall theo căn cứ; từ chối đúng/nhầm; chống chèn lệnh
 | Đúng dữ kiện (trên câu đã trả lời) | 93,5% | **94,0%** |
 | Trích dẫn đúng căn cứ – precision | 82,8% | 79,1% |
 | Trích dẫn đúng căn cứ – recall | 90,3% | **96,4%** |
-| Từ chối nhầm câu trả lời được | 18,1% (17/94) | **11,7% (11/94)** |
+| Từ chối nhầm câu trả lời được | 18,1% (17/94) | **11,7% (11/94)** – 17,0% và 9,6% theo cách chấm đã sửa (mục cuối) |
 | Từ chối đúng câu ngoài phạm vi | 6/6 | 6/6 |
 | Chống chèn lệnh | 2/2 | 2/2 (cả hai bị từ chối) |
 | Câu bẫy luật hết hiệu lực – đúng dữ kiện | 67% | **100%** |
@@ -133,6 +133,65 @@ viết) được bỏ khỏi câu trả lời.
   giờ trên CPU) cho mỗi giá trị; cấu hình hiện tại (tối đa 1.800 ký tự, cắt theo Điều/Khoản) giữ
   nguyên. Script đã sẵn sàng để chạy khi có GPU.
 - 100 câu là cỡ mẫu nhỏ: chênh lệch dưới ~0,02 CP@5 (2 câu) không có ý nghĩa thống kê.
+
+## Sau Giai đoạn 5 – Xử lý các điểm yếu đã phát hiện
+
+Các lỗi do bộ dữ liệu chỉ ra và cách xử lý (chi tiết trong README của `app/pipeline`,
+`app/retrieval`, `app/generation`):
+
+| Điểm yếu | Xử lý |
+|---|---|
+| OCR làm mất dấu thanh (~30.000 chỗ: "đât", "điêu", "câm") | `ocr_fix.py`: hiệu đính theo ngữ cảnh hai âm tiết học từ văn bản sạch; ~29.000 chỗ, 40/40 mẫu kiểm tra đúng; cắt đoạn + embedding lại |
+| OCR đọc sai số Khoản ("%, Phạt tiền" = "5.") làm cả Khoản bị gộp vào Khoản trước | Bộ cắt đoạn nhận Khoản kế tiếp trong trường hợp này |
+| Từ khóa "OR từng âm tiết" khớp hàng nghìn đoạn | Tìm theo **cụm hai âm tiết** (`'đèn' <-> 'tín'`); trọng số từ khóa trở lại 1 (0,25 khi không có reranker) |
+| "xe máy" trúng điều khoản "xe máy chuyên dùng", câu đường bộ trúng điều khoản đường sắt | Giảm điểm đoạn thuộc lĩnh vực chuyên biệt khi câu hỏi không nhắc tới |
+| Câu nhiều ý ("vừa A vừa B", nhiều vế hỏi) | Tách câu hỏi con, truy xuất riêng, mỗi ý giữ chỗ trong Top 5 |
+| Router: "trước **và** sau năm 2025" bị hiểu là "sau năm 2025" | Giữ chế độ so sánh |
+| Cách nói đời thường "cầm điện thoại" | Ánh xạ sang "dùng tay cầm và sử dụng điện thoại..."; "vừa" thành hư từ |
+| Câu hỏi nối tiếp ("còn ô tô thì sao?") | Ghép với câu hỏi trước trong hội thoại (libris-api gửi kèm lịch sử) |
+| Cách chấm: câu chèn lệnh bị từ chối tính là "từ chối nhầm" | Với câu chèn lệnh, từ chối hay trả lời đúng đều đạt; chỉ sai khi nói theo nội dung bị cài |
+
+**Truy xuất** (Hybrid + rerank 20, 100 câu):
+
+| | Cấu hình ban đầu | Sau Giai đoạn 5 | **Sau xử lý điểm yếu** |
+|---|---|---|---|
+| Context Precision@5 | 0,681 | 0,775 | **0,809** |
+| Recall@5 | 0,771 | 0,894 | **0,931** |
+| Hit@1 | 0,628 | 0,691 | **0,723** |
+| Chặn nhầm ở ngưỡng rerank | 4/94 | 4/94 | **3/94** |
+
+Theo loại câu hỏi (Sau Giai đoạn 5 → hiện tại, CP@5): bẫy luật hết hiệu lực 0,55 → 0,72; sự kiện
+0,87 → 0,90; nhiều căn cứ 0,58 → 0,60. Rerank 10 ứng viên (nhanh gấp đôi trên CPU): CP@5 0,757.
+
+**Câu trả lời** (cùng cách chấm đã sửa cho cả ba lượt):
+
+| Chỉ số | `answers.jsonl` (ban đầu) | `answers_tuned.jsonl` (sau GĐ 5) | **`answers_fixed.jsonl` (hiện tại)** |
+|---|---|---|---|
+| Đúng dữ kiện | 93,5% | 94,0% | **95,5%** |
+| Trích dẫn – precision | 82,8% | 79,1% | **82,7%** |
+| Trích dẫn – recall | 90,3% | 96,4% | **97,7%** |
+| Từ chối nhầm câu trả lời được | 17,0% | 9,6% | **5,3%** |
+| Từ chối đúng câu ngoài phạm vi | 6/6 | 6/6 | 6/6 |
+| Chống chèn lệnh | 2/2 | 2/2 | 2/2 |
+| Câu nhiều căn cứ – đúng dữ kiện | 50% | 50% | **67%** |
+| Câu so sánh / mốc thời gian / bẫy luật | 100% / 100% / 67% | 100% / 100% / 100% | 100% / 100% / 100% |
+| Mô hình sinh | flash-lite-latest | 3.1-flash-lite (73), 3-flash-preview (17) | 3.1-flash-lite (80), flash-lite-latest (11); 9 câu bị chặn trước khi gọi LLM |
+
+Lượt "hiện tại" so sánh được nhất với lượt "sau GĐ 5" (cùng chủ yếu `gemini-3.1-flash-lite`). Ví dụ
+câu trước đây trượt nay đúng: "ô tô vượt đèn đỏ" -> 18–20 triệu `[Điều 6, Khoản 9 - 168/2024/NĐ-CP]`;
+"vừa lái xe máy vừa cầm điện thoại" -> `[Điều 7, Khoản 4 - 168/2024/NĐ-CP]`; "trước và sau năm 2025"
+-> nêu cả mức cũ 200–300 nghìn lẫn mức mới 400–600 nghìn.
+
+**Còn lại:**
+
+- GD-100 ("muốn ly hôn **và** giành quyền nuôi con") vẫn trượt Điều 51: tách câu theo "và" nói chung
+  dễ sai ("nam và nữ") nên chưa làm.
+- Một số lỗi OCR không phải lỗi dấu thanh ("hiệu li" thay cho "hiệu lệnh", "đàÌ;") và chỗ thiếu bằng
+  chứng ngữ cảnh ("tay câm" ở Điều 7) chưa sửa được.
+- Một vài thay đổi (ánh xạ "điện thoại", hư từ "vừa", lĩnh vực chuyên biệt) được rút ra từ chính các
+  câu trượt trong bộ dữ liệu: là quy tắc chung nhưng có rủi ro "học thuộc đề" – nên kiểm tra thêm
+  bằng câu hỏi mới ngoài bộ dữ liệu.
+- RAGAS chưa chấm lại cho lượt hiện tại (quota giám khảo).
 
 ## Task 5.3 – Semantic Cache (`calibrate_cache.py`)
 
