@@ -277,6 +277,9 @@ def report(items: list[GoldenItem]) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--dataset", type=Path, default=ROOT / "golden.jsonl", help="VD eval/holdout.jsonl"
+    )
     parser.add_argument("cmd", choices=["generate", "ragas", "report"])
     parser.add_argument("--limit", type=int)
     parser.add_argument("--sleep", type=float, default=4.0, help="giây nghỉ giữa các lượt gọi LLM")
@@ -291,14 +294,14 @@ def main() -> None:
         ANSWERS = RESULTS / f"answers_{args.run}.jsonl"
         RAGAS = RESULTS / f"ragas_{args.run}.jsonl"
         REPORT = RESULTS / f"answers_report_{args.run}.json"
-    items = load_golden()
+    items = load_golden(args.dataset)
     if args.ids:
         items = [i for i in items if i.id in set(args.ids)]
     if args.cmd == "generate":
         generate(items, args.limit, args.sleep)
     elif args.cmd == "ragas":
         asyncio.run(_ragas(items, args.limit, args.judge_model, args.sleep))
-    print(json.dumps(report(load_golden()), ensure_ascii=False, indent=1))
+    print(json.dumps(report(load_golden(args.dataset)), ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":

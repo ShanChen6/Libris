@@ -162,11 +162,14 @@ def run(config: Config, items, conn, embedder, reranker, k: int, min_score: floa
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--dataset", type=Path, default=ROOT / "golden.jsonl", help="VD eval/holdout.jsonl"
+    )
     parser.add_argument("--configs", nargs="*", default=list(CONFIGS), choices=list(CONFIGS))
     parser.add_argument("-k", type=int, default=5, help="số đoạn đưa cho LLM")
     args = parser.parse_args()
     settings = get_settings()
-    items = load_golden()
+    items = load_golden(args.dataset)
     embedder = get_embedder()
     reranker = None
     if any(CONFIGS[c].rerank for c in args.configs):
@@ -186,7 +189,8 @@ def main() -> None:
                   f"{s['context_recall']:.3f}  Hit@1 {s['hit1']:.3f}  MRR {s['mrr']:.3f}  "
                   f"{s['seconds']:.2f}s/câu  ({time.perf_counter() - started:.0f}s)",
                   flush=True)  # fmt: skip
-    out = ROOT / "results" / "retrieval.json"
+    suffix = "" if args.dataset.name == "golden.jsonl" else f"_{args.dataset.stem}"
+    out = ROOT / "results" / f"retrieval{suffix}.json"
     previous = json.loads(out.read_text()) if out.exists() else {}
     out.write_text(json.dumps(previous | results, ensure_ascii=False, indent=1))
     print(f"\nChi tiết: {out}")

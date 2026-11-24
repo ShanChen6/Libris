@@ -24,7 +24,8 @@ from app.core.config import get_settings  # noqa: E402
 
 
 def main() -> int:
-    items = load_golden()
+    # Mặc định golden.jsonl; bộ khác: check_golden.py eval/holdout.jsonl
+    items = load_golden(Path(sys.argv[1])) if len(sys.argv) > 1 else load_golden()
     errors, notes = [], []
     ids = Counter(i.id for i in items)
     errors += [f"Trùng id {k}" for k, v in ids.items() if v > 1]

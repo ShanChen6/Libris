@@ -40,7 +40,8 @@ target-version = "py312"
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff.lint.per-file-ignores]
-"eval/build_golden.py" = ["E501"]  # dữ liệu: mỗi câu hỏi một dòng cho dễ rà soát
+"eval/build_golden.py" = ["E501"]
+"eval/build_holdout.py" = ["E501"]  # dữ liệu: mỗi câu hỏi một dòng cho dễ rà soát
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
