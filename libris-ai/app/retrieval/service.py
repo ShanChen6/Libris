@@ -12,6 +12,7 @@ from datetime import date
 import psycopg
 
 from app.pipeline.embedding import Embedder
+from app.retrieval.decompose import sub_questions
 from app.retrieval.expansion import expand_query
 from app.retrieval.hybrid import FusedHit, SearchWeights, hybrid_search
 from app.retrieval.rerank import Reranker, rerank
@@ -56,6 +57,12 @@ def retrieve(
     weights: SearchWeights | None = None,
 ) -> Retrieval:
     plan = plan or route(query)
+    subs = sub_questions(query) if plan.mode != "compare" else [query]
+    if len(subs) > 1 and reranker is not None:
+        return _retrieve_parts(
+            conn, query, subs, embedder, reranker, candidates=candidates, top_n=top_n,
+            plan=plan, weights=weights,
+        )  # fmt: skip
     # Router phân tích câu gốc; tìm kiếm và rerank dùng câu đã nối thuật ngữ pháp lý
     # (đo trên eval/retrieval_smoke.py: MRR 0,77 với câu gốc -> 0,87 với câu mở rộng)
     # Câu so sánh: tìm theo nội dung chính, bỏ các cụm "so sánh ... cũ và mới"
@@ -108,3 +115,41 @@ def balance_old_and_new(hits: list[FusedHit], top_n: int) -> list[FusedHit]:
         chosen.add(id(h))
     picked = [h for h in hits if id(h) in chosen]
     return picked[:top_n]
+
+
+def _retrieve_parts(
+    conn: psycopg.Connection,
+    query: str,
+    subs: list[str],
+    embedder: Embedder,
+    reranker: Reranker,
+    *,
+    candidates: int,
+    top_n: int,
+    plan: RetrievalPlan,
+    weights: SearchWeights | None,
+) -> Retrieval:
+    """Câu hỏi nhiều ý: truy xuất + rerank riêng từng câu hỏi con, mỗi ý giữ tối thiểu
+    ⌊top_n / số ý⌋ chỗ trong Top N, phần còn lại theo điểm rerank."""
+    ranked: list[list[FusedHit]] = []
+    expanded_parts = []
+    for sub in subs:
+        expanded = expand_query(sub)
+        expanded_parts.append(expanded)
+        vector = embedder.encode([expanded])[0]
+        hits = hybrid_search(
+            conn, expanded, vector, top_k=candidates, plan=plan, weights=weights
+        ).hits
+        ranked.append(rerank(expanded, hits, reranker, top_n=len(hits)))
+    quota = max(1, top_n // len(subs))
+    chosen: dict[str, FusedHit] = {}
+    for hits in ranked:
+        for h in [h for h in hits if h.chunk_id not in chosen][:quota]:
+            chosen[h.chunk_id] = h
+    rest = sorted((h for hits in ranked for h in hits), key=lambda h: -(h.rerank_score or 0))
+    for h in rest:
+        if len(chosen) >= top_n:
+            break
+        chosen.setdefault(h.chunk_id, h)
+    picked = sorted(chosen.values(), key=lambda h: -(h.rerank_score or 0))[:top_n]
+    return Retrieval(query, " | ".join(expanded_parts), plan, picked, True)
