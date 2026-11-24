@@ -71,6 +71,13 @@ def test_point_in_time(query: str, period: tuple[date, date]) -> None:
     assert plan.period == period
 
 
+def test_before_and_after_a_date_is_a_comparison() -> None:
+    plan = route("Mức phạt không đội mũ bảo hiểm trước và sau năm 2025 khác nhau thế nào?")
+    assert plan.mode == "compare" and plan.period is None and "EXPIRED" in plan.statuses
+    # Chỉ hỏi một phía: vẫn là mốc thời gian
+    assert route("Sau năm 2025 không đội mũ bảo hiểm phạt bao nhiêu?").mode == "point_in_time"
+
+
 def test_year_inside_text_is_not_a_period() -> None:
     assert route("Bộ luật Lao động năm 2019 quy định thử việc thế nào?").period is None
     assert route("Phạt từ 400.000 đồng, áp dụng từ 2025").period is None

@@ -18,6 +18,7 @@ SYNONYMS: dict[str, str] = {
     "vượt đèn vàng": "không chấp hành hiệu lệnh của đèn tín hiệu giao thông",
     "xe máy": "xe mô tô xe gắn máy",
     "bằng lái": "giấy phép lái xe",
+    "điện thoại": "dùng tay cầm và sử dụng điện thoại hoặc các thiết bị điện tử khác",
     "say rượu": "nồng độ cồn",
     "uống rượu": "nồng độ cồn",
     "rượu bia": "nồng độ cồn",

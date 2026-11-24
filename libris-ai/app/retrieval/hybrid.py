@@ -37,7 +37,7 @@ STOPWORDS = frozenset(
     """
     à ạ ai anh bao bị bởi các cái cần cho chị chỉ có của cũng đã đang đâu để đến đó em gì hay
     hãy hỏi hoặc khi không là làm lại mà mình nào này nên nếu như những nhiêu ơi phải ra rằng
-    rồi sao sẽ tại thế thì tôi trên trong từ và vậy vào với xin được bạn
+    rồi sao sẽ tại thế thì tôi trên trong từ và vậy vào với xin được bạn vừa
     """.split()
 )
 

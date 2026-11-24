@@ -46,6 +46,9 @@ _COMPARE_RE = re.compile(
         ]
     )
 )  # fmt: skip
+_BEFORE_AND_AFTER_RE = re.compile(
+    fz("trước") + r"\s+(?:" + fz("và") + "|" + fz("với") + r"|/)\s+" + fz("sau"), re.IGNORECASE
+)
 _PENDING_RE = re.compile("|".join(fz(p) for p in ["sắp có hiệu lực", "sẽ có hiệu lực", "sắp tới"]))
 # Mốc thời gian: chỉ nhận khi có từ dẫn để không nhầm với năm trong số hiệu / tên văn bản
 _DATE_CUE = r"(?:" + "|".join(
@@ -156,6 +159,11 @@ def route(query: str) -> RetrievalPlan:
         plan.reasons.append("Câu hỏi so sánh / về quy định cũ: tìm cả văn bản hết hiệu lực")
 
     found = _period(scrubbed)
+    if found and plan.mode == "compare" and _BEFORE_AND_AFTER_RE.search(scrubbed):
+        # "trước và sau năm 2025 khác nhau thế nào": so sánh hai phía của mốc, không phải hỏi
+        # riêng thời điểm "sau năm 2025" (Golden Dataset GD-024)
+        plan.reasons.append("So sánh trước và sau một mốc thời gian: giữ chế độ so sánh")
+        found = None
     if found:
         plan.period, text = found
         plan.mode = "point_in_time"
