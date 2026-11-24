@@ -167,9 +167,10 @@ def main() -> None:
                     "expect_refusal": False,
                 }
             )
+        # Ghi sau mỗi lượt: bị ngắt giữa chừng (hết quota) vẫn giữ được phần đã sinh
+        OUT.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in items))
         print(f"{len(items)}/{args.count}", flush=True)
         time.sleep(args.sleep)
-    OUT.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in items))
     print(f"Đã ghi {len(items)} câu vào {OUT}")
     if overlap:
         print(f"lexical_overlap trung bình: {sum(overlap) / len(overlap):.2f}")
