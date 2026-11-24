@@ -106,6 +106,9 @@
   - Deploy PostgreSQL (`pgvector`) lên **Supabase** hoặc **Neon**.
   - Đóng gói Docker cho dịch vụ `libris-ai` (FastAPI) và `libris-api` (NestJS), triển khai lên **Render** hoặc **Railway**.
   - Deploy giao diện `libris-web` (Next.js) lên **Vercel**.
-- [ ] **Task 6.2: Hoàn thiện Báo cáo & Kịch bản Demo**
+  - *Đã chuẩn bị (chạy thử bằng Docker Compose): Dockerfile cho `libris-ai`, `libris-api`; `render.yaml`;
+    `scripts/migrate_to_cloud.sh`; hướng dẫn [DEPLOY.md](DEPLOY.md). Còn lại: tạo tài khoản và deploy
+    theo hướng dẫn.*
+- [x] **Task 6.2: Hoàn thiện Báo cáo & Kịch bản Demo**
   - Trình bày sơ đồ kiến trúc Hybrid Search, cơ chế kiểm soát hiệu lực văn bản theo thời gian và bảng kết quả đánh giá RAGAS.
   - Chuẩn bị kịch bản Demo thực tế: Hỏi tình huống giao thông/đất đai -> Bấm vào trích dẫn để đối chiếu nguyên văn điều luật -> Thử nghiệm hỏi quy định cũ đã hết hiệu lực để chứng minh hệ thống tự động cập nhật theo luật mới nhất.

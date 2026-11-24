@@ -66,13 +66,13 @@ Kiểm tra: `https://<libris-api>.onrender.com/health` trả `{"status":"ok"}`.
 
 ### RAM của libris-ai (đo thực tế, CPU)
 
-Chạy image production với giới hạn RAM bằng `docker update --memory`, gửi câu hỏi mới (chưa có
-trong cache):
+Chạy image production với giới hạn RAM bằng `docker update --memory`, gửi liên tiếp các câu hỏi mới
+(chưa có trong cache) và một lần phân tích hợp đồng:
 
 | Giới hạn RAM | Kết quả |
 |---|---|
-| 2 GB | trả lời bình thường, 16,7 giây, không bị OOM |
-| 1,5 GB | vẫn trả lời (14,9 giây) – trọng số mô hình được ánh xạ từ file nên có thể nhả bớt |
+| 2 GB | 5 câu hỏi mới (11–14 giây mỗi câu) + phân tích hợp đồng (70 giây): ổn định, dùng tối đa ~1,2 GB |
+| 1,5 GB | trả lời được câu đầu nhưng **tiến trình bị dừng và khởi động lại** sau vài câu – không đủ |
 
 Khuyến nghị gói **≥ 2 GB** (Render `standard`) để còn dư cho tải văn bản/phân tích hợp đồng
 (OCR). Máy nhỏ hơn: đặt `RERANKER_ENABLED=false` (bỏ mô hình reranker) – chất lượng truy xuất giảm

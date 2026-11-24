@@ -21,7 +21,10 @@ Libris/
 ├── db/                  # Migration SQL (dbmate) + schema.sql – xem db/README.md
 ├── docker/postgres/     # Script khởi tạo PostgreSQL (CREATE EXTENSION vector)
 ├── docker-compose.yml   # PostgreSQL 17 + pgvector, Redis
-└── docs/ROADMAP.md
+├── docker-compose.prod.yml  # bản production của libris-ai + libris-api (Docker)
+├── render.yaml          # Render Blueprint – xem docs/DEPLOY.md
+├── scripts/             # migrate_to_cloud.sh: chuyển kho văn bản sang Neon/Supabase
+└── docs/                # ROADMAP, REPORT (báo cáo), DEMO (kịch bản), DEPLOY (triển khai), demo/
 ```
 
 ## Chạy môi trường phát triển
@@ -105,6 +108,7 @@ Chi tiết nguồn dữ liệu, cách OCR bản scan và định dạng đầu r
 ## Tài liệu
 
 - [Lộ trình triển khai (12 tuần)](docs/ROADMAP.md)
+- [Báo cáo dự án](docs/REPORT.md) · [Kịch bản demo](docs/DEMO.md) · [Triển khai lên cloud](docs/DEPLOY.md)
 - Hỏi đáp có trích dẫn: [libris-ai/app/generation/README.md](libris-ai/app/generation/README.md)
 - Phân tích hợp đồng: [libris-ai/app/analysis/README.md](libris-ai/app/analysis/README.md)
 - Đánh giá (Golden Dataset, RAGAS, Semantic Cache): [libris-ai/eval/README.md](libris-ai/eval/README.md)
