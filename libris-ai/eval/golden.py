@@ -62,3 +62,28 @@ def matches(ref: Reference, document: str, article: str | None, clause: str | No
     if norm(document) != norm(ref.document) or not article or norm(article) != norm(ref.article):
         return False
     return ref.clause is None or clause is None or norm(clause) == norm(ref.clause)
+
+
+_NEGATION_RE = re.compile(
+    r"(không|chưa|chẳng|sai|không đúng|không chính xác|không có căn cứ|bác bỏ)[^.!?\n]{0,60}$"
+)
+
+
+_REFUTED_RE = re.compile(r"(là|thì)?\s*(không chính xác|không đúng|sai)")
+
+
+def asserts(text: str, phrase: str) -> bool:
+    """Câu trả lời có **khẳng định** ``phrase`` không: bỏ qua các lần xuất hiện trong câu phủ định
+    ("không có căn cứ để khẳng định nữ đủ 16 tuổi là được kết hôn" không phải khẳng định)."""
+    t = norm(text)
+    for alt in phrase.split("|"):
+        p = norm(alt)
+        start = t.find(p)
+        while start >= 0:
+            after = t[start + len(p) : start + len(p) + 60].split(".")[0]
+            if not _NEGATION_RE.search(t[max(0, start - 80) : start]) and not _REFUTED_RE.search(
+                after
+            ):
+                return True
+            start = t.find(p, start + 1)
+    return False
