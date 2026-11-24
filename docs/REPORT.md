@@ -196,6 +196,7 @@ bất cứ lúc nào.
 | Bộ câu tự động do LLM viết từ chính đoạn luật; Golden/hold-out đã dùng khi tinh chỉnh | Một bộ câu hỏi do người khác soạn (hoặc câu hỏi thật của người dùng), giữ kín, chỉ dùng để đo trước mỗi lần phát hành |
 | Lớp kiểm tra áp dụng đúng Khoản chỉ hiểu một số đơn vị (người chở theo, km/h, nồng độ cồn, tuổi) và số tiền | Bổ sung đơn vị khi mở rộng lĩnh vực (diện tích, thời hạn...) |
 | Câu hỏi nối tiếp được nhận diện bằng quy tắc | Viết lại câu hỏi bằng LLM khi có quota |
+| Câu hỏi đời thường khác xa từ ngữ của luật ("nghỉ ngang", "đi trễ bị trừ lương"): Điều đúng không lọt vào 20 ứng viên | Đã thử cho LLM viết lại câu hỏi bằng thuật ngữ pháp lý rồi tìm bằng cả hai câu (`rewrite.py`): không cải thiện (Golden Recall@5 0,936 -> 0,941, Hit@1 0,713 -> 0,702), tốn thêm một lần gọi LLM -> không bật. Hướng tiếp: lấy thêm ứng viên (40–50) khi có GPU, hoặc bổ sung bảng ánh xạ thuật ngữ từ câu hỏi thật |
 | Token đăng nhập lưu trong `localStorage` | Chuyển sang session cookie `HttpOnly` khi web và API có chung tên miền riêng |
 | Chạy trên CPU: 8–20 giây mỗi câu trả lời mới | GPU cho embedding/reranker; cache đã giảm còn ~0,25 giây cho câu lặp lại |
 | Phụ thuộc quota Gemini gói miễn phí | Gói trả phí hoặc mô hình khác qua API tương thích OpenAI (chỉ đổi cấu hình) |

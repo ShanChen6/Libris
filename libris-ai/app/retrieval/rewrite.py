@@ -6,6 +6,10 @@ kỷ luật lao động". Khi khác biệt từ ngữ quá lớn, đoạn đúng
 không có cơ hội xếp nó lên (GD-041, GD-053, GD-063). Bảng ánh xạ thuật ngữ (``expansion.py``) chỉ
 vá được từng cụm đã biết; ở đây nhờ LLM viết lại thành truy vấn pháp lý, rồi tìm bằng **cả câu gốc
 lẫn câu viết lại** và gộp ứng viên. Câu viết lại chỉ dùng để tìm, không đưa vào câu trả lời.
+
+Kết quả đánh giá (``eval/README.md``, vòng 3): không cải thiện so với tìm bằng câu gốc, các câu mục
+tiêu vẫn trượt, mỗi câu tốn thêm một lần gọi LLM -> **không bật trong API**; chỉ dùng qua cấu hình
+đánh giá ``hybrid_kw1_rerank20_rewrite``.
 """
 
 from __future__ import annotations
