@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { Scale } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { tokenStore, type User } from "@/lib/api";
@@ -20,7 +20,8 @@ export function AppHeader({ user, children }: { user: User | null; children?: Re
     <header className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3">
       <div className="flex min-w-0 items-center gap-4">
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Scale className="size-5" /> <span className="hidden sm:inline">Libris</span>
+          <Image src="/libris-icon.png" alt="" width={664} height={469} className="h-6 w-auto" />
+          <span className="hidden sm:inline">Libris</span>
         </Link>
         <nav className="flex gap-1 text-sm">
           {NAV.map((item) => (

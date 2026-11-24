@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/libris-logo-dark.png">
+    <img src="docs/brand/libris-logo.png" alt="Libris" width="220">
+  </picture>
+</p>
+
 # Libris – Trợ lý Pháp luật
 
 Hệ thống hỏi đáp & tra cứu văn bản quy phạm pháp luật Việt Nam dựa trên RAG (Retrieval-Augmented Generation), có trích dẫn điều khoản nguyên văn và kiểm soát hiệu lực văn bản theo thời gian.

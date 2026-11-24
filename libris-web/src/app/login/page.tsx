@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { Scale } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { ApiError, signIn } from "@/lib/api";
@@ -40,9 +40,7 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-16">
       <div className="flex items-center gap-3">
-        <span className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-lg">
-          <Scale className="size-5" />
-        </span>
+        <Image src="/libris-icon.png" alt="Libris" width={664} height={469} priority className="h-10 w-auto" />
         <h1 className="text-2xl font-semibold tracking-tight">
           {mode === "login" ? "Đăng nhập Libris" : "Tạo tài khoản"}
         </h1>

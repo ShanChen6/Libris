@@ -1,17 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Scale } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-8 px-4 py-24 sm:px-8">
-      <div className="flex items-center gap-3">
-        <span className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-lg">
-          <Scale className="size-5" />
-        </span>
-        <h1 className="text-2xl font-semibold tracking-tight">Libris</h1>
-      </div>
+      <h1>
+        <Image src="/libris-logo.png" alt="Libris" width={974} height={283} priority className="h-14 w-auto" />
+      </h1>
       <div className="space-y-3">
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Trợ lý Pháp luật
