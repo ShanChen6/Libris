@@ -36,6 +36,8 @@ export class ChatService {
     content: string,
     options: AnswerOptions,
   ): AsyncGenerator<string> {
+    // Lấy lịch sử trước khi lưu câu hỏi mới: câu hỏi nối tiếp ("còn ô tô thì sao?") cần ngữ cảnh
+    const history = await this.chats.recentQuestions(sessionId);
     const userMessageId = await this.chats.addUserMessage(sessionId, content);
     yield formatSse('start', { sessionId, userMessageId });
 
@@ -44,7 +46,7 @@ export class ChatService {
     try {
       const body = await this.ai.streamAnswer(
         content,
-        options,
+        { ...options, history },
         upstream.signal,
       );
       for await (const event of parseSse(body)) {

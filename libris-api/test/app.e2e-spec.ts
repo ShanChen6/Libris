@@ -413,6 +413,7 @@ describe.skipIf(!TEST_DB_URL)('libris-api (e2e)', () => {
     expect(ai.streamAnswer.mock.calls[0][0]).toBe(
       'Xe máy không có gương chiếu hậu bị phạt bao nhiêu?',
     );
+    expect(ai.streamAnswer.mock.calls[0][1]).toMatchObject({ history: [] }); // câu đầu tiên
 
     const history = await http()
       .get(`/chat/sessions/${sessionId}`)

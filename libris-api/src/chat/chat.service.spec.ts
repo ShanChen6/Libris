@@ -41,7 +41,11 @@ const DONE = {
 };
 
 describe('ChatService', () => {
-  const repo = { addUserMessage: vi.fn(), addAssistantMessage: vi.fn() };
+  const repo = {
+    addUserMessage: vi.fn(),
+    addAssistantMessage: vi.fn(),
+    recentQuestions: vi.fn(),
+  };
   const ai = { streamAnswer: vi.fn() };
   const service = new ChatService(
     repo as unknown as ChatRepository,
@@ -51,6 +55,9 @@ describe('ChatService', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     repo.addUserMessage.mockResolvedValue('u1');
+    repo.recentQuestions.mockResolvedValue([
+      'Xe máy vượt đèn đỏ bị phạt bao nhiêu?',
+    ]);
     repo.addAssistantMessage.mockResolvedValue({
       id: 'a1',
       documentIds: { c1: 'd1' },
@@ -77,6 +84,10 @@ describe('ChatService', () => {
     expect(done.citations[0]).toMatchObject({
       chunk_id: 'c1',
       document_id: 'd1',
+    });
+    // Câu hỏi trước trong phiên được gửi kèm để libris-ai hiểu câu hỏi nối tiếp
+    expect(ai.streamAnswer.mock.calls[0][1]).toEqual({
+      history: ['Xe máy vượt đèn đỏ bị phạt bao nhiêu?'],
     });
     const [sessionId, content, metadata, citations] =
       repo.addAssistantMessage.mock.calls[0];

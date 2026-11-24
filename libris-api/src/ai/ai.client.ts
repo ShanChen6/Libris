@@ -27,6 +27,8 @@ export interface UploadedFile {
 export interface AnswerOptions {
   includeExpired?: boolean;
   asOf?: string;
+  /** Các câu hỏi trước trong hội thoại (cũ -> mới) */
+  history?: string[];
 }
 
 /** Gọi libris-ai (FastAPI) bằng token nội bộ. */
@@ -69,6 +71,7 @@ export class AiClient {
           question,
           include_expired: options.includeExpired ?? null,
           as_of: options.asOf ?? null,
+          history: options.history ?? [],
         }),
         signal,
       });

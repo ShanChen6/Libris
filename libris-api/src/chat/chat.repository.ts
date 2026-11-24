@@ -103,6 +103,16 @@ export class ChatRepository {
     return (rowCount ?? 0) > 0;
   }
 
+  /** Các câu hỏi gần nhất của phiên (cũ -> mới) – để libris-ai hiểu câu hỏi nối tiếp. */
+  async recentQuestions(sessionId: string, limit = 3): Promise<string[]> {
+    const { rows } = await this.db.query<{ content: string }>(
+      `SELECT content FROM chat_messages WHERE session_id = $1 AND role = 'user'
+       ORDER BY created_at DESC, id DESC LIMIT $2`,
+      [sessionId, limit],
+    );
+    return rows.map((r) => r.content).reverse();
+  }
+
   /** Lưu câu hỏi; đặt tiêu đề phiên từ câu hỏi đầu tiên nếu chưa có. */
   async addUserMessage(sessionId: string, content: string): Promise<string> {
     return this.db.transaction(async (tx) => {

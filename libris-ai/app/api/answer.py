@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 from app.api.search import EmbedderDep, HitOut, PlanOut, RerankerDep, SettingsDep
 from app.cache.semantic import SemanticCache, corpus_version, get_cache
 from app.generation.answer import AnswerResult, answer_question, stream_answer
+from app.generation.followup import contextualize
 from app.generation.llm import LLMClient, LLMError, get_llm
 from app.retrieval.service import make_plan
 
@@ -28,6 +29,8 @@ CacheDep = Annotated[SemanticCache | None, Depends(get_cache)]
 
 class AnswerRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
+    # Các câu hỏi trước trong cùng hội thoại (cũ -> mới) để hiểu câu nối tiếp "còn ô tô thì sao?"
+    history: list[str] = Field(default_factory=list, max_length=10)
     include_expired: bool | None = None
     as_of: date | None = None
 
@@ -169,6 +172,7 @@ def answer(
     llm: LLMDep,
     cache: CacheDep,
 ) -> AnswerResponse:
+    req.question = contextualize(req.question, req.history)
     plan = make_plan(req.question, include_expired=req.include_expired, as_of=req.as_of)
     try:
         with psycopg.connect(settings.database_url) as conn:
@@ -220,6 +224,7 @@ def answer_stream(
       bằng ``answer`` ở đây (có thể thêm cảnh báo hiệu lực hoặc thành lời từ chối)
     - ``error``: ``{message}``
     """
+    req.question = contextualize(req.question, req.history)
     plan = make_plan(req.question, include_expired=req.include_expired, as_of=req.as_of)
 
     def events() -> Iterator[str]:
