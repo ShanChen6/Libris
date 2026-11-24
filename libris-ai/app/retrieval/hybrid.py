@@ -47,11 +47,11 @@ _WORD_RE = re.compile(r"\d{1,4}/(?:19|20)\d{2}/[^\s,;:()]+|[^\W_]+(?:-[^\W_]+)*"
 @dataclass
 class SearchWeights:
     vector: float = 1.0
-    # Đo trên Golden Dataset (eval/eval_retrieval.py, Task 5.2): Context Precision@5 sau rerank
-    # 0,681 với keyword=1 -> 0,744 với keyword=0,25. Văn bản OCR nhiễu và truy vấn theo từng âm
-    # tiết khiến luồng từ khóa kéo nhiều đoạn không liên quan vào danh sách ứng viên; vẫn giữ một
-    # phần để bắt số hiệu văn bản, thuật ngữ chính xác.
-    keyword: float = 0.25
+    # Đo trên Golden Dataset (eval/eval_retrieval.py), có rerank: khi luồng từ khóa còn là OR từng
+    # âm tiết, trọng số 0,25 tốt hơn (CP@5 0,681 -> 0,744). Sau khi chuyển sang cụm hai âm tiết và
+    # hiệu đính OCR, trọng số 1 tốt nhất: CP@5 0,789 (0,25) / 0,794 (0,5) / 0,798 (1). Không có
+    # reranker thì retrieve() dùng 0,25 (service.NO_RERANK_WEIGHTS).
+    keyword: float = 1.0
     referenced: float = 1.0
     candidates: int = 50  # số kết quả mỗi luồng trước khi hợp nhất
 
@@ -98,15 +98,37 @@ class SearchResult:
 
 
 def tsquery_terms(query: str) -> str:
-    """Biểu thức to_tsquery('simple', ...): OR các từ có nghĩa; số hiệu văn bản giữ nguyên."""
+    """Biểu thức to_tsquery('simple', ...) theo **cụm hai âm tiết liền nhau**: ('đèn' <-> 'tín') |
+    ('tín' <-> 'hiệu') | ... ; số hiệu văn bản giữ nguyên.
+
+    Tiếng Việt viết theo âm tiết: OR từng âm tiết ('xe' | 'máy' | 'đèn'...) khớp hàng nghìn đoạn
+    và đẩy đoạn có đúng cụm "đèn tín hiệu giao thông" xuống dưới (Golden Dataset, cấu hình có
+    rerank: Context Precision@5 0,774 -> 0,789, Recall@5 0,894 -> 0,915 với cụm hai âm tiết).
+    Câu chỉ có một âm tiết có nghĩa thì dùng âm tiết đó.
+    """
+    words = [w.lower() for w in _WORD_RE.findall(query)]
     terms: list[str] = []
-    for w in _WORD_RE.findall(query):
-        w = w.lower()
-        if w in STOPWORDS or (len(w) == 1 and not w.isdigit()):
+
+    def quote(w: str) -> str:
+        return "'" + w.replace("'", "''") + "'"
+
+    for a, b in zip(words, words[1:], strict=False):
+        if a in STOPWORDS or b in STOPWORDS or "/" in a or "/" in b:
             continue
-        token = "'" + w.replace("'", "''") + "'"
-        if token not in terms:
-            terms.append(token)
+        if (len(a) == 1 and not a.isdigit()) or (len(b) == 1 and not b.isdigit()):
+            continue
+        term = f"({quote(a)} <-> {quote(b)})"
+        if term not in terms:
+            terms.append(term)
+    for w in words:
+        if "/" in w and quote(w) not in terms:  # số hiệu văn bản: 168/2024/nđ-cp
+            terms.append(quote(w))
+    if not terms:  # không có cặp nào: OR các âm tiết có nghĩa
+        for w in words:
+            if w in STOPWORDS or (len(w) == 1 and not w.isdigit()):
+                continue
+            if quote(w) not in terms:
+                terms.append(quote(w))
     return " | ".join(terms)
 
 

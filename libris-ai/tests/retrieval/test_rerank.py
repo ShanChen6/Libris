@@ -113,3 +113,25 @@ def test_specialized_domains_are_demoted_unless_asked() -> None:
     ]
     asked = disambiguate("xe máy chuyên dùng chạy quá tốc độ", [moto, special])
     assert [h.article for h in asked] == ["Điều 8", "Điều 7"]
+
+
+def test_keyword_weight_is_lower_without_reranker(monkeypatch) -> None:
+    from app.retrieval import service
+
+    seen = []
+
+    def fake_search(conn, query, vector, *, top_k, plan, weights):
+        seen.append(weights)
+        from app.retrieval.hybrid import SearchResult
+
+        return SearchResult(query, plan, [])
+
+    monkeypatch.setattr(service, "hybrid_search", fake_search)
+
+    class Emb:
+        def encode(self, texts):
+            return np.zeros((len(texts), 4), dtype=np.float32)
+
+    service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), None)
+    service.retrieve(None, "xe máy vượt đèn đỏ", Emb(), FakeReranker())
+    assert seen[0].keyword == 0.25 and seen[1] is None  # None: SearchWeights() mặc định (1)
