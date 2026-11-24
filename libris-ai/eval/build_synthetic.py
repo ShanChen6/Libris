@@ -39,7 +39,9 @@ OUT = ROOT / "synthetic.jsonl"
 BATCH = 5
 
 DOMAINS = {
-    "168/2024/NĐ-CP": "giao_thong", "36/2024/QH15": "giao_thong", "100/2019/NĐ-CP": "giao_thong",
+    # 100/2019/NĐ-CP không lấy: phần xử phạt đã được 168/2024 thay thế (hệ thống trả về 168/2024
+    # là đúng nhưng sẽ bị chấm sai)
+    "168/2024/NĐ-CP": "giao_thong", "36/2024/QH15": "giao_thong",
     "45/2019/QH14": "lao_dong", "145/2020/NĐ-CP": "lao_dong", "12/2022/NĐ-CP": "lao_dong",
     "31/2024/QH15": "dat_dai", "43/2024/QH15": "dat_dai", "101/2024/NĐ-CP": "dat_dai",
     "102/2024/NĐ-CP": "dat_dai", "88/2024/NĐ-CP": "dat_dai", "123/2024/NĐ-CP": "dat_dai",
@@ -66,6 +68,10 @@ def candidates(conn, excluded: set[tuple[str, str]]) -> list[dict]:
         FROM legal_chunks c JOIN legal_documents d ON d.id = c.document_id
         WHERE d.status IN ('ACTIVE', 'AMENDED') AND c.article IS NOT NULL
           AND length(c.content) BETWEEN 200 AND 2500
+          AND NOT EXISTS (  -- Điều/Khoản đã bị bãi bỏ hoặc thay nội dung
+            SELECT 1 FROM superseded_provisions s
+            WHERE s.target_number = d.document_number AND s.article = c.article
+              AND (s.clause IS NULL OR c.clause IS NULL OR s.clause = c.clause))
         ORDER BY c.id
         """
     ).fetchall()
