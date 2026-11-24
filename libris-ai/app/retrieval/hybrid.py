@@ -53,7 +53,42 @@ class SearchWeights:
     # reranker thì retrieve() dùng 0,25 (service.NO_RERANK_WEIGHTS).
     keyword: float = 1.0
     referenced: float = 1.0
+    definition: float = 1.0
     candidates: int = 50  # số kết quả mỗi luồng trước khi hợp nhất
+
+
+# Câu hỏi định nghĩa: "Ly hôn là gì", "Thế nào là tảo hôn", "Khái niệm người lao động". Đáp án nằm
+# ở Điều "Giải thích từ ngữ" dưới dạng "14. Ly hôn là ...": một luồng riêng tìm đúng mẫu này. Đoạn
+# định nghĩa ngắn và chung chung nên hay bị các Điều nói chi tiết về thuật ngữ (Điều 51, 55, 56 về
+# ly hôn) đẩy ra khỏi 20 ứng viên (bộ hold-out HO-008).
+_DEFINITION_RES = [
+    re.compile(r"^(?:vậy\s+|cho hỏi\s+)?(?P<t>[^,?.:;]{2,60}?)\s+(?:là gì|là như thế nào|"
+               r"được hiểu (?:là gì|là như thế nào|như thế nào)|có nghĩa là gì|nghĩa là gì)\b",
+               re.I),
+    re.compile(r"(?:thế nào là|thế nào được (?:coi|gọi|hiểu) là|khái niệm|định nghĩa)\s+"
+               r"(?P<t>[^,?.:;]{2,60}?)\s*(?:$|[?,.:;]|\s+(?:theo|trong|là)\b)", re.I),
+]  # fmt: skip
+
+
+def definition_term(query: str) -> str | None:
+    """Thuật ngữ được hỏi định nghĩa, viết thường; None nếu không phải câu hỏi định nghĩa."""
+    for pattern in _DEFINITION_RES:
+        m = pattern.search(query.strip())
+        if m:
+            term = re.sub(r"\s+", " ", m.group("t")).strip().lower()
+            if 1 <= len(term.split()) <= 6:
+                return term
+    return None
+
+
+def definition_regex(query: str) -> str:
+    """Biểu thức chính quy (PostgreSQL) cho dòng định nghĩa "N. <thuật ngữ> là ..."; rỗng nếu
+    không phải câu hỏi định nghĩa."""
+    term = definition_term(query)
+    if not term:
+        return ""
+    words = r"\s+".join(re.escape(w) for w in term.split())
+    return r"(^|\n)\s*\d{1,3}\s*[.,]\s*" + words + r"\s+(là|được hiểu là)\s"
 
 
 @dataclass
@@ -190,15 +225,25 @@ ref AS (
     ORDER BY dist LIMIT %(n)s
   ) s
 ),
+defn AS (
+  SELECT id, row_number() OVER (ORDER BY len, id) AS rank FROM (
+    SELECT c.id, length(c.content) AS len
+    FROM legal_chunks c JOIN legal_documents d ON d.id = c.document_id
+    WHERE %(def_re)s <> '' AND lower(c.content) ~ %(def_re)s AND {scope}
+    LIMIT %(n)s
+  ) s
+),
 fused AS (
-  SELECT coalesce(v.id, k.id, r.id) AS id,
+  SELECT coalesce(v.id, k.id, r.id, df.id) AS id,
          coalesce(%(w_vec)s / (%(rrf_k)s + v.rank), 0)
        + coalesce(%(w_kw)s / (%(rrf_k)s + k.rank), 0)
-       + coalesce(%(w_ref)s / (%(rrf_k)s + r.rank), 0) AS score,
+       + coalesce(%(w_ref)s / (%(rrf_k)s + r.rank), 0)
+       + coalesce(%(w_def)s / (%(rrf_k)s + df.rank), 0) AS score,
          v.rank AS vec_rank, k.rank AS kw_rank, r.rank AS ref_rank
   FROM vec v
   FULL OUTER JOIN kw k ON k.id = v.id
   FULL OUTER JOIN ref r ON r.id = coalesce(v.id, k.id)
+  FULL OUTER JOIN defn df ON df.id = coalesce(v.id, k.id, r.id)
 )
 SELECT c.id, d.document_number, d.title, d.status::text, d.effective_date, d.expiry_date,
        c.article, c.clause, c.point, c.context_prefix, c.content, c.char_start, c.char_end,
@@ -272,6 +317,8 @@ def hybrid_search(
         "w_vec": weights.vector,
         "w_kw": weights.keyword,
         "w_ref": weights.referenced if plan.referenced else 0.0,
+        "def_re": definition_regex(query),
+        "w_def": weights.definition,
         "rrf_k": float(RRF_K),
         "top_k": top_k,
     }

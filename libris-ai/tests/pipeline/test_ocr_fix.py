@@ -45,7 +45,7 @@ VOCAB = LanguageModel.from_texts(
 
 def test_fix_confusions() -> None:
     fixed, report = fix_confusions("14. 1y hôn là việc chấm dứt; g1ao kết hợp đồng", VOCAB)
-    assert fixed == "14. ly hôn là việc chấm dứt; giao kết hợp đồng"
+    assert fixed == "14. Ly hôn là việc chấm dứt; giao kết hợp đồng"
     assert report.replaced == 2
     # Số hiệu có chữ cái, số La Mã, từ không có ngữ cảnh xác nhận: giữ nguyên
     for text in ("khoản 8a Điều 24", "Mục i1 chương", "abc 1x def"):
@@ -84,4 +84,4 @@ def test_fix_ocr_keeps_length() -> None:
     text = "Điều 3.\n1. X.\n2. 1y hôn là. 3. Y:\na) a;\nb) b;\n©) c"
     fixed, _ = fix_ocr(text, VOCAB)
     assert len(fixed) == len(text)
-    assert fixed == "Điều 3.\n1. X.\n2. ly hôn là.\n3. Y:\na) a;\nb) b;\nc) c"
+    assert fixed == "Điều 3.\n1. X.\n2. Ly hôn là.\n3. Y:\na) a;\nb) b;\nc) c"

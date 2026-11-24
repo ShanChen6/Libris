@@ -1,3 +1,4 @@
+import re
 from datetime import date
 
 import psycopg
@@ -161,3 +162,22 @@ def test_repealed_articles_are_excluded_by_default(partly_repealed) -> None:
 
     past = _search(partly_repealed, "vào năm 2023 xe mô tô không có gương chiếu hậu")
     assert "Điều 1" in [h.article for h in past.hits]  # năm 2023 Điều 1 còn hiệu lực
+
+
+def test_definition_questions() -> None:
+    from app.retrieval.hybrid import definition_regex, definition_term
+
+    cases = {
+        "Ly hôn là gì theo Luật Hôn nhân và gia đình?": "ly hôn",
+        "Thế nào là tảo hôn?": "tảo hôn",
+        "Khái niệm người lao động theo Bộ luật Lao động": "người lao động",
+        "Bạo lực gia đình được hiểu như thế nào?": "bạo lực gia đình",
+        "Đi xe máy không đội mũ bảo hiểm bị phạt bao nhiêu?": None,
+        "Thời hạn sử dụng đất nông nghiệp là bao lâu?": None,
+    }
+    for question, term in cases.items():
+        assert definition_term(question) == term
+    pattern = re.compile(definition_regex("Ly hôn là gì?"))
+    assert pattern.search("điều 3.\n14. ly hôn là việc chấm dứt quan hệ vợ chồng")
+    assert not pattern.search("15. ly hôn giả tạo là việc lợi dụng ly hôn")
+    assert definition_regex("Xe máy bị phạt bao nhiêu?") == ""

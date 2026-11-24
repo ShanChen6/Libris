@@ -151,6 +151,7 @@ _CONFUSABLE = {
     "ñ": "n", "í": "i", "ì": "i",
 }  # fmt: skip
 _WORDISH_RE = re.compile(r"[^\W_]+", re.UNICODE)
+_SENTENCE_START_RE = re.compile(r"(?:^|\n)\s*(?:\d{1,3}\s*[.,]|[a-zđ]\))\s*$")
 
 
 def _variants(word: str, limit: int = 2):
@@ -240,6 +241,8 @@ def fix_confusions(
             fixed = "".join(
                 d.upper() if s.isupper() else d for s, d in zip(original, best, strict=True)
             )
+            if _SENTENCE_START_RE.search(text, 0, m.start()):
+                fixed = fixed[0].upper() + fixed[1:]  # "14. 1y hôn" -> "14. Ly hôn"
             out[m.start() : m.end()] = fixed
             report.replaced += 1
             report.examples[(original.lower(), best)] += 1
